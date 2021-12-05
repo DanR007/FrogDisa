@@ -17,6 +17,7 @@
 #include "FrogDisa/GrapplingObject.h"
 #include "FrogDisa/Collectibles.h"
 #include "EProjectiles.h"
+#include "SteamBug.h"
 #include "Movement.generated.h"
 
 UCLASS()
@@ -73,13 +74,16 @@ protected:
 
 	void ReturnWrench();
 
-
+	void ChangeCharacter();
 
 	void PauseMenu();
 	UFUNCTION(BlueprintCallable)
 		void SetMeleeAttackInactive();
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 		bool isClimbing;
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+		void SetNewPosses();
 public:
 
 	UFUNCTION(BlueprintCallable)
@@ -131,6 +135,7 @@ private:
 	bool circleMenuIsOpen;
 	bool craftMenuOpen;
 	bool isWaitingWrench;
+	bool isHaveSteamBug;
 
 	int Collectibles;
 	int stoneCount;
@@ -154,4 +159,8 @@ private:
 	AGrapplingObject* ActorGrapplingPoint;
 	ACollectiblesObject* ActorCollectibleObject;
 	AMovableObject* movableActor;
+	ASteamBug* SteamBug;
+
+	TSubclassOf<ASteamBug> SteamBug_ClassBP;
+	TSubclassOf<ASteamBug> SteamBug_Class;
 };

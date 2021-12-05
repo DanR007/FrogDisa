@@ -14,10 +14,12 @@
 #include "GameFramework/Pawn.h"
 #include "Engine/EngineTypes.h"
 #include "FrogDisa/InteractiveObject.h"
+#include "FrogDisa/PuzzleInteractiveObject.h"
 #include "FrogDisa/Collectibles.h"
 #include "FrogDisa/GrapplingObjectComponent.h"
 #include "FrogDisa/GrapplingObject.h"
 #include "FrogDisa/MyHUD.h"
+#include "FrogDisa/LogicPuzzleActor.h"
 #include "FrogDisa/MovableObject.h"
 #include "Components/CapsuleComponent.h"
 #include "DrawDebugHelpers.h"
@@ -27,6 +29,7 @@
 #include "Components/TimelineComponent.h"
 #include "GameFramework/PlayerController.h"
 #include "FrogDisa/TestPuzzleActor.h"
+#include "PuzzlePyatnashky.h"
 #include "Blueprint/UserWidget.h"
 
 // Sets default values
@@ -66,6 +69,12 @@ AMovement::AMovement()
 	//Mesh->An
 	ShootComponent = CreateDefaultSubobject<UShootComponent>(TEXT("Shoot"));
 
+	ConstructorHelpers::FClassFinder<ASteamBug> steam_bug(TEXT("SkeletalMesh'/Game/Meshes/Animation/jaba.jaba'"));
+	ConstructorHelpers::FClassFinder<ASteamBug> steam_bug_bp(TEXT("/Game/Blueprint/BP_SteamBug"));
+
+	SteamBug_ClassBP = steam_bug_bp.Class;
+	SteamBug_Class = steam_bug.Class;
+
 	isGrappling = false;
 	MeleeAttackIsActive = false;
 	isBearObject = false;
@@ -74,6 +83,7 @@ AMovement::AMovement()
 	craftMenuOpen = false;
 	isClimbing = false;
 	isWaitingWrench = false;
+	
 
 	Collectibles = 0;
 
@@ -105,6 +115,7 @@ void AMovement::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 	PlayerInputComponent->BindAction("PauseMenu", IE_Pressed, this, &AMovement::PauseMenu);
 	PlayerInputComponent->BindAction("SwitchProjectileType", IE_Pressed, this, &AMovement::SwitchProjectile);
+	PlayerInputComponent->BindAction("SwitchCharacter", IE_Pressed, this, &AMovement::ChangeCharacter);
 }
 
 // Called when the game starts or when spawned
@@ -291,6 +302,7 @@ void AMovement::Attack()
 		else
 		{
 			MeleeAttackIsActive = true;
+			GetWorld()->GetTimerManager().SetTimer(GrapplingTimer, this, &AMovement::SetMeleeAttackInactive, 0.01f, false, 0.5f);
 		}
 	}
 	else
@@ -307,6 +319,29 @@ void AMovement::Attack()
 void AMovement::StopShoot()
 {
 	
+}
+
+void AMovement::ChangeCharacter()
+{
+	//delete this when you will make final build
+	isHaveSteamBug = true;
+
+	if (isHaveSteamBug && GetCharacterMovement()->MovementMode == EMovementMode::MOVE_Walking)
+	{
+		FActorSpawnParameters SpawnParameters;
+		SpawnParameters.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+		FTransform bugTransform = FTransform(GetActorRotation(), Mesh->GetSocketLocation("feet_L") + FVector(70,0,0));
+		SteamBug = GetWorld()->SpawnActor<ASteamBug>(SteamBug_ClassBP, bugTransform, SpawnParameters);
+		SteamBug->SetMainCharacter(this);
+		SteamBug->SetNewPosses();
+		//GetWorld()->GetPlaye
+		//SetNewPosses();
+	}
+}
+
+void AMovement::SetNewPosses_Implementation()
+{
+
 }
 
 void AMovement::SetMeleeAttackInactive()
@@ -357,18 +392,28 @@ void AMovement::InteractionWithObject()
 {
 
 	FHitResult hitPoint;
-	
+
 	TArray<AActor*> overlappingActors;
 
-	if(InteractiveObject)
+	if (InteractiveObject)
 		InteractiveObject->GetOverlappingActors(overlappingActors);
 
-	if (overlappingActors.Num() == 0)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Daaaaaaaaaa"));
-	}
-	bool isZeroOverlappingActors = overlappingActors.Num() == 0;
-	
+
+
+	bool isZeroOverlappingActors = overlappingActors.Num() == 0;// = overlappingActors.Num() == 0;
+
+
+	if (overlappingActors.Num() == 1)
+		for (AActor* actor : overlappingActors)
+		{
+			if (Cast<ALogicPuzzleActor>(actor))
+			{
+				isZeroOverlappingActors = true;
+			}
+		}
+
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::FromInt(overlappingActors.Num()));
+
 	if (isBearObject == true)
 	{
 		if (isZeroOverlappingActors)
@@ -408,7 +453,7 @@ void AMovement::InteractionWithObject()
 
 			}
 		}
-		
+
 	}
 }
 
@@ -524,6 +569,13 @@ void AMovement::TakeCollectibles()
 				{
 					Cast<ATestPuzzleActor>(hitPoint.Actor.Get())->Use();
 					//Cast<APuzlePyatnashky>(hitPoint.Actor.Get())->Use();
+				}
+				else
+				{
+					if (Cast<APuzzlePyatnashky>(hitPoint.Actor.Get()))
+					{
+						Cast<APuzzlePyatnashky>(hitPoint.Actor.Get())->Use();
+					}
 				}
 			}
 		}

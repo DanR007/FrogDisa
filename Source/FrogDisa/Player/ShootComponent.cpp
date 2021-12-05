@@ -10,8 +10,8 @@ UShootComponent::UShootComponent()
 	ConstructorHelpers::FClassFinder<AThrowProjectile> projectile(TEXT("Class'/Script/FrogDisa.ThrowProjectile'"));
 	ProjectileWrench = projectile.Class;
 
-	ConstructorHelpers::FClassFinder<AThrowProjectile> projectiles(TEXT("/Game/Blueprint/BP_MyThrowProjectile"));
-	BlueprintWrench = projectiles.Class;
+	ConstructorHelpers::FClassFinder<AThrowProjectile> projectile_bp(TEXT("/Game/Blueprint/BP_MyThrowProjectile"));
+	BlueprintWrench = projectile_bp.Class;
 	
 	ConstructorHelpers::FClassFinder<AThrowingStone> stoneProjectiles(TEXT("/Game/Blueprint/BP_ThrowingStone"));
 	StoneClass = stoneProjectiles.Class;

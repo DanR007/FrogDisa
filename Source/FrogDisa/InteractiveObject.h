@@ -28,7 +28,7 @@ public:
 	//UFUNCTION(BlueprintAssignable)
 	void DropThisObject();
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Mesh")
+	UPROPERTY(EditAnywhere)
 		UStaticMeshComponent* Mesh;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Mesh")
