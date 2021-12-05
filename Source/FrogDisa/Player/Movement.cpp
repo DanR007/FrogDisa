@@ -69,11 +69,11 @@ AMovement::AMovement()
 	//Mesh->An
 	ShootComponent = CreateDefaultSubobject<UShootComponent>(TEXT("Shoot"));
 
-	ConstructorHelpers::FClassFinder<ASteamBug> steam_bug(TEXT("SkeletalMesh'/Game/Meshes/Animation/jaba.jaba'"));
+	//ConstructorHelpers::FClassFinder<ASteamBug> steam_bug(TEXT("SkeletalMesh'/Game/Meshes/Animation/jaba.jaba'"));
 	ConstructorHelpers::FClassFinder<ASteamBug> steam_bug_bp(TEXT("/Game/Blueprint/BP_SteamBug"));
 
 	SteamBug_ClassBP = steam_bug_bp.Class;
-	SteamBug_Class = steam_bug.Class;
+	//SteamBug_Class = steam_bug.Class;
 
 	isGrappling = false;
 	MeleeAttackIsActive = false;
