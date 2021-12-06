@@ -1,18 +1,21 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Movement.h"
-#include "GameFramework/Character.h"
-#include "Animation/AnimInstance.h"
-#include "Kismet/GameplayStatics.h"
-#include "MotionControllerComponent.h"
-#include "Kismet/KismetMathLibrary.h"
-#include "TimerManager.h"
+#include "PuzzlePyatnashky.h"
+
+#include "Components/TimelineComponent.h"
 #include "Components/InputComponent.h"
+#include "Components/CapsuleComponent.h"
+
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/Controller.h"
 #include "GameFramework/Actor.h"
 #include "GameFramework/Pawn.h"
-#include "Engine/EngineTypes.h"
+#include "GameFramework/HUD.h"
+#include "GameFramework/PlayerController.h"
+#include "GameFramework/Character.h"
+
+#include "FrogDisa/TestPuzzleActor.h"
 #include "FrogDisa/InteractiveObject.h"
 #include "FrogDisa/PuzzleInteractiveObject.h"
 #include "FrogDisa/Collectibles.h"
@@ -21,17 +24,17 @@
 #include "FrogDisa/MyHUD.h"
 #include "FrogDisa/LogicPuzzleActor.h"
 #include "FrogDisa/MovableObject.h"
-#include "Components/CapsuleComponent.h"
+
+#include "Animation/AnimInstance.h"
+#include "Kismet/GameplayStatics.h"
+#include "MotionControllerComponent.h"
+#include "Kismet/KismetMathLibrary.h"
+#include "TimerManager.h"
+#include "Engine/EngineTypes.h"
+#include "Blueprint/UserWidget.h"
 #include "DrawDebugHelpers.h"
 #include "Styling/SlateWidgetStyleContainerInterface.h"
-#include "GameFramework/HUD.h"
 #include "UObject/ConstructorHelpers.h"
-#include "Components/TimelineComponent.h"
-#include "GameFramework/PlayerController.h"
-#include "FrogDisa/TestPuzzleActor.h"
-#include "PuzzlePyatnashky.h"
-#include "Blueprint/UserWidget.h"
-
 // Sets default values
 AMovement::AMovement()
 {
@@ -234,7 +237,7 @@ void AMovement::MoveForward(float Value)
 				{
 					GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Walking);
 					ACharacter::Jump();
-					isClimbing = false;//ñäåëàòü àíèìàöèþ è âñ¸
+					isClimbing = false;//Ã±Ã¤Ã¥Ã«Ã Ã²Ã¼ Ã Ã­Ã¨Ã¬Ã Ã¶Ã¨Ã¾ Ã¨ Ã¢Ã±Â¸
 				}
 				else
 				{
@@ -447,7 +450,7 @@ void AMovement::InteractionWithObject()
 				InteractiveActor->SetActorLocation(GetActorLocation() + GetActorForwardVector() * 90.f + GetActorUpVector() * 10.f);
 				InteractiveActor->SetActorRotation(GetActorRotation());
 				InteractiveObject = InteractiveActor->FindComponentByClass<UStaticMeshComponent>();
-				InteractiveObject->SetSimulatePhysics(false);//îòêëþ÷àåì ïîòîìó ÷òî ñ ôèçèêîé îáúåêò íå äâèãàåòñÿ
+				InteractiveObject->SetSimulatePhysics(false);//Ã®Ã²ÃªÃ«Ã¾Ã·Ã Ã¥Ã¬ Ã¯Ã®Ã²Ã®Ã¬Ã³ Ã·Ã²Ã® Ã± Ã´Ã¨Ã§Ã¨ÃªÃ®Ã© Ã®Ã¡ÃºÃ¥ÃªÃ² Ã­Ã¥ Ã¤Ã¢Ã¨Ã£Ã Ã¥Ã²Ã±Ã¿
 				InteractiveObject->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 				InteractiveActor->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform);
 
