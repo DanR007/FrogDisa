@@ -14,22 +14,22 @@ UCLASS()
 class FROGDISA_API AThrowProjectile : public AActor
 {
 	GENERATED_BODY()
-	
-public:	
+
+public:
 	// Sets default values for this actor's properties
-	AThrowProjectile(); 
+	AThrowProjectile();
 	virtual void Tick(float DeltaTime) override;
 	UFUNCTION(BlueprintCallable)
-	void ReturnToCharacter();
+		void ReturnToCharacter();
 	UFUNCTION()
-	void Launch();
-	
+		void Launch();
+
 	//virtual void OnActorBeginOverlap() override;
 	void AttachToPlayerCharacter(AActor* Character);
 	bool GetInAirState();
 	AActor* GetOwnerPlayer();
 	UFUNCTION(BlueprintNativeEvent)
-	void OnOverlap(AActor* OverlappedActor, AActor* OtherActor);
+		void OnOverlap(AActor* OverlappedActor, AActor* OtherActor);
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -38,28 +38,30 @@ protected:
 		UStaticMeshComponent* ProjectileMesh;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		UCapsuleComponent* ProjectileColliderD;
-		UFUNCTION(BlueprintCallable)
-			void ReturnStart();
-		UFUNCTION(BlueprintCallable)
-			void Stop();
-	//AMovement* PlayerCharacter;
-		UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	bool projectileIsReturning;
-		UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	bool isLaunched;
-		UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UFUNCTION(BlueprintCallable)
+		void ReturnStart();
+	UFUNCTION(BlueprintCallable)
+		void Stop();
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		bool projectileIsReturning;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		bool isLaunched;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		bool inAir;
-		UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	float halfDistance;
-		UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	AActor* OwnerPlayer;
-		UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-			FVector StartLocation;
-		UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		float halfDistance;
+
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		AActor* OwnerPlayer;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+		FVector StartLocation;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 		FVector EndLocation;
-		UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-			FVector OldStartLocation;
-		UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+		FVector OldStartLocation;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 		float currentDistance;
 private:
 	FTimerHandle MoveTimer;
@@ -67,6 +69,6 @@ private:
 	void Move();
 	void RuleToMove(int direction);
 
-	
-	
+
+
 };

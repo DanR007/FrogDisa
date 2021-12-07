@@ -12,17 +12,22 @@ ALogicPuzzleActor::ALogicPuzzleActor()
 {
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+
 	BaseComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Base"));
 	RootComponent = BaseComponent;
+
 	FirstComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("First"));
 	SecondComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Second"));
 	ThirdComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Third"));
 	FourthComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Fourth"));
 	FifthComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Fifth"));
 	SixthComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Sixth"));
+
 	Components = { FirstComponent, SecondComponent, ThirdComponent, FourthComponent, FifthComponent,
 	SixthComponent };
+
 	boolComponents = { false,false,false,false,false,false };
+
 	for (UStaticMeshComponent* mesh : Components)
 	{
 		mesh->SetupAttachment(RootComponent);

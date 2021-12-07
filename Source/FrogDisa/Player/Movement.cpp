@@ -66,14 +66,12 @@ AMovement::AMovement()
 	FVector MeshPosition = FVector(0.f, 0.f, -80.f);
 	FRotator MeshRotation = FRotator(0.f, 270.f, 0.f);
 	GetMesh()->SetRelativeLocationAndRotation(MeshPosition, MeshRotation);
-	//Mesh->An
+
 	ShootComponent = CreateDefaultSubobject<UShootComponent>(TEXT("Shoot"));
 
-	//ConstructorHelpers::FClassFinder<ASteamBug> steam_bug(TEXT("SkeletalMesh'/Game/Meshes/Animation/jaba.jaba'"));
 	ConstructorHelpers::FClassFinder<ASteamBug> steam_bug_bp(TEXT("/Game/Blueprint/BP_SteamBug"));
 
 	SteamBug_ClassBP = steam_bug_bp.Class;
-	//SteamBug_Class = steam_bug.Class;
 
 	isGrappling = false;
 	MeleeAttackIsActive = false;
@@ -99,7 +97,6 @@ void AMovement::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
 	PlayerInputComponent->BindAction("Attack", IE_Pressed, this, &AMovement::Attack);
 	PlayerInputComponent->BindAction("Attack", IE_Released, this, &AMovement::StopShoot);
-	//PlayerInputComponent->BindAction("ReturnWrench", IE_Pressed, this, &AMovement::ReturnWrench);
 	PlayerInputComponent->BindAxis("MoveForward", this, &AMovement::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &AMovement::MoveRight);
 
@@ -140,7 +137,7 @@ void AMovement::Tick(float DeltaTime)
 		startLoc = GetActorLocation();
 		FVector Start = _Camera->GetComponentLocation();
 		FVector End = _Camera->GetForwardVector() * 3000.f + Start;
-		//DrawDebugLine(GetWorld(), Start, End, FColor::Blue, false, 10.f, 5);
+
 		if (GetWorld()->LineTraceSingleByChannel(hitPoint, Start, End, ECC_Visibility,
 			CollisionParams))
 		{
@@ -334,8 +331,6 @@ void AMovement::ChangeCharacter()
 		SteamBug = GetWorld()->SpawnActor<ASteamBug>(SteamBug_ClassBP, bugTransform, SpawnParameters);
 		SteamBug->SetMainCharacter(this);
 		SteamBug->SetNewPosses();
-		//GetWorld()->GetPlaye
-		//SetNewPosses();
 	}
 }
 
@@ -400,7 +395,7 @@ void AMovement::InteractionWithObject()
 
 
 
-	bool isZeroOverlappingActors = overlappingActors.Num() == 0;// = overlappingActors.Num() == 0;
+	bool isZeroOverlappingActors = overlappingActors.Num() == 0;
 
 
 	if (overlappingActors.Num() == 1)
@@ -500,11 +495,7 @@ void AMovement::Aim(float Value)
 
 		cameraComponent->bUsePawnControlRotation = true;
 
-		//bUseControllerRotationPitch = true;
 		bUseControllerRotationYaw = true;
-		//bUseControllerRotationRoll = true;
-
-		//cameraComponent->TargetArmLength = 300.f;
 
 		if (cameraComponent->TargetArmLength > 140.f)
 			cameraComponent->TargetArmLength -= ChangeTargetArmSpeed;
@@ -518,11 +509,8 @@ void AMovement::Aim(float Value)
 
 		cameraComponent->bUsePawnControlRotation = true;
 
-		//bUseControllerRotationPitch = false;
 		bUseControllerRotationYaw = false;
-		//bUseControllerRotationRoll = false;
 
-		//cameraComponent->TargetArmLength = 400.f;
 		if (cameraComponent->TargetArmLength < 400.f)
 		{
 			cameraComponent->TargetArmLength += ChangeTargetArmSpeed;
@@ -553,7 +541,7 @@ void AMovement::TakeCollectibles()
 	{
 		FVector Start = _Camera -> GetComponentLocation();
 		FVector End = _Camera -> GetForwardVector() * 1000.f + Start;
-		//DrawDebugLine(GetWorld(), Start, End, FColor::Blue, false, 10.f, 5);
+
 		if (ActorCollectibleObject)
 		{
 			Collectibles++;
@@ -568,7 +556,6 @@ void AMovement::TakeCollectibles()
 				if (Cast<ATestPuzzleActor>(hitPoint.Actor.Get()))
 				{
 					Cast<ATestPuzzleActor>(hitPoint.Actor.Get())->Use();
-					//Cast<APuzlePyatnashky>(hitPoint.Actor.Get())->Use();
 				}
 				else
 				{
@@ -602,8 +589,7 @@ void AMovement::PauseMenu()
 	{
 		craftMenuOpen = true;
 		GetWorld()->GetFirstPlayerController()->SetShowMouseCursor(true);
-		//GetWorld()->GetFirstPlayerController()->Pause
-		
+
 		GetWorld()->GetFirstPlayerController()->SetPause(true);
 		
 	}
@@ -638,7 +624,7 @@ void AMovement::ForwardTrace()
 	collisionParams.AddIgnoredActor(this);
 	f_start = GetActorLocation();
 	f_end = GetActorLocation() + GetActorForwardVector() * 100;
-	//DrawDebugLine(GetWorld(), f_start, f_end, FColor::Blue, false, 10.f, 5);
+
 	if(GetWorld()->LineTraceSingleByChannel(hitPoint, f_start, f_end, ECC_GameTraceChannel1, collisionParams))
 	{
 		wallNormal = hitPoint.Normal;
@@ -654,7 +640,7 @@ void AMovement::HeightTrace()
 	collisionParams.AddIgnoredActor(this);
 	h_start = GetActorLocation() + FVector(0, 0, 200.f) + GetActorForwardVector() * 75;
 	h_end = h_start - FVector(0, 0, 200.f);
-	//DrawDebugLine(GetWorld(), h_start, h_end, FColor::Blue, false, 10.f, 5);
+
 	if (GetWorld()->LineTraceSingleByChannel(hitPoint, h_start, h_end, ECC_GameTraceChannel1, collisionParams))
 	{
 		float distanceZ = Mesh->GetSocketLocation(TEXT("spineSocket")).Z - hitPoint.Location.Z;
@@ -669,11 +655,6 @@ void AMovement::HeightTrace()
 			}
 		}
 	}
-	//else
-	//{
-	//	GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Falling);
-	//	GetCharacterMovement()->StopMovementImmediately();
-	//}
 }
 
 void AMovement::SwitchProjectile()

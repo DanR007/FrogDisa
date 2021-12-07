@@ -22,8 +22,6 @@ AThrowProjectile::AThrowProjectile()
 	ProjectileMesh->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Overlap);
 	ProjectileMesh->SetupAttachment(RootComponent);
 
-
-	//ProjectileColliderD->OnComponentBeginOverlap.AddDynamic(this, &AThrowProjectile::OnThrowProjectileOverlap);
 	OnActorBeginOverlap.AddDynamic(this, &AThrowProjectile::OnOverlap);
 
 }
@@ -54,7 +52,6 @@ void AThrowProjectile::ReturnToCharacter()
 {
 	if (projectileIsReturning == false && isLaunched == true)
 	{
-		//ProjectileMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 		GetWorldTimerManager().ClearTimer(MoveTimer);
 		EndLocation = OldStartLocation;
 		projectileIsReturning = true;
@@ -74,21 +71,16 @@ void AThrowProjectile::Launch()
 {
 	if (isLaunched == false)
 	{
-		
-		//SetActorLocation(Cast<AMovement>(OwnerPlayer)->GetMesh()->GetSocketLocation(TEXT("hand_RSocket")));
+
 		DetachRootComponentFromParent(true);
 		StartLocation = GetActorLocation();
 
-		
-
 		SetActorRotation(Cast<AMovement>(OwnerPlayer)->_Camera->GetComponentRotation());
-
 		EndLocation = GetActorLocation() + GetActorForwardVector() * 1050.f;
-		//SetActorLocation(OwnerPlayer->FindComponentByClass<UCameraComponent>()->GetComponentLocation());
 
 		MoveProjectileVector = GetActorForwardVector();
 		halfDistance = FVector::Distance(EndLocation, GetActorLocation()) / 1.4;
-		//MovableComp->Velocity = GetActorForwardVector() * 200.f;
+
 		GetWorld()->GetTimerManager().SetTimer(MoveTimer, this, &AThrowProjectile::Move, 0.01f, true, 0.f);
 		isLaunched = true;
 		inAir = true;
@@ -111,7 +103,6 @@ void AThrowProjectile::Move()
 			GetWorldTimerManager().ClearTimer(MoveTimer);
 			Cast<AMovement>(OwnerPlayer)->SetUnwaitingState();
 			SetActorRotation(OwnerPlayer->GetActorRotation() + FRotator(-15, 0, 0));
-			//SetActorRelativeRotation(FRotator(-15, 0, 0));
 			projectileIsReturning = false;
 			isLaunched = false;
 			inAir = false;
@@ -146,7 +137,7 @@ void AThrowProjectile::RuleToMove(int direction)
 	currentAlpha = FMath::Clamp(currentAlpha, 0.f, 1.f);
 
 	FVector nextRightVector = EndLocation - GetActorRightVector() * UKismetMathLibrary::Lerp(halfDistance, 0, currentAlpha) * direction / 2.f;
-	//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, nextRightVector.ToCompactString());
+
 	FVector nextLoc = UKismetMathLibrary::VInterpTo_Constant(GetActorLocation(), nextRightVector, 0.1f, 200.f);
 
 	SetActorLocation(nextLoc);
@@ -174,8 +165,6 @@ void AThrowProjectile::OnOverlap_Implementation(AActor* OverlappedActor, AActor*
 		{
 			if (cast && Cast<ADropItAfterShot>(OtherActor)->isABreakableMesh() == false)
 			{
-				//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, TEXT("FIRST"));
-				//AThrowProjectile::Stop();
 				AThrowProjectile::ReturnToCharacter();
 			}
 		}
@@ -183,8 +172,6 @@ void AThrowProjectile::OnOverlap_Implementation(AActor* OverlappedActor, AActor*
 		{
 			if (cast)
 			{
-				//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, TEXT("FIRST"));
-				//AThrowProjectile::Stop();
 				AThrowProjectile::ReturnToCharacter();
 			}
 		}

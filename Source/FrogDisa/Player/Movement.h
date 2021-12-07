@@ -7,7 +7,6 @@
 #include "UObject/ConstructorHelpers.h"
 #include "Components/TimelineComponent.h"
 #include "Components/BoxComponent.h"
-//#include "HealthComponent.h"
 #include "FrogDisa/MovableObject.h"
 #include "ShootComponent.h"
 #include "FrogDisa/InteractiveObject.h"
@@ -46,8 +45,6 @@ protected:
 
 	void StopShoot();
 
-	//void Heal();
-
 	void Jump();
 
 	void StopJumping();
@@ -58,18 +55,16 @@ protected:
 	
 	void Run(float Value);
 
-	//UFUNCTION(Blueprint)
 	void InteractionWithObject();
 
 	void TakeCollectibles();
-	//void ResetJumpState();
-	// Called every frame
+
 	virtual void Tick(float DeltaTime) override;
 
 	virtual void AddControllerYawInput(float Val);
 
 	virtual void AddControllerPitchInput(float Val);
-	// Called to bind functionality to input
+
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	void ReturnWrench();
@@ -97,10 +92,6 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera")
 		UCameraComponent* _Camera;
-
-	//Переменная для отображения здоровья
-	/*UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Health")
-		UHealthComponent* Health;*/
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Shoot")
 		UShootComponent* ShootComponent;

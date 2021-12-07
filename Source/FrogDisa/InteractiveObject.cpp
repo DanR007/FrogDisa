@@ -9,11 +9,9 @@ AInteractiveObject::AInteractiveObject()
 {
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MainMesh"));
 	Interactive = CreateDefaultSubobject<UInteractiveObjectComponent>(TEXT("Interactive"));
-	//ConstructorHelpers::FObjectFinder<UStaticMesh> mesh(TEXT("StaticMesh'/Engine/BasicShapes/Cube.Cube'"));
-	//Mesh->SetStaticMesh(mesh.Object);
 	Mesh->SetSimulatePhysics(true);
 	Mesh->SetCollisionResponseToChannel(ECollisionChannel::ECC_GameTraceChannel1, ECollisionResponse::ECR_Ignore);
-	//Mesh->SetCollisionResponseToAllChannels(ECR_Ignore);
+
 }
 
 // Called when the game starts or when spawned

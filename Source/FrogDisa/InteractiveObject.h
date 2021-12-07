@@ -23,9 +23,9 @@ protected:
 	virtual void BeginPlay() override;
 
 public:	
-	//UFUNCTION(BlueprintAssignable)
+
 	void TakeThisObject();
-	//UFUNCTION(BlueprintAssignable)
+
 	void DropThisObject();
 
 	UPROPERTY(EditAnywhere)
