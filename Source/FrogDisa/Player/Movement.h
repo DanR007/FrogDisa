@@ -1,22 +1,28 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Character.h"
-#include "GameFramework/SpringArmComponent.h"
-#include "Camera/CameraComponent.h"
-#include "UObject/ConstructorHelpers.h"
-#include "Components/TimelineComponent.h"
-#include "Components/BoxComponent.h"
-#include "FrogDisa/MovableObject.h"
-#include "ShootComponent.h"
-#include "FrogDisa/InteractiveObject.h"
-#include "GameFramework/HUD.h"
-#include "FrogDisa/CollectiblesObject.h"
-#include "GameFramework/MovementComponent.h"
-#include "FrogDisa/GrapplingObject.h"
-#include "FrogDisa/Collectibles.h"
+
 #include "EProjectiles.h"
 #include "SteamBug.h"
+#include "ShootComponent.h"
+
+#include "FrogDisa/GrapplingObject.h"
+#include "FrogDisa/Collectibles.h"
+#include "FrogDisa/CollectiblesObject.h"
+#include "FrogDisa/MovableObject.h"
+#include "FrogDisa/InteractiveObject.h"
+
+#include "GameFramework/Character.h"
+#include "GameFramework/SpringArmComponent.h"
+#include "GameFramework/MovementComponent.h"
+#include "GameFramework/HUD.h"
+
+#include "Components/TimelineComponent.h"
+#include "Components/BoxComponent.h"
+
+#include "Camera/CameraComponent.h"
+#include "UObject/ConstructorHelpers.h"
+
 #include "Movement.generated.h"
 
 UCLASS()
