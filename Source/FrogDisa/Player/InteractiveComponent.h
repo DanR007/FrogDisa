@@ -4,17 +4,17 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
-#include "GrapplingObjectComponent.generated.h"
+#include "InteractiveComponent.generated.h"
 
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
-class FROGDISA_API UGrapplingObjectComponent : public UActorComponent
+class FROGDISA_API UInteractiveComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
 public:	
 	// Sets default values for this component's properties
-	UGrapplingObjectComponent();
+	UInteractiveComponent();
 
 protected:
 	// Called when the game starts

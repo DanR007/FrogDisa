@@ -7,9 +7,8 @@
 ACollectiblesObject::ACollectiblesObject()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	//PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 	CollectiblesPointWidget = CreateDefaultSubobject<UBillboardComponent>(TEXT("BillBoard"));
-	CollectiblesComponent = CreateDefaultSubobject<UCollectibles>(TEXT("CollectiblesComponent"));
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
 	Collider = CreateDefaultSubobject< USphereComponent>(TEXT("Collider"));
 	RootComponent = Mesh;

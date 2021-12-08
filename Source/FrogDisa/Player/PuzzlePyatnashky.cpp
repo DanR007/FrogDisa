@@ -32,16 +32,10 @@ APuzzlePyatnashky::APuzzlePyatnashky()
 	Text7 = CreateDefaultSubobject<UBillboardComponent>(TEXT("text7"));
 	Text8 = CreateDefaultSubobject<UBillboardComponent>(TEXT("text8"));
 	Text9 = CreateDefaultSubobject<UBillboardComponent>(TEXT("text9"));
-	//Mesh1->OnClicked.AddDynamic(this, &APuzzlePyatnashky::Check);
+
 	field_meshes = { {Mesh2,Mesh4,Mesh3},{Mesh1,Mesh6, Mesh8},{Mesh7,Mesh5,Mesh9} };
 	field_meshes_true = { {Mesh1,Mesh2,Mesh3},{Mesh4,Mesh5, Mesh6},{Mesh7,Mesh8,Mesh9} };
 	field_text = { {Text2,Text4,Text3},{Text1,Text6, Text8},{Text7,Text5,Text9} };
-	//static ConstructorHelpers::FObjectFinder<UStaticMesh> mesh(TEXT("StaticMesh'/Game/Weapon_Pack/Mesh/Weapons/Weapons_Kit/SM_Axe.SM_Axe'"));
-
-	//ConstructorHelpers::FObjectFinder<UTexture2D> _1(TEXT("Texture2D'/Game/Images/1.1'"));
-
-		//map_images["1"] = _1.Object;
-
 
 	for (int i = 0; i < 3; i++)
 	{
@@ -50,16 +44,10 @@ APuzzlePyatnashky::APuzzlePyatnashky()
 			field_meshes[i][j]->SetupAttachment(RootComponent);
 			field_text[i][j]->SetupAttachment(field_meshes[i][j]);
 			field_text[i][j]->SetRelativeLocation(FVector::ZeroVector + FVector(10, 0, 0));
-			//field_text[i][j]->SetSprite(UTexture2D::);
-			//field_text[i][j]->HorizontalAlignment = EHorizTextAligment::EHTA_Center;
-			//field_text[i][j]->VerticalAlignment = EVerticalTextAligment::EVRTA_TextCenter;
-			//field_text[i][j]->SetTextMaterial();
 		}
 	}
 
-	PrimaryActorTick.bCanEverTick = true;
-
-	//field = { {Mesh1,Mesh2,Mesh3},{Mesh4,Mesh5,Mesh6} ,{Mesh7,Mesh8,Mesh9} };
+	PrimaryActorTick.bCanEverTick = false;
 }
 
 // Called when the game starts or when spawned
@@ -127,19 +115,13 @@ bool APuzzlePyatnashky::Check(UStaticMeshComponent* Mesh)
 					{
 						if (field_meshes[k + moveY[j]][i + moveX[j]] == Mesh9 && flag)
 						{
-							//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, FString::FromInt(field_numbers[k + moveY[j]][i + moveX[j]]));
-							GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, TEXT("daaaaaaaaaaaa"));
 							FVector first_Pos = Mesh9->GetComponentLocation();
 							Mesh9->SetWorldLocation(Mesh->GetComponentLocation(),false, nullptr, ETeleportType::TeleportPhysics);
 							Mesh->SetWorldLocation(first_Pos);
-							//UStaticMeshComponent* MOld = field_meshes[k][i];
-							//int aOld = field_numbers[k][i];
-							//std::swap(field_numbers[k + moveY[j]][i + moveX[j]], );
+
 							field_meshes[k][i] = Mesh9;
 							field_meshes[k + moveY[j]][i + moveX[j]] = Mesh;
 							flag = false;
-							//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, FString::FromInt(field_numbers[k + moveY[j]][i + moveX[j]]));
-							//std::swap(field_meshes[k + moveY[j]][i + moveX[j]], field_meshes[k][i]);
 						}
 					}
 				}

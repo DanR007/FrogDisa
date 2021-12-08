@@ -3,15 +3,15 @@
 
 #include "ThrowProjectile.h"
 #include "Kismet/KismetMathLibrary.h"
-#include "GameFramework/Actor.h"
+
 #include "Movement.h"
 #include "FrogDisa/DropItAfterShot.h"
-#include "FrogDisa/BreakingObject.h"
+
 #include "UObject/ConstructorHelpers.h"
 // Sets default values
 AThrowProjectile::AThrowProjectile()
 {
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 
 	ProjectileMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ProjectileMesh"));
 
@@ -159,18 +159,15 @@ void AThrowProjectile::OnOverlap_Implementation(AActor* OverlappedActor, AActor*
 {
 	if (OtherActor)
 	{
-		bool cast = Cast<ADropItAfterShot>(OtherActor) == nullptr && Cast<ABreakingObject>(OtherActor) == nullptr;
+		bool cast = Cast<ADropItAfterShot>(OtherActor) == nullptr;
 
-		if (Cast<ADropItAfterShot>(OtherActor))
+		if (cast)
 		{
-			if (cast && Cast<ADropItAfterShot>(OtherActor)->isABreakableMesh() == false)
-			{
-				AThrowProjectile::ReturnToCharacter();
-			}
+			AThrowProjectile::ReturnToCharacter();
 		}
 		else
 		{
-			if (cast)
+			if (Cast<ADropItAfterShot>(OtherActor)->isABreakableMesh() == false)
 			{
 				AThrowProjectile::ReturnToCharacter();
 			}

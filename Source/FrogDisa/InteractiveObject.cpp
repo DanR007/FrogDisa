@@ -2,13 +2,12 @@
 
 
 #include "InteractiveObject.h"
-#include "InteractiveObjectComponent.h"
-#include "UObject/ConstructorHelpers.h"
+
 // Sets default values
 AInteractiveObject::AInteractiveObject()
 {
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MainMesh"));
-	Interactive = CreateDefaultSubobject<UInteractiveObjectComponent>(TEXT("Interactive"));
+
 	Mesh->SetSimulatePhysics(true);
 	Mesh->SetCollisionResponseToChannel(ECollisionChannel::ECC_GameTraceChannel1, ECollisionResponse::ECR_Ignore);
 

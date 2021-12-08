@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "InteractiveObjectComponent.h"
 #include "PhysicsEngine/PhysicsConstraintComponent.h"
 #include "InteractiveObject.generated.h"
 
@@ -31,6 +30,4 @@ public:
 	UPROPERTY(EditAnywhere)
 		UStaticMeshComponent* Mesh;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Mesh")
-		UInteractiveObjectComponent* Interactive;
 };

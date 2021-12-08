@@ -5,9 +5,10 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "GameFramework/Pawn.h"
+
 #include "Components/SphereComponent.h"
 #include "Components/CapsuleComponent.h"
-#include "GameFramework/MovementComponent.h"
+
 #include "ThrowProjectile.generated.h"
 
 UCLASS()

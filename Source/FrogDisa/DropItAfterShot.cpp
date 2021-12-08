@@ -7,7 +7,7 @@
 ADropItAfterShot::ADropItAfterShot()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 	ConstructorHelpers::FClassFinder<AThrowProjectile> projectile(TEXT("Class'/Script/FrogDisa.ThrowProjectile'"));
 	MeshConstruction = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MeshConstruction"));
 	BreakableMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("BreakableMesh"));
@@ -21,9 +21,7 @@ ADropItAfterShot::ADropItAfterShot()
 
 	CableMesh1->bAttachStart = true;
 	CableMesh1->bAttachEnd = true;
-	//CableMesh1->SetWorldLocation(BreakableMesh->GetComponentLocation());
-	//CableMesh1->SetWorldLocation(BreakableMesh->GetComponentLocation());
-	//CableMesh1->AttachEndTo.OverrideComponent = BreakableMesh;
+
 	CableMesh1->EndLocation = BreakableMesh->GetComponentLocation();
 	CableMesh2->bAttachStart = true;
 	CableMesh2->bAttachEnd = true;

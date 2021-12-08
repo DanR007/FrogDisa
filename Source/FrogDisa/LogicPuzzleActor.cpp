@@ -11,7 +11,7 @@ std::vector<bool> boolComponents;
 ALogicPuzzleActor::ALogicPuzzleActor()
 {
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 
 	BaseComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Base"));
 	RootComponent = BaseComponent;

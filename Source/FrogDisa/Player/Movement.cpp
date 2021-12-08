@@ -3,7 +3,6 @@
 #include "Movement.h"
 #include "PuzzlePyatnashky.h"
 
-#include "Components/TimelineComponent.h"
 #include "Components/InputComponent.h"
 #include "Components/CapsuleComponent.h"
 
@@ -11,19 +10,13 @@
 #include "GameFramework/Controller.h"
 #include "GameFramework/Actor.h"
 #include "GameFramework/Pawn.h"
-#include "GameFramework/HUD.h"
 #include "GameFramework/PlayerController.h"
-#include "GameFramework/Character.h"
 
 #include "FrogDisa/TestPuzzleActor.h"
 #include "FrogDisa/InteractiveObject.h"
 #include "FrogDisa/PuzzleInteractiveObject.h"
-#include "FrogDisa/Collectibles.h"
-#include "FrogDisa/GrapplingObjectComponent.h"
-#include "FrogDisa/GrapplingObject.h"
 #include "FrogDisa/MyHUD.h"
 #include "FrogDisa/LogicPuzzleActor.h"
-#include "FrogDisa/MovableObject.h"
 
 #include "Animation/AnimInstance.h"
 #include "Kismet/GameplayStatics.h"
@@ -34,7 +27,7 @@
 #include "Blueprint/UserWidget.h"
 #include "DrawDebugHelpers.h"
 #include "Styling/SlateWidgetStyleContainerInterface.h"
-#include "UObject/ConstructorHelpers.h"
+
 // Sets default values
 AMovement::AMovement()
 {

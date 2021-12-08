@@ -1,10 +1,10 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Collectibles.h"
+#include "InteractiveComponent.h"
 
 // Sets default values for this component's properties
-UCollectibles::UCollectibles()
+UInteractiveComponent::UInteractiveComponent()
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
@@ -15,7 +15,7 @@ UCollectibles::UCollectibles()
 
 
 // Called when the game starts
-void UCollectibles::BeginPlay()
+void UInteractiveComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
@@ -25,15 +25,10 @@ void UCollectibles::BeginPlay()
 
 
 // Called every frame
-void UCollectibles::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+void UInteractiveComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	// ...
-}
-
-void UCollectibles::DestroyCall()
-{
-	GetOwner()->Destroy();
 }
 

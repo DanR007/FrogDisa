@@ -5,9 +5,9 @@
 #include "EProjectiles.h"
 #include "SteamBug.h"
 #include "ShootComponent.h"
+#include "InteractiveComponent.h"
 
 #include "FrogDisa/GrapplingObject.h"
-#include "FrogDisa/Collectibles.h"
 #include "FrogDisa/CollectiblesObject.h"
 #include "FrogDisa/MovableObject.h"
 #include "FrogDisa/InteractiveObject.h"

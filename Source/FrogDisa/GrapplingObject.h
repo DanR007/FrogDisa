@@ -5,7 +5,6 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Components/SphereComponent.h"
-#include "GrapplingObjectComponent.h"
 #include "Blueprint/UserWidget.h"
 #include "Components/BillboardComponent.h"
 #include "GrapplingObject.generated.h"
@@ -23,7 +22,6 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-	UGrapplingObjectComponent* grapplingComponent;
 	//UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 		UBillboardComponent* GrapplingPointWidget;
 public:	

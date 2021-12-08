@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "Collectibles.h"
 #include "Components/SphereComponent.h"
 #include "Components/BillboardComponent.h"
 #include "CollectiblesObject.generated.h"
@@ -18,7 +17,7 @@ public:
 	// Sets default values for this actor's properties
 	ACollectiblesObject();
 	void SetActiveObject(bool inVision);
-	UCollectibles* CollectiblesComponent;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
