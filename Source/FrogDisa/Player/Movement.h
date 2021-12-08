@@ -102,6 +102,9 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Shoot")
 		UShootComponent* ShootComponent;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Interactive")
+		UInteractiveComponent* InteractiveComponent;
+
 	UFUNCTION(BlueprintCallable)
 		bool GetAimingState();
 	UFUNCTION(BlueprintCallable)
@@ -151,7 +154,6 @@ private:
 	EProjectiles g_Projectile_Type;
 
 	FCollisionQueryParams CollisionParams;
-	AActor* InteractiveActor;
 	UStaticMeshComponent* InteractiveObject;
 	AGrapplingObject* ActorGrapplingPoint;
 	ACollectiblesObject* ActorCollectibleObject;

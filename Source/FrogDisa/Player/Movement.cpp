@@ -1,5 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #include "Movement.h"
 #include "PuzzlePyatnashky.h"
 
@@ -31,6 +29,10 @@
 // Sets default values
 AMovement::AMovement()
 {
+
+	ConstructorHelpers::FClassFinder<ASteamBug> steam_bug_bp(TEXT("/Game/Blueprint/BP_SteamBug"));
+	ConstructorHelpers::FObjectFinder<USkeletalMesh> mesh(TEXT("SkeletalMesh'/Game/Meshes/Animation/jaba.jaba'"));
+
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
@@ -38,16 +40,11 @@ AMovement::AMovement()
 	bUseControllerRotationYaw = false;
 	bUseControllerRotationRoll = false;
 
-	GetCapsuleComponent()->SetCapsuleRadius(20.f);
 	cameraComponent = CreateDefaultSubobject<USpringArmComponent>(TEXT("camera"));
-	cameraComponent->bUsePawnControlRotation = true;
-	cameraComponent->TargetArmLength = 400.f;
-	//cameraComponent->SocketOffset/*.Y = 110*/ = FVector(0, 110, 80);
-	cameraComponent->SetupAttachment(RootComponent);
-	cameraOffsetYPlus = FVector(0.f, 80.f, 0.f);
-	cameraOffsetYMinus = FVector(0.f, -110.f, 0.f);
-
 	_Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("_Camera"));
+	ShootComponent = CreateDefaultSubobject<UShootComponent>(TEXT("Shoot"));
+	InteractiveComponent = CreateDefaultSubobject<UInteractiveComponent>(TEXT("InteractiveComponent"));
+
 	_Camera->SetupAttachment(cameraComponent, USpringArmComponent::SocketName);;
 	_Camera->bUsePawnControlRotation = false;
 	//_Camera->SetRelativeLocation(FVector(0.f, 110.f, 80.f));
@@ -57,15 +54,18 @@ AMovement::AMovement()
 	GetCharacterMovement()->JumpZVelocity = 600.f;
 	GetCharacterMovement()->AirControl = 0.2f;
 
-	ConstructorHelpers::FObjectFinder<USkeletalMesh> mesh(TEXT("SkeletalMesh'/Game/Meshes/Animation/jaba.jaba'"));
-	GetMesh()->SetSkeletalMesh(mesh.Object);
 	FVector MeshPosition = FVector(0.f, 0.f, -80.f);
 	FRotator MeshRotation = FRotator(0.f, 270.f, 0.f);
+	GetMesh()->SetSkeletalMesh(mesh.Object);
 	GetMesh()->SetRelativeLocationAndRotation(MeshPosition, MeshRotation);
 
-	ShootComponent = CreateDefaultSubobject<UShootComponent>(TEXT("Shoot"));
+	GetCapsuleComponent()->SetCapsuleRadius(20.f);
 
-	ConstructorHelpers::FClassFinder<ASteamBug> steam_bug_bp(TEXT("/Game/Blueprint/BP_SteamBug"));
+	cameraComponent->bUsePawnControlRotation = true;
+	cameraComponent->TargetArmLength = 400.f;
+	cameraComponent->SetupAttachment(RootComponent);
+	cameraOffsetYPlus = FVector(0.f, 80.f, 0.f);
+	cameraOffsetYMinus = FVector(0.f, -110.f, 0.f);
 
 	SteamBug_ClassBP = steam_bug_bp.Class;
 
@@ -89,25 +89,29 @@ void AMovement::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 	check(PlayerInputComponent);
-	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
-	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
-	PlayerInputComponent->BindAction("Attack", IE_Pressed, this, &AMovement::Attack);
-	PlayerInputComponent->BindAction("Attack", IE_Released, this, &AMovement::StopShoot);
+
 	PlayerInputComponent->BindAxis("MoveForward", this, &AMovement::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &AMovement::MoveRight);
-
 	PlayerInputComponent->BindAxis("Turn", this, &AMovement::AddControllerYawInput);
 	PlayerInputComponent->BindAxis("LookUp", this, &AMovement::AddControllerPitchInput);
-
-	PlayerInputComponent->BindAction("TakeInteractiveObject", IE_Pressed, this, &AMovement::InteractionWithObject);
-	PlayerInputComponent->BindAction("GrapplingHook", IE_Pressed, this, &AMovement::UseGrapplingHook);
-	PlayerInputComponent->BindAction("InteractionWithSomeObj", IE_Pressed, this, &AMovement::TakeCollectibles);
-
 	PlayerInputComponent->BindAxis("Aim", this, &AMovement::Aim);
 	PlayerInputComponent->BindAxis("Run", this, &AMovement::Run);
 
+	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
+	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
+
+	PlayerInputComponent->BindAction("Attack", IE_Pressed, this, &AMovement::Attack);
+
+	PlayerInputComponent->BindAction("TakeInteractiveObject", IE_Pressed, this, &AMovement::InteractionWithObject);
+
+	PlayerInputComponent->BindAction("GrapplingHook", IE_Pressed, this, &AMovement::UseGrapplingHook);
+
+	PlayerInputComponent->BindAction("InteractionWithSomeObj", IE_Pressed, this, &AMovement::TakeCollectibles);
+
 	PlayerInputComponent->BindAction("PauseMenu", IE_Pressed, this, &AMovement::PauseMenu);
+
 	PlayerInputComponent->BindAction("SwitchProjectileType", IE_Pressed, this, &AMovement::SwitchProjectile);
+
 	PlayerInputComponent->BindAction("SwitchCharacter", IE_Pressed, this, &AMovement::ChangeCharacter);
 }
 
@@ -300,12 +304,11 @@ void AMovement::Attack()
 	}
 	else
 	{
-		isBearObject = false;
-		InteractiveActor->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
-		InteractiveObject->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
-		InteractiveObject->SetSimulatePhysics(true);
-		InteractiveObject->AddImpulse(_Camera->GetForwardVector() * 1500.f * InteractiveObject->GetMass());
-		InteractiveObject = nullptr;
+		if (InteractiveComponent->IsZeroOverlappingActors())
+		{
+			isBearObject = false;
+			InteractiveComponent->ThrowInteractiveObject(InteractiveObject);
+		}
 	}
 }
 
@@ -376,70 +379,17 @@ void AMovement::LerpToGrapplingPoint(FVector StartLocation, FVector EndLocation,
 }
 void AMovement::InteractionWithObject()
 {
-
-	FHitResult hitPoint;
-
-	TArray<AActor*> overlappingActors;
-
-	if (InteractiveObject)
-		InteractiveObject->GetOverlappingActors(overlappingActors);
-
-
-
-	bool isZeroOverlappingActors = overlappingActors.Num() == 0;
-
-
-	if (overlappingActors.Num() == 1)
-		for (AActor* actor : overlappingActors)
-		{
-			if (Cast<ALogicPuzzleActor>(actor))
-			{
-				isZeroOverlappingActors = true;
-			}
-		}
-
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::FromInt(overlappingActors.Num()));
-
 	if (isBearObject == true)
 	{
-		if (isZeroOverlappingActors)
+		if (InteractiveComponent->OverlapOnlyInteractivePuzzle())
 		{
 			isBearObject = false;
-
-			InteractiveActor->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
-			InteractiveObject->SetSimulatePhysics(true);
-			InteractiveObject->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
-			InteractiveObject = nullptr;
-
-			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Drop this"));
-		}
-		else
-		{
-			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, overlappingActors[0]->GetName());
+			InteractiveComponent->DropInteractiveObject(InteractiveObject);
 		}
 	}
 	else
 	{
-		FVector End = GetActorForwardVector() * 500.f + GetActorLocation();
-		DrawDebugLine(GetWorld(), GetActorLocation(), End, FColor::Blue, false, 10.f, 5);
-		if (GetWorld()->LineTraceSingleByChannel(hitPoint, GetActorLocation(), End, ECC_Visibility, CollisionParams) == true)
-		{
-			if (hitPoint.Actor->IsA(AInteractiveObject::StaticClass()))
-			{
-				isBearObject = true;
-				GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Take this"));
-
-				InteractiveActor = hitPoint.Actor.Get();
-				InteractiveActor->SetActorLocation(GetActorLocation() + GetActorForwardVector() * 90.f + GetActorUpVector() * 10.f);
-				InteractiveActor->SetActorRotation(GetActorRotation());
-				InteractiveObject = InteractiveActor->FindComponentByClass<UStaticMeshComponent>();
-				InteractiveObject->SetSimulatePhysics(false);
-				InteractiveObject->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
-				InteractiveActor->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform);
-
-			}
-		}
-
+		isBearObject = InteractiveComponent->TakeInteractiveObject(InteractiveObject);
 	}
 }
 

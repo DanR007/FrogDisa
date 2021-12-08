@@ -4,6 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+
+#include "FrogDisa/InteractiveObject.h"
 #include "InteractiveComponent.generated.h"
 
 
@@ -20,9 +22,24 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
-public:	
+	AActor* Owner;
+	AActor* InteractiveActor;
+
+	UStaticMeshComponent* InteractiveMesh;
+
+	FCollisionQueryParams CollisionParams;
+
+	
+	
+public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-		
+	bool TakeInteractiveObject(UStaticMeshComponent* Player_InteractiveMesh);
+	bool IsZeroOverlappingActors();
+	bool OverlapOnlyInteractivePuzzle();
+
+	void DropInteractiveObject(UStaticMeshComponent* Player_InteractiveMesh);
+	void ThrowInteractiveObject(UStaticMeshComponent* Player_InteractiveMesh);
+
 };
