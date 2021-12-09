@@ -3,13 +3,13 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
+#include "FrogDisa/PuzzleActor.h"
 #include "Components/BillboardComponent.h"
 #include <vector>
 #include "PuzzlePyatnashky.generated.h"
 
 UCLASS()
-class FROGDISA_API APuzzlePyatnashky : public AActor
+class FROGDISA_API APuzzlePyatnashky : public APuzzleActor
 {
 	GENERATED_BODY()
 	
@@ -64,8 +64,7 @@ protected:
 		UBillboardComponent* Text9;
 
 public:
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
-		void Use();
+
 	UFUNCTION(BlueprintCallable)
 	void EditField(TArray<int> arr1, TArray<int> arr2, TArray<int> arr3);
 	UFUNCTION(BlueprintCallable)

@@ -3,20 +3,26 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "PuzzleActor.h"
-#include "TestPuzzleActor.generated.h"
+#include "GameFramework/Actor.h"
+#include "PuzzleActor.generated.h"
 
 UCLASS()
-class FROGDISA_API ATestPuzzleActor : public APuzzleActor
+class FROGDISA_API APuzzleActor : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	ATestPuzzleActor();
-	
+	APuzzleActor();
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+		void Use();
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
+public:	
+	// Called every frame
+	virtual void Tick(float DeltaTime) override;
 
 };

@@ -64,11 +64,6 @@ void APuzzlePyatnashky::Tick(float DeltaTime)
 
 }
 
-void APuzzlePyatnashky::Use_Implementation()
-{
-
-}
-
 void APuzzlePyatnashky::EditField(TArray<int32> arr1, TArray<int32> arr2, TArray<int32> arr3)
 {
 	for (int i = 0; i < 3; i++)

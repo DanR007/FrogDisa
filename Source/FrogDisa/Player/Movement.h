@@ -65,6 +65,14 @@ protected:
 
 	void TakeCollectibles();
 
+	void ActionWithPuzzleActor();
+
+	bool CanMakeAction();
+
+	void CheckGrapplingPoint();
+
+	void CheckCollectibleActor();
+
 	virtual void Tick(float DeltaTime) override;
 
 	virtual void AddControllerYawInput(float Val);
@@ -133,7 +141,7 @@ private:
 	bool isRunning;
 	bool isGrappling;
 	bool circleMenuIsOpen;
-	bool craftMenuOpen;
+	bool pauseMenuOpen;
 	bool isWaitingWrench;
 	bool isHaveSteamBug;
 

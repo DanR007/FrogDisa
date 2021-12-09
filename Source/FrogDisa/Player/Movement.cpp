@@ -74,7 +74,7 @@ AMovement::AMovement()
 	isBearObject = false;
 	isAiming = false;
 	isRunning = false;
-	craftMenuOpen = false;
+	pauseMenuOpen = false;
 	isClimbing = false;
 	isWaitingWrench = false;
 	
@@ -106,7 +106,8 @@ void AMovement::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 	PlayerInputComponent->BindAction("GrapplingHook", IE_Pressed, this, &AMovement::UseGrapplingHook);
 
-	PlayerInputComponent->BindAction("InteractionWithSomeObj", IE_Pressed, this, &AMovement::TakeCollectibles);
+	PlayerInputComponent->BindAction("ActionWithSomeObj", IE_Pressed, this, &AMovement::TakeCollectibles);
+	PlayerInputComponent->BindAction("ActionWithSomeObj", IE_Pressed, this, &AMovement::ActionWithPuzzleActor);
 
 	PlayerInputComponent->BindAction("PauseMenu", IE_Pressed, this, &AMovement::PauseMenu);
 
@@ -127,7 +128,7 @@ void AMovement::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 
-	if (isBearObject == false)
+	if (CanMakeAction())
 	{
 		ForwardTrace();
 		HeightTrace();
@@ -428,7 +429,7 @@ void AMovement::StopJumping()
 
 void AMovement::Aim(float Value)
 {
-	if (Value != 0 && craftMenuOpen == false)
+	if (Value != 0)
 	{
 		isAiming = true;
 		GetCharacterMovement()->bOrientRotationToMovement = false;
@@ -478,7 +479,7 @@ void AMovement::TakeCollectibles()
 {
 	FHitResult hitPoint;
 
-	if (isBearObject == false)
+	if (CanMakeAction())
 	{
 		FVector Start = _Camera -> GetComponentLocation();
 		FVector End = _Camera -> GetForwardVector() * 1000.f + Start;
@@ -490,55 +491,37 @@ void AMovement::TakeCollectibles()
 			ActorCollectibleObject->Destroy();
 			ActorCollectibleObject = nullptr;
 		}
-		else
-		{
-			if(GetWorld()->LineTraceSingleByChannel(hitPoint, GetActorLocation(), End, ECC_Visibility, CollisionParams) == true)
-			{
-				if (Cast<ATestPuzzleActor>(hitPoint.Actor.Get()))
-				{
-					Cast<ATestPuzzleActor>(hitPoint.Actor.Get())->Use();
-				}
-				else
-				{
-					if (Cast<APuzzlePyatnashky>(hitPoint.Actor.Get()))
-					{
-						Cast<APuzzlePyatnashky>(hitPoint.Actor.Get())->Use();
-					}
-				}
-			}
-		}
-		
 	}
 }
 
-void AMovement::ReturnWrench()
+void AMovement::ActionWithPuzzleActor()
 {
-	isWaitingWrench = true;
-	ShootComponent->ReturnProjectile();
+	if (CanMakeAction())
+	{
+		FHitResult hitPoint;
+		FVector Start = _Camera->GetComponentLocation();
+		FVector End = _Camera->GetForwardVector() * 1000.f + Start;
+		if (GetWorld()->LineTraceSingleByChannel(hitPoint, GetActorLocation(), End, ECC_Visibility, CollisionParams) == true)
+		{
+			if (Cast<APuzzleActor>(hitPoint.Actor.Get()))
+			{
+				Cast<APuzzleActor>(hitPoint.Actor.Get())->Use();
+			}
+		}
+	}
 }
+
 
 void AMovement::PauseMenu()
 {
-	if (craftMenuOpen)
-	{
-		craftMenuOpen = false;
-		GetWorld()->GetFirstPlayerController()->SetShowMouseCursor(false);
-		GetWorld()->GetFirstPlayerController()->SetPause(false);
-
-	}
-	else
-	{
-		craftMenuOpen = true;
-		GetWorld()->GetFirstPlayerController()->SetShowMouseCursor(true);
-
-		GetWorld()->GetFirstPlayerController()->SetPause(true);
-		
-	}
+	pauseMenuOpen = true;
+	GetWorld()->GetFirstPlayerController()->SetShowMouseCursor(true);
+	GetWorld()->GetFirstPlayerController()->SetPause(true);
 }
 
 bool AMovement::GetPauseState()
 {
-	return craftMenuOpen;
+	return pauseMenuOpen;
 }
 
 bool AMovement::GetWaitingState()
@@ -549,7 +532,7 @@ bool AMovement::GetWaitingState()
 void AMovement::SetUnPause()
 {
 	GetWorld()->GetFirstPlayerController()->SetShowMouseCursor(false);
-	craftMenuOpen = false;
+	pauseMenuOpen = false;
 }
 
 void AMovement::SetUnwaitingState()
@@ -601,4 +584,9 @@ void AMovement::HeightTrace()
 void AMovement::SwitchProjectile()
 {
 	g_Projectile_Type == EP_Stone ? g_Projectile_Type = EP_Wrench : g_Projectile_Type = EP_Stone;
+}
+
+bool AMovement::CanMakeAction()
+{
+	return !isBearObject;
 }
