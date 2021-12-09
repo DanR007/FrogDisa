@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "FrogDisa/PuzzleActor.h"
+#include "Components/TextRenderComponent.h"
 #include "Components/BillboardComponent.h"
 #include <vector>
 #include "PuzzlePyatnashky.generated.h"
@@ -17,8 +18,8 @@ public:
 	// Sets default values for this actor's properties
 	APuzzlePyatnashky();
 	std::vector<std::vector<UStaticMeshComponent*>> field_meshes;
-	std::vector<std::vector<UStaticMeshComponent*>> field_meshes_true;
-	std::vector<std::vector<UBillboardComponent*>> field_text;
+	const std::vector<std::vector<UStaticMeshComponent*>> field_meshes_true = { {Mesh1,Mesh2,Mesh3},{Mesh4,Mesh5, Mesh6},{Mesh7,Mesh8,Mesh9} };
+	std::vector<std::vector<UTextRenderComponent*>> field_text;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -45,30 +46,30 @@ protected:
 
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-		UBillboardComponent* Text1;
+		UTextRenderComponent* Text1;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-		UBillboardComponent* Text2;
+		UTextRenderComponent* Text2;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-		UBillboardComponent* Text3;
+		UTextRenderComponent* Text3;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-		UBillboardComponent* Text4;
+		UTextRenderComponent* Text4;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-		UBillboardComponent* Text5;
+		UTextRenderComponent* Text5;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-		UBillboardComponent* Text6;
+		UTextRenderComponent* Text6;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-		UBillboardComponent* Text7;
+		UTextRenderComponent* Text7;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-		UBillboardComponent* Text8;
+		UTextRenderComponent* Text8;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-		UBillboardComponent* Text9;
+		UTextRenderComponent* Text9;
 
 public:
 
 	UFUNCTION(BlueprintCallable)
-	void EditField(TArray<int> arr1, TArray<int> arr2, TArray<int> arr3);
+		void EditField(TArray<UStaticMeshComponent*> arrMesh, TArray<UTextRenderComponent*> arrText, TArray<FVector> arrVector, TArray<FString> arrTextName);
 	UFUNCTION(BlueprintCallable)
-	bool Check(UStaticMeshComponent* Mesh);
+		bool Check(UStaticMeshComponent* Mesh);
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
