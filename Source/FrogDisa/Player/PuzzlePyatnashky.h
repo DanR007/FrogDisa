@@ -17,9 +17,8 @@ class FROGDISA_API APuzzlePyatnashky : public APuzzleActor
 public:
 	// Sets default values for this actor's properties
 	APuzzlePyatnashky();
-	std::vector<std::vector<UStaticMeshComponent*>> field_meshes;
-	const std::vector<std::vector<UStaticMeshComponent*>> field_meshes_true = { {Mesh1,Mesh2,Mesh3},{Mesh4,Mesh5, Mesh6},{Mesh7,Mesh8,Mesh9} };
-	std::vector<std::vector<UTextRenderComponent*>> field_text;
+	//std::vector<std::vector<UStaticMeshComponent*>> field_meshes;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -45,31 +44,33 @@ protected:
 		UStaticMeshComponent* Mesh9;
 
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		UTextRenderComponent* Text1;
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		UTextRenderComponent* Text2;
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		UTextRenderComponent* Text3;
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		UTextRenderComponent* Text4;
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		UTextRenderComponent* Text5;
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		UTextRenderComponent* Text6;
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		UTextRenderComponent* Text7;
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		UTextRenderComponent* Text8;
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		UTextRenderComponent* Text9;
 
 public:
 
 	UFUNCTION(BlueprintCallable)
-		void EditField(TArray<UStaticMeshComponent*> arrMesh, TArray<UTextRenderComponent*> arrText, TArray<FVector> arrVector, TArray<FString> arrTextName);
+		void EditField(TArray<UStaticMesh*> arrMesh, TArray<FVector> arrVector, TArray<FString> arrTextName);
 	UFUNCTION(BlueprintCallable)
 		bool Check(UStaticMeshComponent* Mesh);
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+		void OnClick(UStaticMeshComponent* Mesh);
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

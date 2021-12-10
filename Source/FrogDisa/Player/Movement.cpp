@@ -572,7 +572,7 @@ void AMovement::HeightTrace()
 		{
 			if (!isClimbing && GetCharacterMovement()->MovementMode == EMovementMode::MOVE_Falling)
 			{
-				GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Drop this"));
+				
 				isClimbing = true;
 				GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Flying);
 				GetCharacterMovement()->StopMovementImmediately();
