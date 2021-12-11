@@ -590,3 +590,10 @@ bool AMovement::CanMakeAction()
 {
 	return !isBearObject;
 }
+
+
+void AMovement::DetachInteractiveObject()
+{
+	isBearObject = false;
+	InteractiveComponent->DetachInteractiveFromParent(InteractiveObject);
+}

@@ -42,4 +42,5 @@ public:
 	void DropInteractiveObject(UStaticMeshComponent* Player_InteractiveMesh);
 	void ThrowInteractiveObject(UStaticMeshComponent* Player_InteractiveMesh);
 
+	void DetachInteractiveFromParent(UStaticMeshComponent* Player_InteractiveMesh);
 };

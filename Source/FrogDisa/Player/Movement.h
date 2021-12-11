@@ -95,6 +95,8 @@ protected:
 		void SetNewPosses();
 public:
 
+	void DetachInteractiveObject();
+
 	UFUNCTION(BlueprintCallable)
 		bool GetWaitingState();
 

@@ -8,7 +8,7 @@
 //std::vector <std::vector<int>> field_numbers;
 std::vector<std::vector<UStaticMeshComponent*>> field_meshes;
 std::vector<std::vector<UTextRenderComponent*>> field_text;
-const std::vector<std::vector<FString>> field_string_true = { {"1","2","3"}, {"4","5","6"},{"7","8","0"} };
+const std::vector<std::vector<FString>> field_string_true = { {"1","2","3"}, {"4","5","6"},{"7","8"," "} };
 std::vector<std::vector<FString>> field_string;
 // Sets default values
 APuzzlePyatnashky::APuzzlePyatnashky()
@@ -76,21 +76,17 @@ void APuzzlePyatnashky::EditField(TArray<UStaticMesh*> arrMesh, TArray<FVector> 
 		for (int j = 0; j < 3; j++)
 		{
 			field_meshes[i][j]->SetStaticMesh(arrMesh[i * 3 + j]);
-			
-			field_string[i][j] = arrTextName[i * 3 + j];
-			
-			//field_meshes[i][j]->SetupAttachment(RootComponent);
 			field_meshes[i][j]->SetRelativeScale3D(FVector(0.5, 0.3, 0.3));
 			field_meshes[i][j]->SetRelativeLocation(arrVector[i * 3 + j]);
+
+			field_string[i][j] = arrTextName[i * 3 + j];
+
 			field_text[i][j]->SetupAttachment(field_meshes[i][j]);
-			//field_text[i][j]->SetupAttachment(field_meshes[i][j]);
 			field_text[i][j]->SetRelativeLocation(FVector::ZeroVector + FVector(76, 0, 0) + arrVector[i * 3 + j]);
 			field_text[i][j]->SetText(FText::FromString(arrTextName[i * 3 + j]));
 			field_text[i][j]->HorizontalAlignment = EHorizTextAligment::EHTA_Center;
 			field_text[i][j]->VerticalAlignment = EVerticalTextAligment::EVRTA_TextCenter;
-			//field_text[i][j]->Text = FText::FromString("FFFF");
-			//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, field_text[i][j]-> GetAttachmentRoot() == field_meshes[i][j]? TEXT("true") : TEXT("no"));
-			//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, field_text[i][j]->Text.ToString());
+
 		}
 	}
 }
@@ -111,21 +107,19 @@ bool APuzzlePyatnashky::Check(UStaticMeshComponent* Mesh)
 					if (nextPosY < 3 &&
 						nextPosY >= 0 && nextPosX < 3 && nextPosX >= 0)
 					{
-						if (field_string[nextPosY][nextPosX] == "0")
+						if (field_string[nextPosY][nextPosX] == " ")
 						{
 							UStaticMesh* mesh = field_meshes[nextPosY][nextPosX]->GetStaticMesh();
 							UMaterialInterface* material  = field_meshes[nextPosY][nextPosX]->GetMaterial(0);
-							//FVector first_Pos = Mesh9->GetComponentLocation();
-							//Mesh9->SetWorldLocation(Mesh->GetComponentLocation(),false, nullptr, ETeleportType::TeleportPhysics);
-							//Mesh->SetWorldLocation(first_Pos);
-							
+
 							field_meshes[nextPosY][nextPosX]->SetMaterial(0, Mesh->GetMaterial(0));
 							Mesh->SetMaterial(0, material);
-							//field_meshes[k + moveY[j]][i + moveX[j]] = Mesh;
+
 							std::swap(field_string[k][i], field_string[nextPosY][nextPosX]);
-							GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, field_string[nextPosY][nextPosX]);
+
 							field_text[k][i]->SetText(FText::FromString(field_string[k][i]));
 							field_text[nextPosY][nextPosX]->SetText(FText::FromString(field_string[nextPosY][nextPosX]));
+
 							return field_string == field_string_true;
 						}
 					}

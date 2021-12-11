@@ -67,18 +67,19 @@ void UInteractiveComponent::DropInteractiveObject(UStaticMeshComponent* Player_I
 	InteractiveMesh->SetSimulatePhysics(true);
 	InteractiveMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 	InteractiveMesh = nullptr;
+	InteractiveActor = nullptr;
 	Player_InteractiveMesh = InteractiveMesh;
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Drop this"));
 }
 
 void UInteractiveComponent::ThrowInteractiveObject(UStaticMeshComponent* Player_InteractiveMesh)
 {
-
 	InteractiveActor->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
 	InteractiveMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 	InteractiveMesh->SetSimulatePhysics(true);
 	InteractiveMesh->AddImpulse(Cast<AMovement>(Owner)->_Camera->GetForwardVector() * 1500.f * InteractiveMesh->GetMass());
 	InteractiveMesh = nullptr;
+	InteractiveActor = nullptr;
 	Player_InteractiveMesh = InteractiveMesh;
 }
 
@@ -105,4 +106,12 @@ bool UInteractiveComponent::OverlapOnlyInteractivePuzzle()
 	}
 
 	return overlapOnlyInteractivePuzzleOrNothing;
+}
+
+void UInteractiveComponent::DetachInteractiveFromParent(UStaticMeshComponent* Player_InteractiveMesh)
+{	
+	InteractiveActor->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
+	InteractiveMesh = nullptr;
+	InteractiveActor = nullptr;
+	Player_InteractiveMesh = nullptr;
 }
