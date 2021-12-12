@@ -1,5 +1,6 @@
 #include "Movement.h"
 #include "PuzzlePyatnashky.h"
+#include "SaveGameSystem.h"
 
 #include "Components/InputComponent.h"
 #include "Components/CapsuleComponent.h"
@@ -596,4 +597,33 @@ void AMovement::DetachInteractiveObject()
 {
 	isBearObject = false;
 	InteractiveComponent->DetachInteractiveFromParent(InteractiveObject);
+}
+
+bool AMovement::IsHaveASteamBug()
+{
+	return isHaveSteamBug;
+}
+
+bool AMovement::IsBearObject()
+{
+	return isBearObject;
+}
+
+
+int AMovement::GetCountStones()
+{
+	return stoneCount;
+}
+
+int AMovement::GetCountCollectibles()
+{
+	return Collectibles;
+}
+
+void AMovement::SetStartSettings(int countStone, int countCollectibles, bool isHaveBug, bool isBearObj)
+{
+	stoneCount = countStone;
+	Collectibles = countCollectibles;
+	isHaveSteamBug = isHaveBug;
+	isBearObject = isBearObj;
 }

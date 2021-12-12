@@ -6,6 +6,7 @@
 #include "SteamBug.h"
 #include "ShootComponent.h"
 #include "InteractiveComponent.h"
+#include "FrogDisaGameInstance.h"
 
 #include "FrogDisa/GrapplingObject.h"
 #include "FrogDisa/CollectiblesObject.h"
@@ -115,6 +116,11 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Interactive")
 		UInteractiveComponent* InteractiveComponent;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+		UFrogDisaGameInstance* game_Instance;
+	
+	UFUNCTION(BlueprintCallable)
+		void SetStartSettings(int countStone, int countCollectibles, bool isHaveBug, bool isBearObj);
 	UFUNCTION(BlueprintCallable)
 		bool GetAimingState();
 	UFUNCTION(BlueprintCallable)
@@ -126,6 +132,17 @@ public:
 		bool GetPauseState();
 	UFUNCTION(BlueprintCallable)
 		void SetUnPause();
+
+	UFUNCTION(BlueprintCallable)
+		bool IsHaveASteamBug();
+	UFUNCTION(BlueprintCallable)
+		bool IsBearObject();
+
+	UFUNCTION(BlueprintCallable)
+		int GetCountStones();
+
+	UFUNCTION(BlueprintCallable)
+		int GetCountCollectibles();
 private:
 	void ForwardTrace();
 	void HeightTrace();
@@ -137,6 +154,8 @@ private:
 	float CurveFloatValue;
 	float TimelineValue;
 	FTimerHandle GrapplingTimer;
+
+	
 
 	bool isBearObject;
 	bool isAiming;
