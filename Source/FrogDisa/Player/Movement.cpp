@@ -45,6 +45,7 @@ AMovement::AMovement()
 	_Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("_Camera"));
 	ShootComponent = CreateDefaultSubobject<UShootComponent>(TEXT("Shoot"));
 	InteractiveComponent = CreateDefaultSubobject<UInteractiveComponent>(TEXT("InteractiveComponent"));
+	UpdateGrapplingOrCollectibleActors = CreateDefaultSubobject<UUpdateBillboardComponent>(TEXT("SetActiveBillboardComponent"));
 
 	_Camera->SetupAttachment(cameraComponent, USpringArmComponent::SocketName);;
 	_Camera->bUsePawnControlRotation = false;
@@ -65,8 +66,7 @@ AMovement::AMovement()
 	cameraComponent->bUsePawnControlRotation = true;
 	cameraComponent->TargetArmLength = 400.f;
 	cameraComponent->SetupAttachment(RootComponent);
-	cameraOffsetYPlus = FVector(0.f, 80.f, 0.f);
-	cameraOffsetYMinus = FVector(0.f, -110.f, 0.f);
+
 
 	SteamBug_ClassBP = steam_bug_bp.Class;
 
@@ -128,79 +128,26 @@ void AMovement::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-
 	if (CanMakeAction())
 	{
 		ForwardTrace();
 		HeightTrace();
 
+		UpdateGrapplingOrCollectibleActors->CheckCollectibleActor();
+		UpdateGrapplingOrCollectibleActors->CheckGrapplingPoint(isGrappling, endLoc);
+		//GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Green, UpdateGrapplingOrCollectibleActors->grapplingObject->GetFullName());
 		FHitResult hitPoint;
-		FHitResult hitPoint2;
-		startLoc = GetActorLocation();
-		FVector Start = _Camera->GetComponentLocation();
-		FVector End = _Camera->GetForwardVector() * 3000.f + Start;
 
-		if (GetWorld()->LineTraceSingleByChannel(hitPoint, Start, End, ECC_Visibility,
-			CollisionParams))
-		{
-			if (GetDistanceTo(hitPoint.Actor.Get()) > MinimumGrapplingDistance
-				&& GetDistanceTo(hitPoint.Actor.Get()) < MaximumGrapplingDistance
-				&& hitPoint.Actor->IsA(AGrapplingObject::StaticClass()))
-			{
-				ActorGrapplingPoint = Cast<AGrapplingObject>(hitPoint.Actor.Get());
-				endLoc = hitPoint.Location;
-				ActorGrapplingPoint->SetActiveObject(true);
-			}
-			else
-			{
-				if (GetDistanceTo(hitPoint.Actor.Get()) < MaximumCollectibleObject && hitPoint.Actor->IsA(ACollectiblesObject::StaticClass()))
-				{
-					ActorCollectibleObject = Cast<ACollectiblesObject>(hitPoint.Actor.Get());
-					ActorCollectibleObject->SetActiveObject(true);
-				}
-				else
-				{
-					if (ActorCollectibleObject)
-					{
-						ActorCollectibleObject->SetActiveObject(false);
-						ActorCollectibleObject = nullptr;
-					}
-				}
-				if (ActorGrapplingPoint && isGrappling == false)
-				{
-					if (ActorGrapplingPoint)
-						ActorGrapplingPoint->SetActiveObject(false);
-					ActorGrapplingPoint = nullptr;
-				}
-			}
-		}
-		else
-		{
-			if (isGrappling == false)
-			{
-				if(ActorGrapplingPoint)
-					ActorGrapplingPoint->SetActiveObject(false);
-				ActorGrapplingPoint = nullptr;
-			}
-			if (ActorCollectibleObject)
-			{
-				ActorCollectibleObject->SetActiveObject(false);
-				ActorCollectibleObject = nullptr;
-			}
-		}
-		Start = GetActorLocation();
-		End = Start + GetActorForwardVector() * 40.f;
-		DrawDebugLine(GetWorld(), Start, End, FColor::Red, false, 10.f, 5);
-		if (GetWorld()->LineTraceSingleByChannel(hitPoint, Start, End, ECC_Visibility,
-			CollisionParams))
-		{
+		FVector Start = GetActorLocation();
+		FVector End = Start + GetActorForwardVector() * 40.f;
 
+		if (GetWorld()->LineTraceSingleByChannel(hitPoint, Start, End, ECC_Visibility))
+		{
 			movableActor = Cast<AMovableObject>(hitPoint.Actor.Get());
 			if (movableActor)
 			{
 				movableActor->SetMovable();
 			}
-
 		}
 		else
 		{
@@ -210,8 +157,6 @@ void AMovement::Tick(float DeltaTime)
 				movableActor = nullptr;
 			}
 		}
-
-		
 	}
 }
 
@@ -347,7 +292,7 @@ void AMovement::SetMeleeAttackInactive()
 
 void AMovement::UseGrapplingHook()
 {
-	if (ActorGrapplingPoint)
+	if (UpdateGrapplingOrCollectibleActors->ActorGrapplingPoint)
 	{
 		isGrappling = true;
 		GetCharacterMovement()->SetMovementMode(MOVE_Falling);
@@ -357,28 +302,22 @@ void AMovement::UseGrapplingHook()
 
 void AMovement::LerpTo()
 {
-	if (GetDistanceTo(ActorGrapplingPoint) <= 70.f)
+	if (GetDistanceTo(UpdateGrapplingOrCollectibleActors->ActorGrapplingPoint) <= 70.f)
 	{
 		isGrappling = false;
 
 		GetWorldTimerManager().ClearTimer(GrapplingTimer);
 		GetMovementComponent()->Velocity = FVector::ZeroVector;
 		GetMovementComponent()->Velocity.Z = 500.f;
-		ActorGrapplingPoint->SetActiveObject(false);
-		ActorGrapplingPoint = nullptr;
+		UpdateGrapplingOrCollectibleActors->ActorGrapplingPoint->SetActiveObject(false);
+		UpdateGrapplingOrCollectibleActors->ActorGrapplingPoint = nullptr;
 	}
 	else
 	{
-		GetMovementComponent()->Velocity = (ActorGrapplingPoint->GetActorLocation() - GetActorLocation()) * 5;
+		GetMovementComponent()->Velocity = (UpdateGrapplingOrCollectibleActors->ActorGrapplingPoint->GetActorLocation() - GetActorLocation()) * 5;
 	}
 }
-void AMovement::LerpToGrapplingPoint(FVector StartLocation, FVector EndLocation, float time)
-{
-	FVector nextLoc = UKismetMathLibrary::VLerp(StartLocation,
-		EndLocation, time);
-	nextLoc.Z += 0.1f;
-	SetActorLocation(nextLoc);
-}
+
 void AMovement::InteractionWithObject()
 {
 	if (isBearObject == true)
@@ -485,12 +424,12 @@ void AMovement::TakeCollectibles()
 		FVector Start = _Camera -> GetComponentLocation();
 		FVector End = _Camera -> GetForwardVector() * 1000.f + Start;
 
-		if (ActorCollectibleObject)
+		if (UpdateGrapplingOrCollectibleActors->ActorCollectibleObject)
 		{
 			Collectibles++;
 			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::FromInt(Collectibles));
-			ActorCollectibleObject->Destroy();
-			ActorCollectibleObject = nullptr;
+			UpdateGrapplingOrCollectibleActors->ActorCollectibleObject->Destroy();
+			UpdateGrapplingOrCollectibleActors->ActorCollectibleObject = nullptr;
 		}
 	}
 }
@@ -511,7 +450,6 @@ void AMovement::ActionWithPuzzleActor()
 		}
 	}
 }
-
 
 void AMovement::PauseMenu()
 {

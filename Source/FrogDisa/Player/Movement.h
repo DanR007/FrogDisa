@@ -7,6 +7,7 @@
 #include "ShootComponent.h"
 #include "InteractiveComponent.h"
 #include "FrogDisaGameInstance.h"
+#include "UpdateBillboardComponent.h"
 
 #include "FrogDisa/GrapplingObject.h"
 #include "FrogDisa/CollectiblesObject.h"
@@ -43,18 +44,18 @@ protected:
 	// Called when the game starts or when spawned
 
 	virtual void BeginPlay() override;
+	virtual void Tick(float DeltaTime) override;
+	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	//Action Functions default
 	void MoveForward(float Value);
-
 	void MoveRight(float Value);
-
 	void Attack();
-
 	void StopShoot();
-
 	void Jump();
-
 	void StopJumping();
+	virtual void AddControllerYawInput(float Val);
+	virtual void AddControllerPitchInput(float Val);
 
 	void UseGrapplingHook();
 
@@ -63,30 +64,16 @@ protected:
 	void Run(float Value);
 
 	void InteractionWithObject();
-
 	void TakeCollectibles();
-
 	void ActionWithPuzzleActor();
-
 	bool CanMakeAction();
-
-	void CheckGrapplingPoint();
-
-	void CheckCollectibleActor();
-
-	virtual void Tick(float DeltaTime) override;
-
-	virtual void AddControllerYawInput(float Val);
-
-	virtual void AddControllerPitchInput(float Val);
-
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	void ReturnWrench();
 
 	void ChangeCharacter();
 
 	void PauseMenu();
+
 	UFUNCTION(BlueprintCallable)
 		void SetMeleeAttackInactive();
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
@@ -94,6 +81,8 @@ protected:
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 		void SetNewPosses();
+
+	UUpdateBillboardComponent* UpdateGrapplingOrCollectibleActors;
 public:
 
 	void DetachInteractiveObject();
@@ -118,6 +107,7 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 		UFrogDisaGameInstance* game_Instance;
+
 	
 	UFUNCTION(BlueprintCallable)
 		void SetStartSettings(int countStone, int countCollectibles, bool isHaveBug, bool isBearObj);
@@ -146,7 +136,6 @@ public:
 private:
 	void ForwardTrace();
 	void HeightTrace();
-	void LerpToGrapplingPoint(FVector StartLocation, FVector EndLocation, float time);
 	void LerpTo();
 	void SwitchProjectile();
 
@@ -154,8 +143,6 @@ private:
 	float CurveFloatValue;
 	float TimelineValue;
 	FTimerHandle GrapplingTimer;
-
-	
 
 	bool isBearObject;
 	bool isAiming;
@@ -169,14 +156,9 @@ private:
 	int Collectibles;
 	int stoneCount;
 
-	FVector cameraOffsetYPlus;
-	FVector cameraOffsetYMinus;
-	FVector startLoc, endLoc;
+	FVector endLoc;
 	FVector wallNormal, wallLocation;
 
-	const float MinimumGrapplingDistance = 200.f;
-	const float MaximumGrapplingDistance = 5000.f;
-	const float MaximumCollectibleObject = 800.f;
 	const float DefaultSpeed = 400.f, RunningSpeed = DefaultSpeed + 200.f;
 	const float ChangeTargetArmSpeed = 20.f;
 
@@ -184,8 +166,6 @@ private:
 
 	FCollisionQueryParams CollisionParams;
 	UStaticMeshComponent* InteractiveObject;
-	AGrapplingObject* ActorGrapplingPoint;
-	ACollectiblesObject* ActorCollectibleObject;
 	AMovableObject* movableActor;
 	ASteamBug* SteamBug;
 
