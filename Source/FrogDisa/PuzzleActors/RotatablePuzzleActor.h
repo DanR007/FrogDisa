@@ -23,6 +23,8 @@ public:
 		UStaticMeshComponent* SecondMesh;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Meshes")
 		UStaticMeshComponent* ThirdMesh;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Meshes")
+		UStaticMeshComponent* MainMesh;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		TArray<FRotator> start_direction;

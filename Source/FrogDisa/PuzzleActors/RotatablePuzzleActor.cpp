@@ -10,10 +10,17 @@ std::vector<FRotator> g_right_direction = { FRotator(0,90,0), FRotator(0,90,0), 
 std::vector<FRotator> g_now_direction = { FRotator(0,0,0),FRotator(0,0,0),FRotator(0,0,0) } ;
 ARotatablePuzzleActor::ARotatablePuzzleActor()
 {
-
+	MainMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MainMesh"));
+	
 	FirstMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("FirstMesh"));
 	SecondMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("SecondMesh"));
 	ThirdMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ThirdMesh"));
+
+	RootComponent = MainMesh;
+	FirstMesh->SetupAttachment(RootComponent);
+	SecondMesh->SetupAttachment(RootComponent);
+	ThirdMesh->SetupAttachment(RootComponent);
+
 	meshArray = { FirstMesh, SecondMesh,ThirdMesh };
 }
 
@@ -33,7 +40,7 @@ void ARotatablePuzzleActor::ChangeRotation(UStaticMeshComponent* mesh)
 			for (int i = 0; i < 90; i++)
 			{
 				meshArray[j]->AddRelativeRotation(FRotator(0, 1, 0));
-				g_now_direction[j] += FRotator(0, 1, 0);
+				g_now_direction[j] = FRotator(0, 90, 0);
 			}
 
 			break;
