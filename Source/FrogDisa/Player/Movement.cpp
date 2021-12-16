@@ -1,5 +1,4 @@
 #include "Movement.h"
-#include "PuzzlePyatnashky.h"
 #include "SaveGameSystem.h"
 
 #include "Components/InputComponent.h"
@@ -11,11 +10,8 @@
 #include "GameFramework/Pawn.h"
 #include "GameFramework/PlayerController.h"
 
-#include "FrogDisa/TestPuzzleActor.h"
-#include "FrogDisa/InteractiveObject.h"
-#include "FrogDisa/PuzzleInteractiveObject.h"
 #include "FrogDisa/MyHUD.h"
-#include "FrogDisa/LogicPuzzleActor.h"
+#include "FrogDisa/InteractiveObject.h"
 
 #include "Animation/AnimInstance.h"
 #include "Kismet/GameplayStatics.h"
@@ -109,7 +105,6 @@ void AMovement::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	PlayerInputComponent->BindAction("GrapplingHook", IE_Pressed, this, &AMovement::UseGrapplingHook);
 
 	PlayerInputComponent->BindAction("ActionWithSomeObj", IE_Pressed, this, &AMovement::TakeCollectibles);
-	PlayerInputComponent->BindAction("ActionWithSomeObj", IE_Pressed, this, &AMovement::ActionWithPuzzleActor);
 	PlayerInputComponent->BindAction("ActionWithSomeObj", IE_Pressed, InteractiveWithPuzzlesComponent,
 		&UInteractiveWithPuzzlesComponent::ActionWithPuzzleActor);
 
@@ -305,7 +300,7 @@ void AMovement::UseGrapplingHook()
 
 void AMovement::LerpTo()
 {
-	if (GetDistanceTo(UpdateGrapplingOrCollectibleActors->ActorGrapplingPoint) <= 70.f)
+	if (GetDistanceTo(UpdateGrapplingOrCollectibleActors->ActorGrapplingPoint) <= 70.f)//lerp while distance > 70
 	{
 		isGrappling = false;
 
@@ -437,11 +432,6 @@ void AMovement::TakeCollectibles()
 	}
 }
 
-void AMovement::ActionWithPuzzleActor()
-{
-	//InteractiveWithPuzzlesComponent->ActionWithPuzzleActor();
-}
-
 void AMovement::PauseMenu()
 {
 	pauseMenuOpen = true;
@@ -479,7 +469,7 @@ void AMovement::ForwardTrace()
 	f_start = GetActorLocation();
 	f_end = GetActorLocation() + GetActorForwardVector() * 100;
 
-	if(GetWorld()->LineTraceSingleByChannel(hitPoint, f_start, f_end, ECC_GameTraceChannel1, collisionParams))
+	if(GetWorld()->LineTraceSingleByChannel(hitPoint, f_start, f_end, ECC_GameTraceChannel1, collisionParams))//check an object height
 	{
 		wallNormal = hitPoint.Normal;
 		wallLocation = hitPoint.Location;
@@ -495,7 +485,7 @@ void AMovement::HeightTrace()
 	h_start = GetActorLocation() + FVector(0, 0, 200.f) + GetActorForwardVector() * 75;
 	h_end = h_start - FVector(0, 0, 200.f);
 
-	if (GetWorld()->LineTraceSingleByChannel(hitPoint, h_start, h_end, ECC_GameTraceChannel1, collisionParams))
+	if (GetWorld()->LineTraceSingleByChannel(hitPoint, h_start, h_end, ECC_GameTraceChannel1, collisionParams))//check an object in front of player
 	{
 		float distanceZ = Mesh->GetSocketLocation(TEXT("spineSocket")).Z - hitPoint.Location.Z;
 		if (distanceZ <= 0 && distanceZ >= -100.f)

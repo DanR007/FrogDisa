@@ -3,16 +3,14 @@
 
 #include "InteractiveComponent.h"
 #include "Movement.h"
-#include "FrogDisa/PuzzleInteractiveObject.h"
+#include "FrogDisa/PuzzleActors/PuzzleInteractiveObject.h"
 
 // Sets default values for this component's properties
 UInteractiveComponent::UInteractiveComponent()
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
-	PrimaryComponentTick.bCanEverTick = true;
-
-	// ...
+	PrimaryComponentTick.bCanEverTick = false;
 }
 
 
@@ -21,17 +19,7 @@ void UInteractiveComponent::BeginPlay()
 {
 	Super::BeginPlay();
 	Owner = GetOwner();
-	// ...
 	
-}
-
-
-// Called every frame
-void UInteractiveComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
-{
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	// ...
 }
 
 bool UInteractiveComponent::TakeInteractiveObject(UStaticMeshComponent* Player_InteractiveMesh)
@@ -39,7 +27,7 @@ bool UInteractiveComponent::TakeInteractiveObject(UStaticMeshComponent* Player_I
 	FHitResult hitPoint;
 
 	FVector End = Owner->GetActorForwardVector() * 500.f + Owner->GetActorLocation();
-	//DrawDebugLine(GetWorld(), GetActorLocation(), End, FColor::Blue, false, 10.f, 5);
+
 	if (Owner->GetWorld()->LineTraceSingleByChannel(hitPoint, Owner->GetActorLocation(), End, ECC_Visibility, CollisionParams) == true)
 	{
 		if (hitPoint.Actor->IsA(AInteractiveObject::StaticClass()))

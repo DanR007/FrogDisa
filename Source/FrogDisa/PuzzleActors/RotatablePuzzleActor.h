@@ -4,7 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "PuzzleActor.h"
-#include "Player/EProjectiles.h"
+#include "FrogDisa/Player/EProjectiles.h"
+#include "FrogDisa/Player/InteractiveWithPuzzlesComponent.h"
 #include "RotatablePuzzleActor.generated.h"
 
 /**
@@ -38,5 +39,7 @@ protected:
 
 	
 	void PuzzleComplete();
+
+	friend class UInteractiveWithPuzzlesComponent;
 };
 

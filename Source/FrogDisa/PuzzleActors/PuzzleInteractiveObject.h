@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "InteractiveObject.h"
+#include "FrogDisa/InteractiveObject.h"
 #include "PuzzleInteractiveObject.generated.h"
 
 /**

@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "FrogDisa/PuzzleActor.h"
+#include "FrogDisa/PuzzleActors/PuzzleActor.h"
 #include "Components/TextRenderComponent.h"
 #include "Components/BillboardComponent.h"
 #include <vector>

@@ -66,7 +66,6 @@ protected:
 
 	void InteractionWithObject();
 	void TakeCollectibles();
-	void ActionWithPuzzleActor();
 	bool CanMakeAction();
 
 	void ChangeCharacter();
