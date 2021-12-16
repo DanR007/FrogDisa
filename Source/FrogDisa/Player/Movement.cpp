@@ -46,6 +46,7 @@ AMovement::AMovement()
 	ShootComponent = CreateDefaultSubobject<UShootComponent>(TEXT("Shoot"));
 	InteractiveComponent = CreateDefaultSubobject<UInteractiveComponent>(TEXT("InteractiveComponent"));
 	UpdateGrapplingOrCollectibleActors = CreateDefaultSubobject<UUpdateBillboardComponent>(TEXT("SetActiveBillboardComponent"));
+	InteractiveWithPuzzlesComponent = CreateDefaultSubobject<UInteractiveWithPuzzlesComponent>(TEXT("InteractiveWithPuzzlesComponent"));
 
 	_Camera->SetupAttachment(cameraComponent, USpringArmComponent::SocketName);;
 	_Camera->bUsePawnControlRotation = false;
@@ -109,6 +110,8 @@ void AMovement::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 	PlayerInputComponent->BindAction("ActionWithSomeObj", IE_Pressed, this, &AMovement::TakeCollectibles);
 	PlayerInputComponent->BindAction("ActionWithSomeObj", IE_Pressed, this, &AMovement::ActionWithPuzzleActor);
+	PlayerInputComponent->BindAction("ActionWithSomeObj", IE_Pressed, InteractiveWithPuzzlesComponent,
+		&UInteractiveWithPuzzlesComponent::ActionWithPuzzleActor);
 
 	PlayerInputComponent->BindAction("PauseMenu", IE_Pressed, this, &AMovement::PauseMenu);
 
@@ -436,19 +439,7 @@ void AMovement::TakeCollectibles()
 
 void AMovement::ActionWithPuzzleActor()
 {
-	if (CanMakeAction())
-	{
-		FHitResult hitPoint;
-		FVector Start = _Camera->GetComponentLocation();
-		FVector End = _Camera->GetForwardVector() * 1000.f + Start;
-		if (GetWorld()->LineTraceSingleByChannel(hitPoint, GetActorLocation(), End, ECC_Visibility, CollisionParams) == true)
-		{
-			if (Cast<APuzzleActor>(hitPoint.Actor.Get()))
-			{
-				Cast<APuzzleActor>(hitPoint.Actor.Get())->Use();
-			}
-		}
-	}
+	//InteractiveWithPuzzlesComponent->ActionWithPuzzleActor();
 }
 
 void AMovement::PauseMenu()

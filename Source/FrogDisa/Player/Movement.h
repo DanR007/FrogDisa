@@ -8,6 +8,7 @@
 #include "InteractiveComponent.h"
 #include "FrogDisaGameInstance.h"
 #include "UpdateBillboardComponent.h"
+#include "InteractiveWithPuzzlesComponent.h"
 
 #include "FrogDisa/GrapplingObject.h"
 #include "FrogDisa/CollectiblesObject.h"
@@ -68,8 +69,6 @@ protected:
 	void ActionWithPuzzleActor();
 	bool CanMakeAction();
 
-	void ReturnWrench();
-
 	void ChangeCharacter();
 
 	void PauseMenu();
@@ -108,7 +107,9 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 		UFrogDisaGameInstance* game_Instance;
 
-	
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+		UInteractiveWithPuzzlesComponent* InteractiveWithPuzzlesComponent;
+
 	UFUNCTION(BlueprintCallable)
 		void SetStartSettings(int countStone, int countCollectibles, bool isHaveBug, bool isBearObj);
 	UFUNCTION(BlueprintCallable)
@@ -171,4 +172,6 @@ private:
 
 	TSubclassOf<ASteamBug> SteamBug_ClassBP;
 	TSubclassOf<ASteamBug> SteamBug_Class;
+
+	friend class UInteractiveWithPuzzlesComponent;
 };

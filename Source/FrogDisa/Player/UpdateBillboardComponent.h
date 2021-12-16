@@ -8,8 +8,6 @@
 #include "FrogDisa/GrapplingObject.h"
 #include "FrogDisa/CollectiblesObject.h"
 
-
-
 #include "UpdateBillboardComponent.generated.h"
 
 
