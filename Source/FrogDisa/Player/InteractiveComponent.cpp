@@ -22,7 +22,7 @@ void UInteractiveComponent::BeginPlay()
 	
 }
 
-bool UInteractiveComponent::TakeInteractiveObject(UStaticMeshComponent* Player_InteractiveMesh)
+bool UInteractiveComponent::TakeInteractiveObject(UStaticMeshComponent* Player_InteractiveMesh)//убрать повторение кода
 {
 	FHitResult hitPoint;
 

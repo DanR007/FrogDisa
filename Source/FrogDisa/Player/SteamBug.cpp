@@ -35,8 +35,6 @@ void ASteamBug::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 void ASteamBug::SetMainCharacter(ACharacter*f_main_character)
 {
 	main_character = f_main_character;
-	//PossessedBy(GetWorld()->GetFirstPlayerController());
-	//ReceivePossessed(GetWorld()->GetFirstPlayerController());
 }
 
 void ASteamBug::SetNewPosses_Implementation()

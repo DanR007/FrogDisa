@@ -52,7 +52,6 @@ protected:
 	void MoveForward(float Value);
 	void MoveRight(float Value);
 	void Attack();
-	void StopShoot();
 	void Jump();
 	void StopJumping();
 	virtual void AddControllerYawInput(float Val);
@@ -151,7 +150,7 @@ private:
 	bool circleMenuIsOpen;
 	bool pauseMenuOpen;
 	bool isWaitingWrench;
-	bool isHaveSteamBug;
+	bool HaveSteamBug;
 
 	int Collectibles;
 	int stoneCount;

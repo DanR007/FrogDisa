@@ -36,7 +36,7 @@ ADropItAfterShot::ADropItAfterShot()
 	CableMesh4->bAttachStart = true;
 	CableMesh4->bAttachEnd = true;
 	CableMesh4->EndLocation = BreakableMesh->GetComponentLocation();
-	//CableMesh4->SetWorldLocation(BreakableMesh->GetComponentLocation());
+	CableMesh4->SetWorldLocation(BreakableMesh->GetComponentLocation());
 
 	BreakableMesh->OnComponentBeginOverlap.AddDynamic(this, &ADropItAfterShot::OnOverlapBreakableMesh);
 }
@@ -57,10 +57,10 @@ void ADropItAfterShot::Tick(float DeltaTime)
 
 void ADropItAfterShot::DropConstruction()
 {
-	CableMesh1->DestroyComponent();
-	CableMesh2->DestroyComponent();
-	CableMesh3->DestroyComponent();
-	CableMesh4->DestroyComponent();
+	//CableMesh1->DestroyComponent();
+	//CableMesh2->DestroyComponent();
+	//CableMesh3->DestroyComponent();
+	//CableMesh4->DestroyComponent();
 	BreakableMesh->DestroyComponent();
 	MeshConstruction -> SetSimulatePhysics(true);
 }

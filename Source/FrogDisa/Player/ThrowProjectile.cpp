@@ -79,7 +79,7 @@ void AThrowProjectile::Launch()
 		EndLocation = GetActorLocation() + GetActorForwardVector() * 1050.f;
 
 		MoveProjectileVector = GetActorForwardVector();
-		halfDistance = FVector::Distance(EndLocation, GetActorLocation()) / 1.4;
+		halfDistance = FVector::Distance(EndLocation, GetActorLocation()) / 2;
 
 		GetWorld()->GetTimerManager().SetTimer(MoveTimer, this, &AThrowProjectile::Move, 0.01f, true, 0.f);
 		isLaunched = true;
@@ -128,7 +128,7 @@ void AThrowProjectile::RuleToMove(int direction)
 {
 	if (direction == 1)
 	{
-		EndLocation = Cast<AMovement>(OwnerPlayer)->GetMesh()->GetSocketLocation(TEXT("hand_RSocket"));
+		EndLocation = Cast<AMovement>(OwnerPlayer)->GetMesh()->GetSocketLocation(TEXT("hand_RSocket"));//easing function
 	}
 
 	currentDistance = FVector::Distance(EndLocation, GetActorLocation());

@@ -23,6 +23,8 @@
 #include "DrawDebugHelpers.h"
 #include "Styling/SlateWidgetStyleContainerInterface.h"
 
+
+#define ECC_ClimbingTraceChannel ECC_GameTraceChannel1
 // Sets default values
 AMovement::AMovement()
 {
@@ -133,7 +135,7 @@ void AMovement::Tick(float DeltaTime)
 
 		UpdateGrapplingOrCollectibleActors->CheckCollectibleActor();
 		UpdateGrapplingOrCollectibleActors->CheckGrapplingPoint(isGrappling, endLoc);
-		//GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Green, UpdateGrapplingOrCollectibleActors->grapplingObject->GetFullName());
+
 		FHitResult hitPoint;
 
 		FVector Start = GetActorLocation();
@@ -176,7 +178,7 @@ void AMovement::MoveForward(float Value)
 				{
 					GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Walking);
 					ACharacter::Jump();
-					isClimbing = false;//ñäåëàòü àíèìàöèþ è âñ¸
+					isClimbing = false;
 				}
 				else
 				{
@@ -257,17 +259,12 @@ void AMovement::Attack()
 	}
 }
 
-void AMovement::StopShoot()
-{
-	
-}
-
 void AMovement::ChangeCharacter()
 {
 	//delete this when you will make final build
-	isHaveSteamBug = true;
+	HaveSteamBug = true;
 
-	if (isHaveSteamBug && GetCharacterMovement()->MovementMode == EMovementMode::MOVE_Walking)
+	if (HaveSteamBug && GetCharacterMovement()->MovementMode == EMovementMode::MOVE_Walking)
 	{
 		FActorSpawnParameters SpawnParameters;
 		SpawnParameters.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
@@ -415,8 +412,6 @@ AActor *AMovement::GetThrowProjectile()
 
 void AMovement::TakeCollectibles()
 {
-	FHitResult hitPoint;
-
 	if (CanMakeAction())
 	{
 		FVector Start = _Camera -> GetComponentLocation();
@@ -464,12 +459,10 @@ void AMovement::ForwardTrace()
 {
 	FHitResult hitPoint;
 	FVector f_start, f_end;
-	FCollisionQueryParams collisionParams;
-	collisionParams.AddIgnoredActor(this);
 	f_start = GetActorLocation();
 	f_end = GetActorLocation() + GetActorForwardVector() * 100;
 
-	if(GetWorld()->LineTraceSingleByChannel(hitPoint, f_start, f_end, ECC_GameTraceChannel1, collisionParams))//check an object height
+	if(GetWorld()->LineTraceSingleByChannel(hitPoint, f_start, f_end, ECC_ClimbingTraceChannel))//check an object height
 	{
 		wallNormal = hitPoint.Normal;
 		wallLocation = hitPoint.Location;
@@ -480,12 +473,10 @@ void AMovement::HeightTrace()
 {
 	FHitResult hitPoint;
 	FVector h_start, h_end;
-	FCollisionQueryParams collisionParams;
-	collisionParams.AddIgnoredActor(this);
 	h_start = GetActorLocation() + FVector(0, 0, 200.f) + GetActorForwardVector() * 75;
 	h_end = h_start - FVector(0, 0, 200.f);
 
-	if (GetWorld()->LineTraceSingleByChannel(hitPoint, h_start, h_end, ECC_GameTraceChannel1, collisionParams))//check an object in front of player
+	if (GetWorld()->LineTraceSingleByChannel(hitPoint, h_start, h_end, ECC_ClimbingTraceChannel))//check an object in front of player
 	{
 		float distanceZ = Mesh->GetSocketLocation(TEXT("spineSocket")).Z - hitPoint.Location.Z;
 		if (distanceZ <= 0 && distanceZ >= -100.f)
@@ -520,7 +511,7 @@ void AMovement::DetachInteractiveObject()
 
 bool AMovement::IsHaveASteamBug()
 {
-	return isHaveSteamBug;
+	return HaveSteamBug;
 }
 
 bool AMovement::IsBearObject()
@@ -543,6 +534,6 @@ void AMovement::SetStartSettings(int countStone, int countCollectibles, bool isH
 {
 	stoneCount = countStone;
 	Collectibles = countCollectibles;
-	isHaveSteamBug = isHaveBug;
+	HaveSteamBug = isHaveBug;
 	isBearObject = isBearObj;
 }
