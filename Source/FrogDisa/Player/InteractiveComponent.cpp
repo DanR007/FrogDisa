@@ -49,27 +49,18 @@ bool UInteractiveComponent::TakeInteractiveObject(UStaticMeshComponent* Player_I
 
 }
 
-void UInteractiveComponent::DropInteractiveObject(UStaticMeshComponent* Player_InteractiveMesh)
+void UInteractiveComponent::DropInteractiveObject(UStaticMeshComponent* Player_InteractiveMesh, float ImpulseValue)
 {
 	InteractiveActor->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
 	InteractiveMesh->SetSimulatePhysics(true);
 	InteractiveMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+	InteractiveMesh->AddImpulse(Cast<AMovement>(Owner)->_Camera->GetForwardVector() * ImpulseValue * InteractiveMesh->GetMass());
 	InteractiveMesh = nullptr;
 	InteractiveActor = nullptr;
 	Player_InteractiveMesh = InteractiveMesh;
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Drop this"));
+	//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Drop this"));
 }
 
-void UInteractiveComponent::ThrowInteractiveObject(UStaticMeshComponent* Player_InteractiveMesh)
-{
-	InteractiveActor->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
-	InteractiveMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
-	InteractiveMesh->SetSimulatePhysics(true);
-	InteractiveMesh->AddImpulse(Cast<AMovement>(Owner)->_Camera->GetForwardVector() * 1500.f * InteractiveMesh->GetMass());
-	InteractiveMesh = nullptr;
-	InteractiveActor = nullptr;
-	Player_InteractiveMesh = InteractiveMesh;
-}
 
 bool UInteractiveComponent::IsZeroOverlappingActors()
 {

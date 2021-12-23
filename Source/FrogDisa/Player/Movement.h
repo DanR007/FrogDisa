@@ -160,6 +160,8 @@ private:
 
 	const float DefaultSpeed = 400.f, RunningSpeed = DefaultSpeed + 200.f;
 	const float ChangeTargetArmSpeed = 20.f;
+	const float ThrowImpulseValue = 1500.f;
+	const float DropImpulseValue = 0;
 
 	EProjectiles g_Projectile_Type;
 

@@ -28,8 +28,6 @@ protected:
 	UStaticMeshComponent* InteractiveMesh;
 
 	FCollisionQueryParams CollisionParams;
-
-	
 	
 public:
 
@@ -37,8 +35,7 @@ public:
 	bool IsZeroOverlappingActors();
 	bool OverlapOnlyInteractivePuzzle();
 
-	void DropInteractiveObject(UStaticMeshComponent* Player_InteractiveMesh);
-	void ThrowInteractiveObject(UStaticMeshComponent* Player_InteractiveMesh);
+	void DropInteractiveObject(UStaticMeshComponent* Player_InteractiveMesh, float ImpulseValue);
 
 	void DetachInteractiveFromParent(UStaticMeshComponent* Player_InteractiveMesh);
 };

@@ -254,7 +254,7 @@ void AMovement::Attack()
 		if (InteractiveComponent->IsZeroOverlappingActors())
 		{
 			isBearObject = false;
-			InteractiveComponent->ThrowInteractiveObject(InteractiveObject);
+			InteractiveComponent->DropInteractiveObject(InteractiveObject, ThrowImpulseValue);
 		}
 	}
 }
@@ -320,7 +320,7 @@ void AMovement::InteractionWithObject()
 		if (InteractiveComponent->OverlapOnlyInteractivePuzzle())
 		{
 			isBearObject = false;
-			InteractiveComponent->DropInteractiveObject(InteractiveObject);
+			InteractiveComponent->DropInteractiveObject(InteractiveObject, DropImpulseValue);
 		}
 	}
 	else
