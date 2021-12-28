@@ -144,16 +144,6 @@ void AThrowProjectile::RuleToMove(int direction)
 	AddActorLocalRotation(FRotator(-10, 0, 0), false);
 }
 
-void AThrowProjectile::Stop()
-{
-	if (projectileIsReturning == false && inAir)
-	{
-		SetActorRotation(FRotator(OwnerPlayer->GetActorRotation().Pitch - 15, GetActorRotation().Yaw, GetActorRotation().Roll));
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, TEXT("STOOOOOOOOOOP"));
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, FString::SanitizeFloat(GetActorRotation().Pitch));
-		inAir = false;
-	}
-}
 
 void AThrowProjectile::OnOverlap_Implementation(AActor* OverlappedActor, AActor* OtherActor)
 {

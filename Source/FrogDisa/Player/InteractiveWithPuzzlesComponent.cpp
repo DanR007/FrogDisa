@@ -41,8 +41,6 @@ void UInteractiveWithPuzzlesComponent::ActionWithPuzzleActor()
 		FVector Start = OwnerPlayer->_Camera->GetComponentLocation();
 		FVector End = OwnerPlayer->_Camera->GetForwardVector() * 1000.f + Start;
 
-		//GEngine->DrawDebugLine();
-
 		if (GetWorld()->LineTraceSingleByChannel(hitPoint, Start, End, ECC_GameTraceChannel5))
 		{
 			if (IsPuzzleTypeWithoutSpecialView(hitPoint.Actor.Get()))
@@ -51,7 +49,14 @@ void UInteractiveWithPuzzlesComponent::ActionWithPuzzleActor()
 			}
 			else
 			{
-				Cast<APuzzleActor>(hitPoint.Actor.Get())->Use();
+				//if (Cast<APuzzlePyatnashky>(hitPoint.Actor.Get()))
+				//{
+				//	Cast<APuzzlePyatnashky>(hitPoint.Actor.Get()) -> 
+				//}
+				//else
+				//{
+					Cast<APuzzleActor>(hitPoint.Actor.Get())->Use();
+				//}
 			}
 		}
 	}

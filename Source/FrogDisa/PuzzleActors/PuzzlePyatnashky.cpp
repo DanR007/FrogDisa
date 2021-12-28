@@ -1,6 +1,7 @@
 #include "PuzzlePyatnashky.h"
 
 #include <vector>
+#include <set>
 #include <iostream>
 
 //std::map<FString, UTexture2D*> map_images;
@@ -10,6 +11,19 @@ std::vector<std::vector<UStaticMeshComponent*>> field_meshes;
 std::vector<std::vector<UTextRenderComponent*>> field_text;
 const std::vector<std::vector<FString>> field_string_true = { {"1","2","3"}, {"4","5","6"},{"7","8"," "} };
 std::vector<std::vector<FString>> field_string;
+
+void GetIndexInArray(UStaticMeshComponent* Mesh, std::pair<int, int>& indexYandX)
+{
+	for (int k = 0; k < 3; k++)
+		for (int i = 0; i < 3; i++)
+			if (Mesh == field_meshes[k][i])
+			{
+				indexYandX = std::make_pair(k, i);
+				return;
+			}
+}
+
+
 // Sets default values
 APuzzlePyatnashky::APuzzlePyatnashky()
 {
@@ -96,39 +110,34 @@ bool APuzzlePyatnashky::Check(UStaticMeshComponent* Mesh)
 	int moveX[4] = { 1,0,-1,0 };
 	int moveY[4] = { 0,1,0,-1 };
 
-	for (int k = 0; k < 3; k++)
+	std::pair<int, int> indexInArray;
+
+	GetIndexInArray(Mesh, indexInArray);
+
+
+	for (int i = 0; i < 4; i++)
 	{
-		for (int i = 0; i < 3; i++)
-			if (Mesh == field_meshes[k][i])
+		int nextPosX = indexInArray.second + moveX[i], nextPosY = indexInArray.first + moveY[i];
+		if (nextPosY < 3 &&
+			nextPosY >= 0 && nextPosX < 3 && nextPosX >= 0)
+		{
+			if (field_string[nextPosY][nextPosX] == " ")
 			{
-				for (int j = 0; j < 4; j++)
-				{
-					int nextPosX = i + moveX[j], nextPosY = k + moveY[j];
-					if (nextPosY < 3 &&
-						nextPosY >= 0 && nextPosX < 3 && nextPosX >= 0)
-					{
-						if (field_string[nextPosY][nextPosX] == " ")
-						{
-							UStaticMesh* mesh = field_meshes[nextPosY][nextPosX]->GetStaticMesh();
-							UMaterialInterface* material  = field_meshes[nextPosY][nextPosX]->GetMaterial(0);
+				UStaticMesh* mesh = field_meshes[nextPosY][nextPosX]->GetStaticMesh();
+				UMaterialInterface* material = field_meshes[nextPosY][nextPosX]->GetMaterial(0);
 
-							field_meshes[nextPosY][nextPosX]->SetMaterial(0, Mesh->GetMaterial(0));
-							Mesh->SetMaterial(0, material);
+				field_meshes[nextPosY][nextPosX]->SetMaterial(0, Mesh->GetMaterial(0));
+				Mesh->SetMaterial(0, material);
 
-							std::swap(field_string[k][i], field_string[nextPosY][nextPosX]);
+				std::swap(field_string[indexInArray.first][indexInArray.second], field_string[nextPosY][nextPosX]);
 
-							field_text[k][i]->SetText(FText::FromString(field_string[k][i]));
-							field_text[nextPosY][nextPosX]->SetText(FText::FromString(field_string[nextPosY][nextPosX]));
-
-							return field_string == field_string_true;
-						}
-					}
-				}
+				field_text[indexInArray.first][indexInArray.second]->SetText(FText::FromString(field_string[indexInArray.first][indexInArray.second]));
+				field_text[nextPosY][nextPosX]->SetText(FText::FromString(field_string[nextPosY][nextPosX]));
 			}
-
+		}
 	}
 
-	return false;
+	return field_string == field_string_true;
 }
 
 void APuzzlePyatnashky::OnClick_Implementation(UStaticMeshComponent* Mesh)

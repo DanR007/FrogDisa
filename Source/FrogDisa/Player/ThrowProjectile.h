@@ -41,8 +41,7 @@ protected:
 		UCapsuleComponent* ProjectileColliderD;
 	UFUNCTION(BlueprintCallable)
 		void ReturnStart();
-	UFUNCTION(BlueprintCallable)
-		void Stop();
+
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		bool projectileIsReturning;

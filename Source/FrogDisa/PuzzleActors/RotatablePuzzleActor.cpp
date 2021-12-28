@@ -4,7 +4,9 @@
 #include "RotatablePuzzleActor.h"
 #include <vector>
 
+
 std::vector<UStaticMeshComponent*> meshArray;
+TArray<UStaticMeshComponent*> meshSet;
 std::vector<FRotator> directionInDegrees = {FRotator(0,0,0), FRotator(0,90,0) ,FRotator(0,180,0) ,FRotator(0,270,0) };
 std::vector<FRotator> g_right_direction = { FRotator(0,90,0), FRotator(0,90,0), FRotator(0,90,0) };
 std::vector<FRotator> g_now_direction = { FRotator(0,0,0),FRotator(0,0,0),FRotator(0,0,0) } ;

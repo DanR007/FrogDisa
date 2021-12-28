@@ -6,14 +6,14 @@
 #include "FrogDisa/PuzzleActors/PuzzleActor.h"
 #include "Components/TextRenderComponent.h"
 #include "Components/BillboardComponent.h"
-#include <vector>
+
 #include "PuzzlePyatnashky.generated.h"
 
 UCLASS()
 class FROGDISA_API APuzzlePyatnashky : public APuzzleActor
 {
 	GENERATED_BODY()
-	
+
 public:
 	// Sets default values for this actor's properties
 	APuzzlePyatnashky();
@@ -71,7 +71,7 @@ public:
 		bool Check(UStaticMeshComponent* Mesh);
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 		void OnClick(UStaticMeshComponent* Mesh);
-public:	
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
