@@ -36,7 +36,7 @@ bool UInteractiveComponent::TakeInteractiveObject(UStaticMeshComponent* Player_I
 			InteractiveActor->SetActorLocation(Owner->GetActorLocation() + Owner->GetActorForwardVector() * 90.f + Owner -> GetActorUpVector() * 10.f);
 			InteractiveActor->SetActorRotation(Owner->GetActorRotation());
 			InteractiveMesh = InteractiveActor->FindComponentByClass<UStaticMeshComponent>();
-			InteractiveMesh->SetSimulatePhysics(false);
+			InteractiveMesh->SetSimulatePhysics(false);//if simulate physics true character does not move
 			InteractiveMesh->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 			InteractiveActor->AttachToActor(Owner, FAttachmentTransformRules::KeepWorldTransform);
 			Player_InteractiveMesh = InteractiveMesh;

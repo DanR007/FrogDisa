@@ -82,7 +82,7 @@ bool ADropItAfterShot::isABreakableMesh()
 void ADropItAfterShot::OnOverlapBreakableMesh_Implementation(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp,
 	int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	AThrowProjectile* WrenchActor = Cast<AThrowProjectile>(OtherActor);
+	AThrowProjectile* WrenchActor = Cast<AThrowProjectile>(OtherActor);//if overlap actor is a Warench or sth else in future(crossbow bolt)
 	if (WrenchActor != nullptr && WrenchActor->GetInAirState())
 	{
 		DropConstruction();

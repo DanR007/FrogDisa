@@ -8,8 +8,8 @@
 std::vector<UStaticMeshComponent*> meshArray;
 TArray<UStaticMeshComponent*> meshSet;
 std::vector<FRotator> directionInDegrees = {FRotator(0,0,0), FRotator(0,90,0) ,FRotator(0,180,0) ,FRotator(0,270,0) };
-std::vector<FRotator> g_right_direction = { FRotator(0,90,0), FRotator(0,90,0), FRotator(0,90,0) };
-std::vector<FRotator> g_now_direction = { FRotator(0,0,0),FRotator(0,0,0),FRotator(0,0,0) } ;
+std::vector<FRotator> g_correct_direction = { FRotator(0,90,0), FRotator(0,90,0), FRotator(0,90,0) };
+std::vector<FRotator> g_direction = { FRotator(0,0,0),FRotator(0,0,0),FRotator(0,0,0) } ;
 ARotatablePuzzleActor::ARotatablePuzzleActor()
 {
 	MainMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MainMesh"));
@@ -42,14 +42,14 @@ void ARotatablePuzzleActor::ChangeRotation(UStaticMeshComponent* mesh)
 			for (int i = 0; i < 90; i++)
 			{
 				meshArray[j]->AddRelativeRotation(FRotator(0, 1, 0));
-				g_now_direction[j] = FRotator(0, 90, 0);
+				g_direction[j] = FRotator(0, 90, 0);
 			}
 
 			break;
 		}
 	}
 
-	if (g_now_direction == g_right_direction)
+	if (g_direction == g_correct_direction)
 		PuzzleComplete();
 }
 
