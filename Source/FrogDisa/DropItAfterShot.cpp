@@ -14,29 +14,29 @@ ADropItAfterShot::ADropItAfterShot()
 	Wrench = projectile.Class;
 
 
-	CableMesh1 = CreateDefaultSubobject<UCableComponent>(TEXT("Cable1"));
-	CableMesh2 = CreateDefaultSubobject<UCableComponent>(TEXT("Cable2"));
-	CableMesh3 = CreateDefaultSubobject<UCableComponent>(TEXT("Cable3"));
-	CableMesh4 = CreateDefaultSubobject<UCableComponent>(TEXT("Cable4"));
+	//CableMesh1 = CreateDefaultSubobject<UCableComponent>(TEXT("Cable1"));
+	//CableMesh2 = CreateDefaultSubobject<UCableComponent>(TEXT("Cable2"));
+	//CableMesh3 = CreateDefaultSubobject<UCableComponent>(TEXT("Cable3"));
+	//CableMesh4 = CreateDefaultSubobject<UCableComponent>(TEXT("Cable4"));
 
-	CableMesh1->bAttachStart = true;
-	CableMesh1->bAttachEnd = true;
+	//CableMesh1->bAttachStart = true;
+	//CableMesh1->bAttachEnd = true;
 
-	CableMesh1->EndLocation = BreakableMesh->GetComponentLocation();
-	CableMesh2->bAttachStart = true;
-	CableMesh2->bAttachEnd = true;
-	CableMesh2->EndLocation = BreakableMesh->GetComponentLocation();
-	//CableMesh2->SetWorldLocation(BreakableMesh->GetComponentLocation());
+	//CableMesh1->EndLocation = BreakableMesh->GetComponentLocation();
+	//CableMesh2->bAttachStart = true;
+	//CableMesh2->bAttachEnd = true;
+	//CableMesh2->EndLocation = BreakableMesh->GetComponentLocation();
+	////CableMesh2->SetWorldLocation(BreakableMesh->GetComponentLocation());
 
-	CableMesh3->bAttachStart = true;
-	CableMesh3->bAttachEnd = true;
-	CableMesh3->EndLocation = BreakableMesh->GetComponentLocation();
-	//CableMesh3->SetWorldLocation(BreakableMesh->GetComponentLocation());
+	//CableMesh3->bAttachStart = true;
+	//CableMesh3->bAttachEnd = true;
+	//CableMesh3->EndLocation = BreakableMesh->GetComponentLocation();
+	////CableMesh3->SetWorldLocation(BreakableMesh->GetComponentLocation());
 
-	CableMesh4->bAttachStart = true;
-	CableMesh4->bAttachEnd = true;
-	CableMesh4->EndLocation = BreakableMesh->GetComponentLocation();
-	CableMesh4->SetWorldLocation(BreakableMesh->GetComponentLocation());
+	//CableMesh4->bAttachStart = true;
+	//CableMesh4->bAttachEnd = true;
+	//CableMesh4->EndLocation = BreakableMesh->GetComponentLocation();
+	//CableMesh4->SetWorldLocation(BreakableMesh->GetComponentLocation());
 
 	BreakableMesh->OnComponentBeginOverlap.AddDynamic(this, &ADropItAfterShot::OnOverlapBreakableMesh);
 }

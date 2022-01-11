@@ -32,8 +32,6 @@ bool UInteractiveComponent::TakeInteractiveObject(UStaticMeshComponent* Player_I
 	{
 		if (hitPoint.Actor->IsA(AInteractiveObject::StaticClass()))
 		{
-			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Take this"));
-
 			InteractiveActor = hitPoint.Actor.Get();
 			InteractiveActor->SetActorLocation(Owner->GetActorLocation() + Owner->GetActorForwardVector() * 90.f + Owner -> GetActorUpVector() * 10.f);
 			InteractiveActor->SetActorRotation(Owner->GetActorRotation());
@@ -58,7 +56,6 @@ void UInteractiveComponent::DropInteractiveObject(UStaticMeshComponent* Player_I
 	InteractiveMesh = nullptr;
 	InteractiveActor = nullptr;
 	Player_InteractiveMesh = InteractiveMesh;
-	//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Drop this"));
 }
 
 

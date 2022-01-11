@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "CableComponent.h"
+//#include "CableComponent.h"
 #include "Player/ThrowProjectile.h"
 #include "UObject/ConstructorHelpers.h"
 #include "DropItAfterShot.generated.h"
@@ -25,14 +25,14 @@ protected:
 		UStaticMeshComponent* MeshConstruction;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 		UStaticMeshComponent* BreakableMesh;
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	/*UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 		UCableComponent* CableMesh1;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 		UCableComponent* CableMesh2;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 		UCableComponent* CableMesh3;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-		UCableComponent* CableMesh4;
+		UCableComponent* CableMesh4;*/
 	UFUNCTION(BlueprintCallable)
 		void DropConstruction();
 	UFUNCTION(BlueprintCallable)
