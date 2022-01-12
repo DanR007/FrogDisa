@@ -52,7 +52,7 @@ void UInteractiveComponent::DropInteractiveObject(UStaticMeshComponent* Player_I
 	InteractiveActor->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
 	InteractiveMesh->SetSimulatePhysics(true);
 	InteractiveMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
-	InteractiveMesh->AddImpulse(Cast<AMovement>(Owner)->_Camera->GetForwardVector() * ImpulseValue * InteractiveMesh->GetMass());
+	InteractiveMesh->AddImpulse(Cast<AMovement>(Owner)->Camera->GetForwardVector() * ImpulseValue * InteractiveMesh->GetMass());
 	InteractiveMesh = nullptr;
 	InteractiveActor = nullptr;
 	Player_InteractiveMesh = InteractiveMesh;

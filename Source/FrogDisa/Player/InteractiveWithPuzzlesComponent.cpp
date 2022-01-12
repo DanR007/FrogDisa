@@ -38,8 +38,8 @@ void UInteractiveWithPuzzlesComponent::ActionWithPuzzleActor()
 	{
 		
 		FHitResult hitPoint;
-		FVector Start = OwnerPlayer->_Camera->GetComponentLocation();
-		FVector End = OwnerPlayer->_Camera->GetForwardVector() * 1000.f + Start;
+		FVector Start = OwnerPlayer->Camera->GetComponentLocation();
+		FVector End = OwnerPlayer->Camera->GetForwardVector() * 1000.f + Start;
 
 		if (GetWorld()->LineTraceSingleByChannel(hitPoint, Start, End, ECC_GameTraceChannel5))
 		{

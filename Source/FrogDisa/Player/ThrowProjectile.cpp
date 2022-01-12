@@ -75,7 +75,7 @@ void AThrowProjectile::Launch()
 		DetachRootComponentFromParent(true);
 		StartLocation = GetActorLocation();
 
-		SetActorRotation(Cast<AMovement>(OwnerPlayer)->_Camera->GetComponentRotation());
+		SetActorRotation(Cast<AMovement>(OwnerPlayer)->Camera->GetComponentRotation());
 		EndLocation = GetActorLocation() + GetActorForwardVector() * 1050.f;
 
 		MoveProjectileVector = GetActorForwardVector();

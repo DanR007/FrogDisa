@@ -34,8 +34,8 @@ void UUpdateBillboardComponent::CheckGrapplingPoint(bool isGrappling, FVector& H
 	{
 		FHitResult hitPoint;
 
-		FVector Start = Owner->_Camera->GetComponentLocation();
-		FVector End = Owner->_Camera->GetForwardVector() * 3000.f + Start;
+		FVector Start = Owner->Camera->GetComponentLocation();
+		FVector End = Owner->Camera->GetForwardVector() * 3000.f + Start;
 
 
 		if (GetWorld()->LineTraceSingleByChannel(hitPoint, Start, End, ECC_GrapplingObjectTraceChannel))
@@ -81,8 +81,8 @@ void UUpdateBillboardComponent::CheckCollectibleActor()
 	{
 		FHitResult hitPoint;
 
-		FVector Start = Owner->_Camera->GetComponentLocation();
-		FVector End = Owner->_Camera->GetForwardVector() * 550.f + Start;
+		FVector Start = Owner->Camera->GetComponentLocation();
+		FVector End = Owner->Camera->GetForwardVector() * 550.f + Start;
 
 		if (GetWorld()->LineTraceSingleByChannel(hitPoint, Start, End, ECC_CollectiblesObjectTraceChannel))
 		{

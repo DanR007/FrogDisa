@@ -28,6 +28,9 @@
 
 #include "Movement.generated.h"
 
+//#define THIRD_PERSON
+
+
 UCLASS()
 class FROGDISA_API AMovement : public ACharacter
 {
@@ -58,9 +61,12 @@ protected:
 	virtual void AddControllerPitchInput(float Val);
 
 	void UseGrapplingHook();
-
+#ifdef THIRD_PERSON
 	void Aim(float Value);
-	
+
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera")
+	USpringArmComponent* cameraComponent;
+#endif
 	void Run(float Value);
 
 	void InteractionWithObject();
@@ -90,11 +96,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "meshComponent")
 		UStaticMeshComponent* meshComponent;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera")
-		USpringArmComponent* cameraComponent;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera")
-		UCameraComponent* _Camera;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Camera")
+		UCameraComponent* Camera;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Shoot")
 		UShootComponent* ShootComponent;
@@ -146,6 +149,7 @@ private:
 	bool isBearObject;
 	bool isAiming;
 	bool isRunning;
+	bool nearClimbingObject;
 	bool isGrappling;
 	bool circleMenuIsOpen;
 	bool pauseMenuOpen;
@@ -162,6 +166,7 @@ private:
 	const float ChangeTargetArmSpeed = 20.f;
 	const float ThrowImpulseValue = 1500.f;
 	const float DropImpulseValue = 0;
+	const float GrapplingForceValue = 200.f;
 
 	EProjectiles g_Projectile_Type;
 

@@ -3,6 +3,10 @@
 
 #include "MineActor.h"
 
+AMineActor::AMineActor()
+{
+
+}
 
 void AMineActor::Create()
 {
