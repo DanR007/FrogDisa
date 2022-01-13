@@ -43,21 +43,22 @@ void UInteractiveWithPuzzlesComponent::ActionWithPuzzleActor()
 
 		if (GetWorld()->LineTraceSingleByChannel(hitPoint, Start, End, ECC_GameTraceChannel5))
 		{
-			if (IsPuzzleTypeWithoutSpecialView(hitPoint.Actor.Get()))
-			{
-				Cast<ARotatablePuzzleActor>(hitPoint.Actor.Get())->ChangeRotation(Cast<UStaticMeshComponent>(hitPoint.GetComponent()));
-			}
-			else
-			{
-				//if (Cast<APuzzlePyatnashky>(hitPoint.Actor.Get()))
-				//{
-				//	Cast<APuzzlePyatnashky>(hitPoint.Actor.Get()) -> 
-				//}
-				//else
-				//{
+			if (Cast<APuzzleActor>(hitPoint.Actor.Get()) || Cast<ARotatablePuzzleActor>(hitPoint.Actor.Get()))
+				if (IsPuzzleTypeWithoutSpecialView(hitPoint.Actor.Get()))
+				{
+					Cast<ARotatablePuzzleActor>(hitPoint.Actor.Get())->ChangeRotation(Cast<UStaticMeshComponent>(hitPoint.GetComponent()));
+				}
+				else
+				{
+					//if (Cast<APuzzlePyatnashky>(hitPoint.Actor.Get()))
+					//{
+					//	Cast<APuzzlePyatnashky>(hitPoint.Actor.Get()) -> 
+					//}
+					//else
+					//{
 					Cast<APuzzleActor>(hitPoint.Actor.Get())->Use();
-				//}
-			}
+					//}
+				}
 		}
 	}
 }

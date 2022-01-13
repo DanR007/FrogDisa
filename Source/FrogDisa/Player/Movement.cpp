@@ -69,17 +69,18 @@ AMovement::AMovement()
 	cameraComponent->TargetArmLength = 400.f;
 	cameraComponent->SetupAttachment(RootComponent);
 #else
-	bUseControllerRotationPitch = false;
-	bUseControllerRotationYaw = true;
-	bUseControllerRotationRoll = false;
+	//bUseControllerRotationPitch = false;
+	//bUseControllerRotationYaw = true;
+	//bUseControllerRotationRoll = false;
 	FVector MeshPosition = FVector(0.f, 0.f, -80.f);
 	FRotator MeshRotation = FRotator(0.f, 270.f, 0.f);
-	GetMesh()->SetSkeletalMesh(mesh.Object);
-	GetMesh()->SetRelativeLocationAndRotation(MeshPosition, MeshRotation);
-	Camera->SetupAttachment(GetCapsuleComponent());
+	
+	Camera->SetupAttachment(RootComponent);
 	Camera->SetRelativeLocation(FVector(-39.56f, 1.75f, 64.f)); // Position the camera
 	Camera->bUsePawnControlRotation = true;
 	GetMesh()->SetupAttachment(Camera);
+	//GetMesh()->SetSkeletalMesh(mesh.Object);
+	//GetMesh()->SetRelativeLocationAndRotation(MeshPosition, MeshRotation);
 #endif
 
 	SteamBug_ClassBP = steam_bug_bp.Class;
@@ -103,6 +104,7 @@ AMovement::AMovement()
 	Collectibles = 0;
 
 	g_Projectile_Type = EP_Wrench;
+	//GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Walking);
 }
 
 // Called to bind functionality to input
@@ -111,13 +113,11 @@ void AMovement::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 	check(PlayerInputComponent);
 
-	PlayerInputComponent->BindAxis("MoveForward", this, &AMovement::MoveForward);
-	PlayerInputComponent->BindAxis("MoveRight", this, &AMovement::MoveRight);
+	//PlayerInputComponent->BindAxis("MoveForward", this, &AMovement::MoveForward);
+	//PlayerInputComponent->BindAxis("MoveRight", this, &AMovement::MoveRight);
 	PlayerInputComponent->BindAxis("Turn", this, &AMovement::AddControllerYawInput);
 	PlayerInputComponent->BindAxis("LookUp", this, &AMovement::AddControllerPitchInput);
-#ifdef THIRD_PERSON
-	PlayerInputComponent->BindAxis("Aim", this, &AMovement::Aim);
-#endif
+
 	PlayerInputComponent->BindAxis("Run", this, &AMovement::Run);
 
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &AMovement::Jump);
@@ -188,6 +188,7 @@ void AMovement::Tick(float DeltaTime)
 
 void AMovement::MoveForward(float Value)
 {
+	//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::SanitizeFloat(Value));
 	if (Controller && Value != 0.0f)
 	{
 #ifdef THIRD_PERSON
@@ -227,7 +228,12 @@ void AMovement::MoveForward(float Value)
 		}
 
 #else
-		AddMovementInput(GetActorForwardVector(), Value);
+		//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Shoot"));
+		//AddMovementInput(GetActorForwardVector(), Value);
+		const FRotator Rotation = Controller->GetControlRotation();
+		const FRotator YawRotation(0, Rotation.Yaw, 0);
+		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
+		AddMovementInput(Direction, Value);
 #endif
 	}
 }
