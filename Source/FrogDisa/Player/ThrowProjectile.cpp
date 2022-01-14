@@ -39,8 +39,9 @@ void AThrowProjectile::AttachToPlayerCharacter(AActor* Character)
 {
 	
 	OwnerPlayer = Character;
-	ProjectileMesh->AttachToComponent(Cast<AMovement>(OwnerPlayer)->GetMesh(),FAttachmentTransformRules::KeepWorldTransform,TEXT("hand_RSocket"));
-	SetActorRelativeLocation(FVector::ZeroVector);
+	this->AttachToActor(OwnerPlayer, FAttachmentTransformRules::KeepWorldTransform);
+	//ProjectileMesh->AttachToComponent(Cast<AMovement>(OwnerPlayer)->GetMesh(),FAttachmentTransformRules::KeepWorldTransform,TEXT("hand_RSocket"));
+	SetActorRelativeLocation(FVector(100, 100 , 0));
 }
 
 void AThrowProjectile::Tick(float DeltaTime)
@@ -95,10 +96,12 @@ void AThrowProjectile::Move()
 		
 		RuleToMove(1);//1 is a left direction and -1 is a right direction
 
-		if (FVector::Distance(Cast<AMovement>(OwnerPlayer)->GetMesh()->GetSocketLocation(TEXT("hand_RSocket")), GetActorLocation()) < 7)
+		if (FVector::Distance(Cast<AMovement>(OwnerPlayer)->GetActorLocation()/*GetMesh()->GetSocketLocation(TEXT("hand_RSocket"))*/, GetActorLocation()) < 7)
 		{
-			ProjectileMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
-			ProjectileMesh->AttachToComponent(Cast<AMovement>(OwnerPlayer)->GetMesh(), FAttachmentTransformRules::KeepWorldTransform, TEXT("hand_RSocket"));
+			ProjectileMesh->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+			//ProjectileMesh->AttachToActor(OwnerPlayer, FAttachmentTransformRules::KeepWorldTransform);
+			this->AttachToActor(OwnerPlayer, FAttachmentTransformRules::KeepWorldTransform);
+			//ProjectileMesh->AttachToComponent(Cast<AMovement>(OwnerPlayer)->GetMesh(), FAttachmentTransformRules::KeepWorldTransform, TEXT("hand_RSocket"));
 			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, TEXT("Returned"));
 			GetWorldTimerManager().ClearTimer(MoveTimer);
 			Cast<AMovement>(OwnerPlayer)->SetUnwaitingState();
@@ -128,7 +131,8 @@ void AThrowProjectile::RuleToMove(int direction)
 {
 	if (direction == 1)
 	{
-		EndLocation = Cast<AMovement>(OwnerPlayer)->GetMesh()->GetSocketLocation(TEXT("hand_RSocket"));//easing function
+		EndLocation = OwnerPlayer->GetActorLocation();
+		//EndLocation = Cast<AMovement>(OwnerPlayer)->GetMesh()->GetSocketLocation(TEXT("hand_RSocket"));//easing function
 	}
 
 	currentDistance = FVector::Distance(EndLocation, GetActorLocation());

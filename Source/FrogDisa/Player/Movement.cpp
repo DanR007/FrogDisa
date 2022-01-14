@@ -53,8 +53,10 @@ AMovement::AMovement()
 	bUseControllerRotationYaw = false;
 	bUseControllerRotationRoll = false;
 
-	cameraComponent = CreateDefaultSubobject<USpringArmComponent>(TEXT("camera"));
-
+	cameraComponent = CreateDefaultSubobject<USpringArmComponent>(TEXT("springarmcamera"));
+	cameraComponent->bUsePawnControlRotation = true;
+	cameraComponent->TargetArmLength = 400.f;
+	cameraComponent->SetupAttachment(RootComponent);
 	Camera->SetupAttachment(cameraComponent, USpringArmComponent::SocketName);;
 	Camera->bUsePawnControlRotation = false;
 
@@ -65,12 +67,10 @@ AMovement::AMovement()
 	GetMesh()->SetSkeletalMesh(mesh.Object);
 	GetMesh()->SetRelativeLocationAndRotation(MeshPosition, MeshRotation);
 
-	cameraComponent->bUsePawnControlRotation = true;
-	cameraComponent->TargetArmLength = 400.f;
-	cameraComponent->SetupAttachment(RootComponent);
+	
 #else
 	//bUseControllerRotationPitch = false;
-	//bUseControllerRotationYaw = true;
+	bUseControllerRotationYaw = true;
 	//bUseControllerRotationRoll = false;
 	FVector MeshPosition = FVector(0.f, 0.f, -80.f);
 	FRotator MeshRotation = FRotator(0.f, 270.f, 0.f);
@@ -113,8 +113,8 @@ void AMovement::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 	check(PlayerInputComponent);
 
-	//PlayerInputComponent->BindAxis("MoveForward", this, &AMovement::MoveForward);
-	//PlayerInputComponent->BindAxis("MoveRight", this, &AMovement::MoveRight);
+	PlayerInputComponent->BindAxis("MoveForward", this, &AMovement::MoveForward);
+	PlayerInputComponent->BindAxis("MoveRight", this, &AMovement::MoveRight);
 	PlayerInputComponent->BindAxis("Turn", this, &AMovement::AddControllerYawInput);
 	PlayerInputComponent->BindAxis("LookUp", this, &AMovement::AddControllerPitchInput);
 
@@ -124,7 +124,7 @@ void AMovement::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &AMovement::StopJumping);
 
 	PlayerInputComponent->BindAction("Attack", IE_Pressed, this, &AMovement::Attack);
-
+	PlayerInputComponent->BindAction("UseSecondWeapon", IE_Pressed, ShootComponent, &UShootComponent::Fire);
 	PlayerInputComponent->BindAction("TakeInteractiveObject", IE_Pressed, this, &AMovement::InteractionWithObject);
 
 	PlayerInputComponent->BindAction("GrapplingHook", IE_Pressed, this, &AMovement::UseGrapplingHook);
@@ -228,12 +228,7 @@ void AMovement::MoveForward(float Value)
 		}
 
 #else
-		//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Shoot"));
-		//AddMovementInput(GetActorForwardVector(), Value);
-		const FRotator Rotation = Controller->GetControlRotation();
-		const FRotator YawRotation(0, Rotation.Yaw, 0);
-		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
-		AddMovementInput(Direction, Value);
+		AddMovementInput(GetActorForwardVector(), Value);
 #endif
 	}
 }
@@ -294,9 +289,10 @@ void AMovement::Attack()
 			MeleeAttackIsActive = true;
 			GetWorld()->GetTimerManager().SetTimer(GrapplingTimer, this, &AMovement::SetMeleeAttackInactive, 0.01f, false, 0.5f);
 		}
-#endif
-#ifdef FIRST_PERSON
-		ShootComponent->ThrowProjectile(g_Projectile_Type);
+#else
+		//јтака ближн€€
+		//ShootComponent->Fire();
+		//ShootComponent->ThrowProjectile(g_Projectile_Type);
 #endif
 	}
 	else
@@ -349,7 +345,7 @@ void AMovement::UseGrapplingHook()
 
 void AMovement::LerpTo()
 {
-#ifdef THIRD_PERSON
+//#ifdef THIRD_PERSON
 	if (GetDistanceTo(UpdateGrapplingOrCollectibleActors->ActorGrapplingPoint) <= 70.f)//lerp while distance > 70
 	{
 		isGrappling = false;
@@ -364,14 +360,14 @@ void AMovement::LerpTo()
 	{
 		GetMovementComponent()->Velocity = (UpdateGrapplingOrCollectibleActors->ActorGrapplingPoint->GetActorLocation() - GetActorLocation()) * 5;
 	}
-#else
+//#else
 
-	GetCharacterMovement()->SetMovementMode(MOVE_Falling);
-	float distanceToGrapplingPoint = GetDistanceTo(UpdateGrapplingOrCollectibleActors->ActorGrapplingPoint);
-	GetMovementComponent()->Velocity = (UpdateGrapplingOrCollectibleActors->ActorGrapplingPoint->GetActorLocation() - GetActorLocation())
-		* distanceToGrapplingPoint * GrapplingForceValue;
+	//GetCharacterMovement()->SetMovementMode(MOVE_Falling);
+	//float distanceToGrapplingPoint = GetDistanceTo(UpdateGrapplingOrCollectibleActors->ActorGrapplingPoint);
+	//GetMovementComponent()->Velocity = (UpdateGrapplingOrCollectibleActors->ActorGrapplingPoint->GetActorLocation() - GetActorLocation())
+	//	;
 	
-#endif
+//#endif
 }
 
 void AMovement::InteractionWithObject()

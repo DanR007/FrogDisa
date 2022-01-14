@@ -18,12 +18,11 @@ public:
 	// Sets default values for this component's properties
 	UShootComponent();
 
+	void Fire();
+
 	void ThrowProjectile(EProjectiles projectile_type);
 
 	void ReturnProjectile();
-
-	//UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-		TSubclassOf<AThrowProjectile> ProjectileWrench;
 
 		TSubclassOf<AThrowProjectile> BlueprintWrench;
 
