@@ -18,7 +18,7 @@ public:
 
 	AMineActor();
 	void Create() override;
-
+	void Launch() override;
 
 private:
 

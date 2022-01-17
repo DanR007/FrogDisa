@@ -8,6 +8,6 @@ class AWeaponActor
 {
 	
 public:
-	
+	virtual void Launch() = 0;
 	virtual void Create() = 0;
 };

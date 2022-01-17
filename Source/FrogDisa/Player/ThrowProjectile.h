@@ -9,21 +9,26 @@
 #include "Components/SphereComponent.h"
 #include "Components/CapsuleComponent.h"
 
+#include "FrogDisa/Weapon/WeaponActor.h"
+#include "FrogDisa/Weapon/BasicWeaponActor.h"
+
 #include "ThrowProjectile.generated.h"
 
 UCLASS()
-class FROGDISA_API AThrowProjectile : public AActor
+class FROGDISA_API AThrowProjectile : public ABasicWeaponActor
 {
 	GENERATED_BODY()
 
 public:
+
+	void Create() override;
 	// Sets default values for this actor's properties
 	AThrowProjectile();
 	virtual void Tick(float DeltaTime) override;
 	UFUNCTION(BlueprintCallable)
 		void ReturnToCharacter();
 	UFUNCTION()
-		void Launch();
+		void Launch() override;
 
 	//virtual void OnActorBeginOverlap() override;
 	void AttachToPlayerCharacter(AActor* Character);

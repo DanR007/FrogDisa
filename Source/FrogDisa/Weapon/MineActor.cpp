@@ -12,3 +12,8 @@ void AMineActor::Create()
 {
 
 }
+
+void AMineActor::Launch()
+{
+
+}

@@ -14,25 +14,26 @@ class FROGDISA_API UShootComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
-public:	
+public:
 	// Sets default values for this component's properties
 	UShootComponent();
 
 	void Fire();
+	
 
-	void ThrowProjectile(EProjectiles projectile_type);
+	TSubclassOf<AThrowProjectile> BlueprintWrench;
 
-	void ReturnProjectile();
-
-		TSubclassOf<AThrowProjectile> BlueprintWrench;
-
-		TSubclassOf<AThrowingStone> StoneClass;
-
-		AActor* GetActorWrench();
+	TSubclassOf<AThrowingStone> StoneClass;
+	
+	AActor* GetActorWrench();
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 private:
+
+
+	AActor* Current_Weapon;
+
 	AThrowingStone* StoneActor;
 
 	AThrowProjectile* Wrench;

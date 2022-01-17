@@ -179,3 +179,8 @@ AActor* AThrowProjectile::GetOwnerPlayer()
 {
 	return OwnerPlayer;
 }
+
+void AThrowProjectile::Create()
+{
+
+}

@@ -41,6 +41,8 @@ AMovement::AMovement()
 	InteractiveComponent = CreateDefaultSubobject<UInteractiveComponent>(TEXT("InteractiveComponent"));
 	UpdateGrapplingOrCollectibleActors = CreateDefaultSubobject<UUpdateBillboardComponent>(TEXT("SetActiveBillboardComponent"));
 	InteractiveWithPuzzlesComponent = CreateDefaultSubobject<UInteractiveWithPuzzlesComponent>(TEXT("InteractiveWithPuzzlesComponent"));
+	//AttributeSet = CreateDefaultSubobject<UCharacterAttributeSet>(TEXT("AttributeSet"));
+	//AbilityComponent = CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("AbilitySystem"));
 
 	GetCharacterMovement()->bOrientRotationToMovement = false; // Character moves in the direction of input...	
 	GetCharacterMovement()->RotationRate = FRotator(0.0f, 540.0f, 0.0f); // ...at this rotation rate
@@ -103,7 +105,7 @@ AMovement::AMovement()
 
 	Collectibles = 0;
 
-	g_Projectile_Type = EP_Wrench;
+	g_Projectile_Type = EW_Wrench;
 	//GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Walking);
 }
 
@@ -145,6 +147,7 @@ void AMovement::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 void AMovement::BeginPlay()
 {
 	Super::BeginPlay();
+
 }
 
 // Called every frame
@@ -577,7 +580,7 @@ void AMovement::HeightTrace()
 
 void AMovement::SwitchProjectile()
 {
-	g_Projectile_Type == EP_Stone ? g_Projectile_Type = EP_Wrench : g_Projectile_Type = EP_Stone;
+	g_Projectile_Type == EW_Stone ? g_Projectile_Type = EW_Wrench : g_Projectile_Type = EW_Stone;
 }
 
 bool AMovement::CanMakeAction()
@@ -620,3 +623,13 @@ void AMovement::SetStartSettings(int countStone, int countCollectibles, bool isH
 	HaveSteamBug = isHaveBug;
 	isBearObject = isBearObj;
 }
+
+EWeaponType AMovement::GetCurrentWeaponType()
+{
+	return g_Projectile_Type;
+}
+
+//UAbilitySystemComponent* AMovement::GetAbilitySystemComponent() const
+//{
+//	return AbilityComponent;
+//}

@@ -10,10 +10,13 @@
 #include "UpdateBillboardComponent.h"
 #include "InteractiveWithPuzzlesComponent.h"
 
+#include "AbilitySystemInterface.h"
+
 #include "FrogDisa/GrapplingObject.h"
 #include "FrogDisa/CollectiblesObject.h"
 #include "FrogDisa/MovableObject.h"
 #include "FrogDisa/InteractiveObject.h"
+#include "FrogDisa/CharacterAttributeSet.h"
 
 #include "GameFramework/Character.h"
 #include "GameFramework/SpringArmComponent.h"
@@ -40,6 +43,8 @@ public:
 	// Sets default values for this character's properties
 	AMovement();
 	
+	//UAbilitySystemComponent* GetAbilitySystemComponent() const override;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		bool MeleeAttackIsActive;
 
@@ -111,6 +116,12 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 		UInteractiveWithPuzzlesComponent* InteractiveWithPuzzlesComponent;
 
+	//UPROPERTY(VisibleAnywhere, Category = "Gameplay")
+	//	UAbilitySystemComponent* AbilityComponent;
+	//UPROPERTY(Transient)
+	//	UCharacterAttributeSet* AttributeSet;
+
+
 	UFUNCTION(BlueprintCallable)
 		void SetStartSettings(int countStone, int countCollectibles, bool isHaveBug, bool isBearObj);
 	UFUNCTION(BlueprintCallable)
@@ -135,6 +146,8 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 		int GetCountCollectibles();
+	UFUNCTION(BlueprintCallable)
+	EWeaponType GetCurrentWeaponType();
 private:
 	void ForwardTrace();
 	void HeightTrace();
@@ -168,7 +181,7 @@ private:
 	const float DropImpulseValue = 0;
 	const float GrapplingForceValue = 200.f;
 
-	EProjectiles g_Projectile_Type;
+	EWeaponType g_Projectile_Type;
 
 	FCollisionQueryParams CollisionParams;
 	UStaticMeshComponent* InteractiveObject;
