@@ -10,13 +10,18 @@
 			"LoadingPhase": "Default",
 			"AdditionalDependencies": [
 				"Engine",
-				"CableComponent"
+				"CableComponent",
+				"GameplayAbilities"
 			]
 		}
 	],
 	"Plugins": [
 		{
 			"Name": "ApexDestruction",
+			"Enabled": true
+		},
+		{
+			"Name": "GameplayAbilities",
 			"Enabled": true
 		}
 	]
