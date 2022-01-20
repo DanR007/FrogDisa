@@ -18,7 +18,8 @@ public:
 	// Sets default values for this component's properties
 	UShootComponent();
 
-	void Fire();
+	UFUNCTION(BlueprintNativeEvent)
+		void Fire();
 	
 
 	TSubclassOf<AThrowProjectile> BlueprintWrench;

@@ -29,5 +29,5 @@ void ABasicWeaponActor::Create()
 
 void ABasicWeaponActor::Launch()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, "Launch");
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, "BasicWeapon");
 }

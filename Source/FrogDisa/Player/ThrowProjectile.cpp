@@ -30,6 +30,7 @@ AThrowProjectile::AThrowProjectile()
 void AThrowProjectile::BeginPlay()
 {
 	Super::BeginPlay();
+	OwnerPlayer = GetOwner();
 	inAir = false;
 	isLaunched = false;
 	projectileIsReturning = false;
@@ -70,6 +71,7 @@ void AThrowProjectile::ReturnStart()
 
 void AThrowProjectile::Launch()
 {
+	GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Red, "ThrowProjectile");
 	if (isLaunched == false)
 	{
 

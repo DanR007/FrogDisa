@@ -27,7 +27,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	UFUNCTION(BlueprintCallable)
 		void ReturnToCharacter();
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
 		void Launch() override;
 
 	//virtual void OnActorBeginOverlap() override;

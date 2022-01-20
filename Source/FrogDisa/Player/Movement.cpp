@@ -23,9 +23,14 @@
 #include "DrawDebugHelpers.h"
 #include "Styling/SlateWidgetStyleContainerInterface.h"
 
+#include<map>
+
 #define TEST
 
 #define ECC_ClimbingTraceChannel ECC_GameTraceChannel1
+
+std::map<EWeaponType, FString> weaponArrayType;
+
 // Sets default values
 AMovement::AMovement()
 {
@@ -97,6 +102,8 @@ AMovement::AMovement()
 	isWaitingWrench = false;
 	nearClimbingObject = false;
 	
+	weaponArrayType[EWeaponType::EW_Wrench] = "Wrench";
+
 #ifdef TEST
 	HaveSteamBug = true;
 #else
@@ -105,7 +112,7 @@ AMovement::AMovement()
 
 	Collectibles = 0;
 
-	g_Projectile_Type = EW_Wrench;
+	g_Projectile_Type = EWeaponType::EW_Wrench;
 	//GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Walking);
 }
 
@@ -580,7 +587,7 @@ void AMovement::HeightTrace()
 
 void AMovement::SwitchProjectile()
 {
-	g_Projectile_Type == EW_Stone ? g_Projectile_Type = EW_Wrench : g_Projectile_Type = EW_Stone;
+	g_Projectile_Type == EWeaponType::EW_Stone ? g_Projectile_Type = EWeaponType::EW_Wrench : g_Projectile_Type = EWeaponType::EW_Stone;
 }
 
 bool AMovement::CanMakeAction()

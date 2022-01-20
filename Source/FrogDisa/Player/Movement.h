@@ -49,6 +49,7 @@ public:
 		bool MeleeAttackIsActive;
 
 		void SetUnwaitingState();
+
 protected:
 	// Called when the game starts or when spawned
 
@@ -97,6 +98,8 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 		bool GetWaitingState();
+
+	
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "meshComponent")
 		UStaticMeshComponent* meshComponent;

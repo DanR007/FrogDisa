@@ -46,7 +46,7 @@ AActor *UShootComponent::GetActorWrench()
 	return Cast<AActor>(Wrench);
 }
 
-void UShootComponent::Fire()
+void UShootComponent::Fire_Implementation()
 {
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, "Shoot");
 	//вот здесь я хочу вызвать метод Launch() у 

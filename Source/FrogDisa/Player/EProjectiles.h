@@ -4,11 +4,7 @@
 
 #include "CoreMinimal.h"
 
-enum EProjectiles
-{
-	EP_Stone, EP_Wrench, EP_Tranquilizer, EP_ThrowingKnife, EP_CrossbowBolt,
-	EP_Flashbang, EP_Grenade, EP_SmokeGrenade, EP_
-};
+//UENUM(BlueprintType)
 UENUM(BlueprintType)
 enum class EWeaponType: uint8
 {
@@ -22,7 +18,7 @@ enum class EWeaponType: uint8
 	EW_SmokeMine UMETA(DisplayName = "EW_SmokeMine"),
 	EW_FlashbangMine UMETA(DisplayName = "EW_FlashbangMine"),
 	EW_Mine UMETA(DisplayName = "EW_Mine"),
-	EW_Wrench UMETA(DisplayName="EW_Wrench")
+	EW_Wrench UMETA(DisplayName = "EW_Wrench")
 };
 //UENUM()
 enum ERotatorDirection
