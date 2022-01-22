@@ -13,6 +13,8 @@
 #define ECC_PuzzleActorTraceChannel ECC_GameTraceChannel4
 
 AMovement* OwnerPlayer;
+FCollisionQueryParams queryParams;
+
 // Sets default values for this component's properties
 UInteractiveWithPuzzlesComponent::UInteractiveWithPuzzlesComponent()
 {
@@ -27,6 +29,7 @@ void UInteractiveWithPuzzlesComponent::BeginPlay()
 {
 	Super::BeginPlay();
 	OwnerPlayer = Cast<AMovement>(GetOwner());
+	queryParams.AddIgnoredActor(OwnerPlayer);
 	// ...
 	
 }
@@ -41,7 +44,8 @@ void UInteractiveWithPuzzlesComponent::ActionWithPuzzleActor()
 		FVector Start = OwnerPlayer->Camera->GetComponentLocation();
 		FVector End = OwnerPlayer->Camera->GetForwardVector() * 1000.f + Start;
 
-		if (GetWorld()->LineTraceSingleByChannel(hitPoint, Start, End, ECC_GameTraceChannel5))
+
+		if (GetWorld()->LineTraceSingleByChannel(hitPoint, Start, End, ECC_GameTraceChannel5, queryParams))
 		{
 			if (Cast<APuzzleActor>(hitPoint.Actor.Get()) || Cast<ARotatablePuzzleActor>(hitPoint.Actor.Get()))
 				if (IsPuzzleTypeWithoutSpecialView(hitPoint.Actor.Get()))

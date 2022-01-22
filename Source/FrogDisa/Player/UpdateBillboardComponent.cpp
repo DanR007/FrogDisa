@@ -12,6 +12,8 @@
 // Sets default values for this component's properties
 
 AMovement* Owner;
+FCollisionQueryParams colQueryParams;
+
 
 UUpdateBillboardComponent::UUpdateBillboardComponent()
 {
@@ -24,6 +26,7 @@ void UUpdateBillboardComponent::BeginPlay()
 {
 	Super::BeginPlay();
 	Owner = Cast<AMovement>(GetOwner());
+	colQueryParams.AddIgnoredActor(Owner);
 	// ...
 	
 }
@@ -37,8 +40,9 @@ void UUpdateBillboardComponent::CheckGrapplingPoint(bool isGrappling, FVector& H
 		FVector Start = Owner->Camera->GetComponentLocation();
 		FVector End = Owner->Camera->GetForwardVector() * 3000.f + Start;
 
+		
 
-		if (GetWorld()->LineTraceSingleByChannel(hitPoint, Start, End, ECC_GrapplingObjectTraceChannel))
+		if (GetWorld()->LineTraceSingleByChannel(hitPoint, Start, End, ECC_GrapplingObjectTraceChannel, colQueryParams))
 		{
 			if (Cast<AGrapplingObject>(hitPoint.Actor.Get()) && Owner->GetDistanceTo(Cast<AGrapplingObject>(hitPoint.Actor.Get())) > MinimumGrapplingDistance
 				&& Owner->GetDistanceTo(Cast<AGrapplingObject>(hitPoint.Actor.Get())) < MaximumGrapplingDistance)
@@ -64,7 +68,6 @@ void UUpdateBillboardComponent::CheckGrapplingPoint(bool isGrappling, FVector& H
 		{
 			if (isGrappling == false)
 			{
-				
 				if (ActorGrapplingPoint)
 				{
 					ActorGrapplingPoint->SetActiveObject(false);
@@ -84,7 +87,7 @@ void UUpdateBillboardComponent::CheckCollectibleActor()
 		FVector Start = Owner->Camera->GetComponentLocation();
 		FVector End = Owner->Camera->GetForwardVector() * 550.f + Start;
 
-		if (GetWorld()->LineTraceSingleByChannel(hitPoint, Start, End, ECC_CollectiblesObjectTraceChannel))
+		if (GetWorld()->LineTraceSingleByChannel(hitPoint, Start, End, ECC_CollectiblesObjectTraceChannel, colQueryParams))
 		{
 			
 			if (Owner->GetDistanceTo(hitPoint.Actor.Get()) < MaximumCollectibleObjectDistance && Cast<ACollectiblesObject>(hitPoint.Actor.Get()))

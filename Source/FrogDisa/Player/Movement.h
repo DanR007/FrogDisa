@@ -95,16 +95,16 @@ protected:
 
 	void ChoiceWrench() { 
 		g_Projectile_Type = EWeaponType::EW_Wrench; GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Red, "Wrench"); 
-		if(ShootComponent)
-		ShootComponent->SwitchProjectile();
+		if(shootComponent)
+			shootComponent->SwitchProjectile();
 	}
 	void ChoiceStone()  { g_Projectile_Type = EWeaponType::EW_Stone; GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Red, "Stone");
-	if(ShootComponent)
-	ShootComponent->SwitchProjectile();
+	if(shootComponent)
+		shootComponent->SwitchProjectile();
 	}
 	void ChoiceMine()   { g_Projectile_Type = EWeaponType::EW_Mine; GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Red, "Mine"); 
-	if(ShootComponent)
-	ShootComponent->SwitchProjectile();
+	if(shootComponent)
+		shootComponent->SwitchProjectile();
 	}
 
 public:
@@ -122,8 +122,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Camera")
 		UCameraComponent* Camera;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Shoot")
-		UShootComponent* ShootComponent;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "ShootComp")
+		UShootComponent* shootComponent;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Interactive")
 		UInteractiveComponent* InteractiveComponent;
@@ -206,6 +206,7 @@ private:
 	UStaticMeshComponent* InteractiveObject;
 	AMovableObject* movableActor;
 	ASteamBug* SteamBug;
+	FCollisionQueryParams queryParams;
 
 	TSubclassOf<ASteamBug> SteamBug_ClassBP;
 	TSubclassOf<ASteamBug> SteamBug_Class;

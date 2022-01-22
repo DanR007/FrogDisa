@@ -20,7 +20,7 @@ public:
 
 	void SwitchProjectile();
 	void Fire();
-	
+
 	AActor* Current_Weapon;
 
 	TSubclassOf<AThrowProjectile> BlueprintWrench;
@@ -28,6 +28,7 @@ public:
 	TSubclassOf<AThrowingStone> StoneClass;
 	
 	AActor* GetActorWrench();
+
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;

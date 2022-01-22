@@ -42,10 +42,10 @@ AMovement::AMovement()
 	PrimaryActorTick.bCanEverTick = true;
 
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
-	ShootComponent = CreateDefaultSubobject<UShootComponent>(TEXT("Shoot"));
 	InteractiveComponent = CreateDefaultSubobject<UInteractiveComponent>(TEXT("InteractiveComponent"));
 	UpdateGrapplingOrCollectibleActors = CreateDefaultSubobject<UUpdateBillboardComponent>(TEXT("SetActiveBillboardComponent"));
 	InteractiveWithPuzzlesComponent = CreateDefaultSubobject<UInteractiveWithPuzzlesComponent>(TEXT("InteractiveWithPuzzlesComponent"));
+	shootComponent = CreateDefaultSubobject<UShootComponent>(TEXT("ShootComponent"));
 	//AttributeSet = CreateDefaultSubobject<UCharacterAttributeSet>(TEXT("AttributeSet"));
 	//AbilityComponent = CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("AbilitySystem"));
 
@@ -157,8 +157,9 @@ void AMovement::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 // Called when the game starts or when spawned
 void AMovement::BeginPlay()
 {
+	queryParams.AddIgnoredActor(this);
 	Super::BeginPlay();
-	if(ShootComponent)
+	if(shootComponent)
 		UE_LOG(LogTemp, Warning, TEXT("Some warning message"))
 	else
 		UE_LOG(LogTemp, Warning, TEXT("ShootComponent is null"))
@@ -171,6 +172,8 @@ void AMovement::Tick(float DeltaTime)
 
 	if (CanMakeAction())
 	{
+
+		
 		ForwardTrace();
 		HeightTrace();
 
@@ -182,7 +185,7 @@ void AMovement::Tick(float DeltaTime)
 		FVector Start = GetActorLocation();
 		FVector End = Start + GetActorForwardVector() * 40.f;
 
-		if (GetWorld()->LineTraceSingleByChannel(hitPoint, Start, End, ECC_Visibility))
+		if (GetWorld()->LineTraceSingleByChannel(hitPoint, Start, End, ECC_Visibility, queryParams))
 		{
 			movableActor = Cast<AMovableObject>(hitPoint.Actor.Get());
 			if (movableActor)
@@ -203,8 +206,8 @@ void AMovement::Tick(float DeltaTime)
 
 void AMovement::Fire()
 {
-	if(ShootComponent)
-		ShootComponent->Fire();
+	if(shootComponent)
+		shootComponent->Fire();
 }
 
 void AMovement::MoveForward(float Value)
@@ -303,7 +306,7 @@ void AMovement::Attack()
 		if (isAiming == true)
 		{
 			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Shoot"));
-			ShootComponent->ThrowProjectile(g_Projectile_Type);
+			shootComponent->ThrowProjectile(g_Projectile_Type);
 		}
 		else
 		{
@@ -353,14 +356,10 @@ void AMovement::UseGrapplingHook()
 {
 	if (UpdateGrapplingOrCollectibleActors->ActorGrapplingPoint)
 	{
-#ifdef THIRD_PERSON
 		isGrappling = true;
 		GetCharacterMovement()->SetMovementMode(MOVE_Falling);
 
 		GetWorld()->GetTimerManager().SetTimer(GrapplingTimer, this, &AMovement::LerpTo, 0.01f, true, 0.f);
-#else
-		LerpTo();
-#endif
 	}
 }
 
@@ -493,11 +492,13 @@ void AMovement::TakeCollectibles()
 {
 	if (CanMakeAction())
 	{
+		UE_LOG(LogTemp, Warning, TEXT("TAKE"))
 		FVector Start = Camera -> GetComponentLocation();
 		FVector End = Camera -> GetForwardVector() * 1000.f + Start;
 
 		if (UpdateGrapplingOrCollectibleActors->ActorCollectibleObject)
 		{
+			UE_LOG(LogTemp, Warning, TEXT("REALY TAKE THIS"))
 			Collectibles++;
 			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::FromInt(Collectibles));
 			UpdateGrapplingOrCollectibleActors->ActorCollectibleObject->Destroy();
@@ -521,7 +522,7 @@ void AMovement::ForwardTrace()
 	f_start = GetActorLocation();
 	f_end = GetActorLocation() + GetActorForwardVector() * 100;
 
-	if(GetWorld()->LineTraceSingleByChannel(hitPoint, f_start, f_end, ECC_ClimbingTraceChannel))//check an object height
+	if(GetWorld()->LineTraceSingleByChannel(hitPoint, f_start, f_end, ECC_ClimbingTraceChannel, queryParams))//check an object height
 	{
 		wallNormal = hitPoint.Normal;
 		wallLocation = hitPoint.Location;
@@ -535,7 +536,7 @@ void AMovement::HeightTrace()
 	h_start = GetActorLocation() + FVector(0, 0, 200.f) + GetActorForwardVector() * 75;
 	h_end = h_start - FVector(0, 0, 200.f);
 
-	if (GetWorld()->LineTraceSingleByChannel(hitPoint, h_start, h_end, ECC_ClimbingTraceChannel))//check an object in front of player
+	if (GetWorld()->LineTraceSingleByChannel(hitPoint, h_start, h_end, ECC_ClimbingTraceChannel, queryParams))//check an object in front of player
 	{
 #ifdef THIRD_PERSON
 		float distanceZ = Mesh->GetSocketLocation(TEXT("spineSocket")).Z - hitPoint.Location.Z;
@@ -624,7 +625,7 @@ bool AMovement::GetRunningState()
 
 AActor* AMovement::GetThrowProjectile()
 {
-	return ShootComponent->GetActorWrench();
+	return shootComponent->GetActorWrench();
 }
 
 bool AMovement::GetPauseState()

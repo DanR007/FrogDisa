@@ -19,7 +19,7 @@ void UInteractiveComponent::BeginPlay()
 {
 	Super::BeginPlay();
 	Owner = GetOwner();
-	
+	CollisionParams.AddIgnoredActor(Owner);
 }
 
 bool UInteractiveComponent::TakeInteractiveObject(UStaticMeshComponent* Player_InteractiveMesh)//убрать повторение кода

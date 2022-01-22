@@ -48,7 +48,6 @@ void UShootComponent::BeginPlay()
 	//Current_Weapon = Wrench;
 }
 
-
 AActor *UShootComponent::GetActorWrench()
 {
 	return Cast<AActor>(Wrench);
