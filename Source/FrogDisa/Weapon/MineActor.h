@@ -5,20 +5,21 @@
 #include "CoreMinimal.h"
 #include "WeaponActor.h"
 #include "GameFramework/Actor.h"
+#include "WeaponLogicInterface.h"
 #include "MineActor.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class FROGDISA_API AMineActor : public AActor, public AWeaponActor
+class FROGDISA_API AMineActor : public AActor, public IWeaponLogicInterface
 {
 	GENERATED_BODY()
 public:
 
 	AMineActor();
-	void Create() override;
-	void Launch() override;
+	virtual void Launch() override;
+	virtual void Create() override;
 
 private:
 

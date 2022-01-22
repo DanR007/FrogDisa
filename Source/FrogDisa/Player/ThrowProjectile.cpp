@@ -9,6 +9,9 @@
 
 #include "UObject/ConstructorHelpers.h"
 // Sets default values
+float currentAlpha;
+float currentRightAlpha;
+
 AThrowProjectile::AThrowProjectile()
 {
 	PrimaryActorTick.bCanEverTick = false;
@@ -72,22 +75,32 @@ void AThrowProjectile::ReturnStart()
 void AThrowProjectile::Launch()
 {
 	GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Red, "ThrowProjectile");
-	if (isLaunched == false)
+	/*if (isLaunched == false)
 	{
+		FHitResult hitPoint;
+		const FVector startLocation = Cast<AMovement>(OwnerPlayer)->Camera->GetComponentLocation(), endLocation = Cast<AMovement>(OwnerPlayer)->Camera->GetForwardVector() * 1000;
+		if (GetWorld()->LineTraceSingleByChannel(hitPoint, startLocation, endLocation, ECollisionChannel::ECC_Visibility))
+		{
+			EndLocation = hitPoint.Location;
+		}
+		else
+		{
+			EndLocation = endLocation;
+		}
+		SetActorRotation(Cast<AMovement>(OwnerPlayer)->Camera->GetComponentRotation());
 
 		DetachRootComponentFromParent(true);
 		StartLocation = GetActorLocation();
-
-		SetActorRotation(Cast<AMovement>(OwnerPlayer)->Camera->GetComponentRotation());
-		EndLocation = GetActorLocation() + GetActorForwardVector() * 1050.f;
-
-		MoveProjectileVector = GetActorForwardVector();
 		halfDistance = FVector::Distance(EndLocation, GetActorLocation()) / 2;
 
-		GetWorld()->GetTimerManager().SetTimer(MoveTimer, this, &AThrowProjectile::Move, 0.01f, true, 0.f);
+		currentAlpha = 0;
+		currentRightAlpha = 0;
+
 		isLaunched = true;
 		inAir = true;
-	}
+
+		GetWorld()->GetTimerManager().SetTimer(MoveTimer, this, &AThrowProjectile::Move, 0.01f, true, 0.f);
+	}*/
 }
 
 
@@ -119,7 +132,7 @@ void AThrowProjectile::Move()
 		{
 
 			RuleToMove(-1);
-			if (FVector::Distance(StartLocation, GetActorLocation()) >= 1000.f)
+			if (FVector::Distance(EndLocation, GetActorLocation()) <= 1.f)
 			{
 				GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, TEXT("ReturnSt"));
 				ReturnToCharacter();
@@ -133,19 +146,28 @@ void AThrowProjectile::RuleToMove(int direction)
 {
 	if (direction == 1)
 	{
+		currentAlpha -= 0.01f;
 		EndLocation = OwnerPlayer->GetActorLocation();
 		//EndLocation = Cast<AMovement>(OwnerPlayer)->GetMesh()->GetSocketLocation(TEXT("hand_RSocket"));//easing function
 	}
+	else
+		currentAlpha += 0.01f;
+
+	
 
 	currentDistance = FVector::Distance(EndLocation, GetActorLocation());
-	float currentAlpha;
-	currentAlpha = FMath::Abs(halfDistance - currentDistance) / (halfDistance / 2);
-	currentAlpha = FMath::Clamp(currentAlpha, 0.f, 1.f);
+	
+	if (halfDistance > currentDistance)
+		currentRightAlpha += 0.01;
+	else
+		currentRightAlpha -= 0.01;
 
-	FVector nextRightVector = EndLocation - GetActorRightVector() * UKismetMathLibrary::Lerp(halfDistance, 0, currentAlpha) * direction / 2.f;
-
-	FVector nextLoc = UKismetMathLibrary::VInterpTo_Constant(GetActorLocation(), nextRightVector, 0.1f, 200.f);
-
+	//currentAlpha = FMath::Abs(halfDistance - currentDistance) / (halfDistance / 2);
+	//currentAlpha = FMath::Clamp(currentAlpha, 0.f, 1.f);
+	FVector nextRightVector = EndLocation - GetActorRightVector() * UKismetMathLibrary::Lerp(halfDistance, 0, currentRightAlpha) * direction / 2.f;
+	nextRightVector = UKismetMathLibrary::VEase(GetActorLocation(), GetActorRightVector(), currentRightAlpha, EEasingFunc::Linear);
+	FVector nextLoc = UKismetMathLibrary::VEase(StartLocation, EndLocation, currentAlpha, EEasingFunc::EaseIn);//UKismetMathLibrary::VInterpTo_Constant(GetActorLocation(), nextRightVector, 0.1f, 200.f);
+	GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Yellow, nextLoc.ToCompactString());
 	SetActorLocation(nextLoc);
 	AddActorLocalRotation(FRotator(-10, 0, 0), false);
 }

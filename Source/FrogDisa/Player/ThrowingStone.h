@@ -4,10 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "FrogDisa/Weapon/WeaponLogicInterface.h"
 #include "ThrowingStone.generated.h"
 
 UCLASS()
-class FROGDISA_API AThrowingStone : public AActor
+class FROGDISA_API AThrowingStone : public AActor, public IWeaponLogicInterface
 {
 	GENERATED_BODY()
 	
@@ -26,4 +27,6 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	void ThrowStone(FVector VectorToTarget);
 	
+	virtual void Launch() override{ GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Blue, "Stone"); } ;
+	virtual void Create() override { GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Blue, "Stone"); };
 };

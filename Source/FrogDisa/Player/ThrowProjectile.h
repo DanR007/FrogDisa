@@ -11,25 +11,26 @@
 
 #include "FrogDisa/Weapon/WeaponActor.h"
 #include "FrogDisa/Weapon/BasicWeaponActor.h"
+#include "FrogDisa/Weapon/WeaponLogicInterface.h"
 
 #include "ThrowProjectile.generated.h"
 
 UCLASS()
-class FROGDISA_API AThrowProjectile : public ABasicWeaponActor
+class FROGDISA_API AThrowProjectile : public AActor, public IWeaponLogicInterface
 {
 	GENERATED_BODY()
 
 public:
 
-	void Create() override;
+	
 	// Sets default values for this actor's properties
 	AThrowProjectile();
 	virtual void Tick(float DeltaTime) override;
 	UFUNCTION(BlueprintCallable)
 		void ReturnToCharacter();
-	UFUNCTION(BlueprintCallable)
-		void Launch() override;
-
+	//UFUNCTION(BlueprintCallable)
+		virtual void Launch() override;
+	virtual void Create() override;
 	//virtual void OnActorBeginOverlap() override;
 	void AttachToPlayerCharacter(AActor* Character);
 	bool GetInAirState();

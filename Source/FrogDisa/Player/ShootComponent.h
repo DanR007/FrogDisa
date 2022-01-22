@@ -18,9 +18,10 @@ public:
 	// Sets default values for this component's properties
 	UShootComponent();
 
-	UFUNCTION(BlueprintNativeEvent)
-		void Fire();
+	void SwitchProjectile();
+	void Fire();
 	
+	AActor* Current_Weapon;
 
 	TSubclassOf<AThrowProjectile> BlueprintWrench;
 
@@ -33,7 +34,7 @@ protected:
 private:
 
 
-	AActor* Current_Weapon;
+	
 
 	AThrowingStone* StoneActor;
 

@@ -92,6 +92,21 @@ protected:
 		void SetNewPosses();
 
 	UUpdateBillboardComponent* UpdateGrapplingOrCollectibleActors;
+
+	void ChoiceWrench() { 
+		g_Projectile_Type = EWeaponType::EW_Wrench; GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Red, "Wrench"); 
+		if(ShootComponent)
+		ShootComponent->SwitchProjectile();
+	}
+	void ChoiceStone()  { g_Projectile_Type = EWeaponType::EW_Stone; GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Red, "Stone");
+	if(ShootComponent)
+	ShootComponent->SwitchProjectile();
+	}
+	void ChoiceMine()   { g_Projectile_Type = EWeaponType::EW_Mine; GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Red, "Mine"); 
+	if(ShootComponent)
+	ShootComponent->SwitchProjectile();
+	}
+
 public:
 
 	void DetachInteractiveObject();
@@ -156,6 +171,7 @@ private:
 	void HeightTrace();
 	void LerpTo();
 	void SwitchProjectile();
+	void Fire();
 
 	FTimeline MyTimeline;
 	float CurveFloatValue;

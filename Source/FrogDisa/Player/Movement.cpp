@@ -133,7 +133,7 @@ void AMovement::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &AMovement::StopJumping);
 
 	PlayerInputComponent->BindAction("Attack", IE_Pressed, this, &AMovement::Attack);
-	PlayerInputComponent->BindAction("UseSecondWeapon", IE_Pressed, ShootComponent, &UShootComponent::Fire);
+	PlayerInputComponent->BindAction("UseSecondWeapon", IE_Pressed, this, &AMovement::Fire);
 	PlayerInputComponent->BindAction("TakeInteractiveObject", IE_Pressed, this, &AMovement::InteractionWithObject);
 
 	PlayerInputComponent->BindAction("GrapplingHook", IE_Pressed, this, &AMovement::UseGrapplingHook);
@@ -147,6 +147,10 @@ void AMovement::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	PlayerInputComponent->BindAction("SwitchProjectileType", IE_Pressed, this, &AMovement::SwitchProjectile);
 
 	PlayerInputComponent->BindAction("SwitchCharacter", IE_Pressed, this, &AMovement::ChangeCharacter);
+
+	PlayerInputComponent->BindAction("ChoiceWrench", IE_Pressed, this, &AMovement::ChoiceWrench);
+	PlayerInputComponent->BindAction("ChoiceStone", IE_Pressed, this, &AMovement::ChoiceStone);
+	PlayerInputComponent->BindAction("ChoiceMine", IE_Pressed, this, &AMovement::ChoiceMine);
 }
 
 
@@ -154,7 +158,10 @@ void AMovement::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 void AMovement::BeginPlay()
 {
 	Super::BeginPlay();
-
+	if(ShootComponent)
+		UE_LOG(LogTemp, Warning, TEXT("Some warning message"))
+	else
+		UE_LOG(LogTemp, Warning, TEXT("ShootComponent is null"))
 }
 
 // Called every frame
@@ -194,7 +201,11 @@ void AMovement::Tick(float DeltaTime)
 	}
 }
 
-
+void AMovement::Fire()
+{
+	if(ShootComponent)
+		ShootComponent->Fire();
+}
 
 void AMovement::MoveForward(float Value)
 {
@@ -478,21 +489,6 @@ void AMovement::Aim(float Value)
 }
 #endif
 
-bool AMovement::GetAimingState()
-{
-	return isAiming;
-}
-
-bool AMovement::GetRunningState()
-{
-	return isRunning;
-}
-
-AActor *AMovement::GetThrowProjectile()
-{
-	return ShootComponent->GetActorWrench();
-}
-
 void AMovement::TakeCollectibles()
 {
 	if (CanMakeAction())
@@ -517,26 +513,6 @@ void AMovement::PauseMenu()
 	GetWorld()->GetFirstPlayerController()->SetPause(true);
 }
 
-bool AMovement::GetPauseState()
-{
-	return pauseMenuOpen;
-}
-
-bool AMovement::GetWaitingState()
-{
-	return isWaitingWrench;
-}
-
-void AMovement::SetUnPause()
-{
-	GetWorld()->GetFirstPlayerController()->SetShowMouseCursor(false);
-	pauseMenuOpen = false;
-}
-
-void AMovement::SetUnwaitingState()
-{
-	isWaitingWrench = false;
-}
 
 void AMovement::ForwardTrace()
 {
@@ -634,6 +610,42 @@ void AMovement::SetStartSettings(int countStone, int countCollectibles, bool isH
 EWeaponType AMovement::GetCurrentWeaponType()
 {
 	return g_Projectile_Type;
+}
+
+bool AMovement::GetAimingState()
+{
+	return isAiming;
+}
+
+bool AMovement::GetRunningState()
+{
+	return isRunning;
+}
+
+AActor* AMovement::GetThrowProjectile()
+{
+	return ShootComponent->GetActorWrench();
+}
+
+bool AMovement::GetPauseState()
+{
+	return pauseMenuOpen;
+}
+
+bool AMovement::GetWaitingState()
+{
+	return isWaitingWrench;
+}
+
+void AMovement::SetUnPause()
+{
+	GetWorld()->GetFirstPlayerController()->SetShowMouseCursor(false);
+	pauseMenuOpen = false;
+}
+
+void AMovement::SetUnwaitingState()
+{
+	isWaitingWrench = false;
 }
 
 //UAbilitySystemComponent* AMovement::GetAbilitySystemComponent() const

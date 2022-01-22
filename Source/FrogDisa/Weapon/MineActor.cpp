@@ -15,5 +15,5 @@ void AMineActor::Create()
 
 void AMineActor::Launch()
 {
-
+	GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Blue, "MineActor");
 }
