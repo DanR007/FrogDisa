@@ -29,7 +29,7 @@ UShootComponent::UShootComponent()
 	ConstructorHelpers::FClassFinder<AMineActor> mineActorClass(TEXT("Class'/Script/FrogDisa.MineActor'"));
 
 	weapon_map[EWeaponType::EW_Wrench].first = BlueprintWrench;
-	weapon_map[EWeaponType::EW_Wrench].second = 1;
+	weapon_map[EWeaponType::EW_Wrench].second = 0;
 
 	weapon_map[EWeaponType::EW_Stone].first = StoneClass;
 	weapon_map[EWeaponType::EW_Stone].second = 0;
@@ -91,10 +91,12 @@ void UShootComponent::SwitchProjectile()
 			Current_Weapon->Destroy();
 		}
 		Current_Weapon = GetWorld()->SpawnActor<AActor>(weapon_map[currentType].first, GetOwner()->FindComponentByClass<UCameraComponent>()->GetComponentTransform());
+		Cast<IWeaponLogicInterface>(Current_Weapon)->AttachToCharacter(Player_Actor);
 	}
 	else
 	{
-		Current_Weapon->Destroy();
+		if(Current_Weapon)
+			Current_Weapon->Destroy();
 		Current_Weapon = nullptr;
 	}
 }

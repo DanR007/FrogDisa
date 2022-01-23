@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
 #include "FrogDisa/Weapon/WeaponLogicInterface.h"
 #include "ThrowingStone.generated.h"
 
@@ -29,4 +28,7 @@ public:
 	
 	virtual void Launch() override{ GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Blue, "Stone"); } ;
 	virtual void Create() override { GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Blue, "Stone"); };
+	virtual void AttachToCharacter(AActor* player_Character) override;
+private:
+	AActor* OwnerPlayer;
 };

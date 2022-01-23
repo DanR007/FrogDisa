@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
 #include "GameFramework/Pawn.h"
 
 #include "Components/SphereComponent.h"
@@ -29,11 +28,12 @@ public:
 	UFUNCTION(BlueprintCallable)
 		void ReturnToCharacter();
 	//UFUNCTION(BlueprintCallable)
-		virtual void Launch() override;
+	virtual void Launch() override;
 	virtual void Create() override;
 	//virtual void OnActorBeginOverlap() override;
-	void AttachToPlayerCharacter(AActor* Character);
+	void AttachToCharacter(AActor* player_Character) override;
 	bool GetInAirState();
+
 	AActor* GetOwnerPlayer();
 	UFUNCTION(BlueprintNativeEvent)
 		void OnOverlap(AActor* OverlappedActor, AActor* OtherActor);

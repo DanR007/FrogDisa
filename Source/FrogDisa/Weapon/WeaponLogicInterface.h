@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameFramework/Actor.h"
 #include "UObject/Interface.h"
 #include "WeaponLogicInterface.generated.h"
 
@@ -25,4 +26,5 @@ public:
 
 	virtual void Launch() {}
 	virtual void Create() {}
+	virtual void AttachToCharacter(AActor* player_Character) {}
 };

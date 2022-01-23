@@ -177,9 +177,11 @@ void AMovement::Tick(float DeltaTime)
 		
 		ForwardTrace();
 		HeightTrace();
-
-		UpdateGrapplingOrCollectibleActors->CheckCollectibleActor();
-		UpdateGrapplingOrCollectibleActors->CheckGrapplingPoint(isGrappling, endLoc);
+		if (UpdateGrapplingOrCollectibleActors)
+		{
+			UpdateGrapplingOrCollectibleActors->CheckCollectibleActor();
+			UpdateGrapplingOrCollectibleActors->CheckGrapplingPoint(isGrappling, endLoc);
+		}
 
 		FHitResult hitPoint;
 

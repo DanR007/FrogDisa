@@ -26,4 +26,5 @@ public:
 
 	virtual void Take(AMovement* Player) {}
 	virtual void SetActiveHighlightingObject(bool ActiveHighlighting){}
+	virtual void ChangeHighlightingObject(UMeshComponent* change_mesh, float scale){}
 };

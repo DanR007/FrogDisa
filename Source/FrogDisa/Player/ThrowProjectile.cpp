@@ -8,6 +8,9 @@
 #include "FrogDisa/DropItAfterShot.h"
 
 #include "UObject/ConstructorHelpers.h"
+
+#define FIRST
+
 // Sets default values
 float currentAlpha;
 float currentRightAlpha;
@@ -39,10 +42,9 @@ void AThrowProjectile::BeginPlay()
 	projectileIsReturning = false;
 }
 
-void AThrowProjectile::AttachToPlayerCharacter(AActor* Character)
+void AThrowProjectile::AttachToCharacter(AActor* player_Character)
 {
-	
-	OwnerPlayer = Character;
+	OwnerPlayer = player_Character;
 	this->AttachToActor(OwnerPlayer, FAttachmentTransformRules::KeepWorldTransform);
 	//ProjectileMesh->AttachToComponent(Cast<AMovement>(OwnerPlayer)->GetMesh(),FAttachmentTransformRules::KeepWorldTransform,TEXT("hand_RSocket"));
 	SetActorRelativeLocation(FVector(100, 100 , 0));
@@ -57,11 +59,13 @@ void AThrowProjectile::ReturnToCharacter()
 {
 	if (projectileIsReturning == false && isLaunched == true)
 	{
+		StartLocation = GetActorLocation();
+		SetActorRotation(GetActorRotation() * -1);
 		GetWorldTimerManager().ClearTimer(MoveTimer);
-		EndLocation = OldStartLocation;
 		projectileIsReturning = true;
 		inAir = true;
-		halfDistance = GetDistanceTo(OwnerPlayer) / 1.4;
+		halfDistance = GetDistanceTo(OwnerPlayer) / 2;
+		currentAlpha = 0.f;
 		GetWorld()->GetTimerManager().SetTimer(MoveTimer, this, &AThrowProjectile::Move, 0.01f, true, 0.f);
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, TEXT("ReturnSt"));
 	}
@@ -74,12 +78,14 @@ void AThrowProjectile::ReturnStart()
 
 void AThrowProjectile::Launch()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Red, "ThrowProjectile");
-	/*if (isLaunched == false)
+	//GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Red, "ThrowProjectile");
+	if (isLaunched == false)
 	{
+		FCollisionQueryParams queryParams;
+		queryParams.AddIgnoredActor(OwnerPlayer);
 		FHitResult hitPoint;
-		const FVector startLocation = Cast<AMovement>(OwnerPlayer)->Camera->GetComponentLocation(), endLocation = Cast<AMovement>(OwnerPlayer)->Camera->GetForwardVector() * 1000;
-		if (GetWorld()->LineTraceSingleByChannel(hitPoint, startLocation, endLocation, ECollisionChannel::ECC_Visibility))
+		const FVector startLocation = Cast<AMovement>(OwnerPlayer)->Camera->GetComponentLocation(), endLocation = Cast<AMovement>(OwnerPlayer)->Camera->GetForwardVector() * 1000 + startLocation;
+		if (GetWorld()->LineTraceSingleByChannel(hitPoint, startLocation, endLocation, ECollisionChannel::ECC_Visibility, queryParams))
 		{
 			EndLocation = hitPoint.Location;
 		}
@@ -94,13 +100,12 @@ void AThrowProjectile::Launch()
 		halfDistance = FVector::Distance(EndLocation, GetActorLocation()) / 2;
 
 		currentAlpha = 0;
-		currentRightAlpha = 0;
 
 		isLaunched = true;
 		inAir = true;
 
 		GetWorld()->GetTimerManager().SetTimer(MoveTimer, this, &AThrowProjectile::Move, 0.01f, true, 0.f);
-	}*/
+	}
 }
 
 
@@ -146,30 +151,44 @@ void AThrowProjectile::RuleToMove(int direction)
 {
 	if (direction == 1)
 	{
-		currentAlpha -= 0.01f;
 		EndLocation = OwnerPlayer->GetActorLocation();
 		//EndLocation = Cast<AMovement>(OwnerPlayer)->GetMesh()->GetSocketLocation(TEXT("hand_RSocket"));//easing function
 	}
-	else
-		currentAlpha += 0.01f;
 
-	
+#ifdef FIRST
 
 	currentDistance = FVector::Distance(EndLocation, GetActorLocation());
+	currentAlpha += 0.01f;
+
+	//currentAlpha = FMath::Abs(halfDistance - currentDistance) / (halfDistance / 2);
+	//currentAlpha = FMath::Clamp(currentAlpha, 0.f, 1.f);
 	
+	FVector nextRightVector = EndLocation - GetActorRightVector() * UKismetMathLibrary::Lerp(halfDistance, 0, currentAlpha) * direction / 2.f;
+
+	FVector nextLoc = UKismetMathLibrary::VInterpTo_Constant(GetActorLocation(), nextRightVector, 0.1f, 200.f);
+
+	SetActorLocation(nextLoc);
+
+	AddActorLocalRotation(FRotator(-10, 0, 0), false);
+#else
+	currentAlpha += 0.01f;
+	currentDistance = FVector::Distance(EndLocation, GetActorLocation());
 	if (halfDistance > currentDistance)
 		currentRightAlpha += 0.01;
 	else
 		currentRightAlpha -= 0.01;
 
-	//currentAlpha = FMath::Abs(halfDistance - currentDistance) / (halfDistance / 2);
-	//currentAlpha = FMath::Clamp(currentAlpha, 0.f, 1.f);
-	FVector nextRightVector = EndLocation - GetActorRightVector() * UKismetMathLibrary::Lerp(halfDistance, 0, currentRightAlpha) * direction / 2.f;
-	nextRightVector = UKismetMathLibrary::VEase(GetActorLocation(), GetActorRightVector(), currentRightAlpha, EEasingFunc::Linear);
-	FVector nextLoc = UKismetMathLibrary::VEase(StartLocation, EndLocation, currentAlpha, EEasingFunc::EaseIn);//UKismetMathLibrary::VInterpTo_Constant(GetActorLocation(), nextRightVector, 0.1f, 200.f);
-	GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Yellow, nextLoc.ToCompactString());
-	SetActorLocation(nextLoc);
-	AddActorLocalRotation(FRotator(-10, 0, 0), false);
+	FVector nextRightVector = nextRightVector = GetActorRightVector() * currentRightAlpha * halfDistance / 5 * direction;
+	
+	FVector nextLoc = UKismetMathLibrary::VEase(StartLocation, EndLocation, currentAlpha, EEasingFunc::EaseIn);
+	SetActorLocation(nextLoc + nextRightVector);
+#endif
+	
+
+	//nextRightVector = GetActorRightVector() * currentRightAlpha * halfDistance / 5 * direction;
+	
+	
+	//
 }
 
 
@@ -181,7 +200,8 @@ void AThrowProjectile::OnOverlap_Implementation(AActor* OverlappedActor, AActor*
 
 		if (cast)
 		{
-			AThrowProjectile::ReturnToCharacter();
+			if(OtherActor != OwnerPlayer)
+				AThrowProjectile::ReturnToCharacter();
 		}
 		else
 		{

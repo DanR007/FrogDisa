@@ -4,20 +4,18 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "Components/SphereComponent.h"
-#include "Components/BillboardComponent.h"
-#include "ObjectTakenInterface.h"
-#include "CollectiblesObject.generated.h"
+#include "FrogDisa/ObjectTakenInterface.h"
+#include "WrenchTakeableActor.generated.h"
 
 UCLASS()
-class FROGDISA_API ACollectiblesObject : public AActor, public IObjectTakenInterface
+class FROGDISA_API AWrenchTakeableActor : public AActor, public IObjectTakenInterface
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	ACollectiblesObject();
-	void SetActiveObject(bool inVision);
+	AWrenchTakeableActor();
+
 	void Take(AMovement* Player) override;
 	void SetActiveHighlightingObject(bool ActiveHighlighting) override;
 	void ChangeHighlightingObject(UMeshComponent* change_mesh, float scale) override;
@@ -27,10 +25,10 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		UStaticMeshComponent* Mesh;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		USphereComponent* Collider;
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-		UBillboardComponent* CollectiblesPointWidget;
 
-	friend class AMovement;
+	const int count_add = 1;
+public:	
+	// Called every frame
+	virtual void Tick(float DeltaTime) override;
+
 };
