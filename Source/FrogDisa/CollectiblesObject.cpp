@@ -13,12 +13,11 @@ ACollectiblesObject::ACollectiblesObject()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
-	CollectiblesPointWidget = CreateDefaultSubobject<UBillboardComponent>(TEXT("BillBoard"));
+
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
 	Collider = CreateDefaultSubobject< USphereComponent>(TEXT("Collider"));
 	RootComponent = Mesh;
-	CollectiblesPointWidget->SetupAttachment(RootComponent);
-	CollectiblesPointWidget->SetHiddenInGame(true);
+
 	ConstructorHelpers::FObjectFinder<UStaticMesh> mesh(TEXT("StaticMesh'/Engine/EditorMeshes/AssetViewer/Sphere_inversenormals.Sphere_inversenormals'"));
 	Mesh->SetStaticMesh(mesh.Object);
 	FVector scale = FVector(0.3f, 0.3f, 0.3f);
@@ -48,7 +47,7 @@ void ACollectiblesObject::Take(AMovement* Player)
 void ACollectiblesObject::SetActiveHighlightingObject(bool ActiveHighlighting)
 {
 #ifdef TEST
-	CollectiblesPointWidget->SetHiddenInGame(!ActiveHighlighting);
+	
 #else
 	ActiveHighlighting ? ChangeHighlightingObject(Mesh, 1.f) : ChangeHighlightingObject(Mesh, 0.f);
 #endif

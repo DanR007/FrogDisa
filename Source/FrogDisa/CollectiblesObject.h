@@ -29,8 +29,6 @@ protected:
 		UStaticMeshComponent* Mesh;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		USphereComponent* Collider;
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-		UBillboardComponent* CollectiblesPointWidget;
 
 	friend class AMovement;
 };

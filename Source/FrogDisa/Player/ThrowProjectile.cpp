@@ -81,11 +81,11 @@ void AThrowProjectile::Launch()
 	//GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Red, "ThrowProjectile");
 	if (isLaunched == false)
 	{
-		FCollisionQueryParams queryParams;
-		queryParams.AddIgnoredActor(OwnerPlayer);
+		FCollisionQueryParams queryParamsWrench;
+		queryParamsWrench.AddIgnoredActor(OwnerPlayer);
 		FHitResult hitPoint;
 		const FVector startLocation = Cast<AMovement>(OwnerPlayer)->Camera->GetComponentLocation(), endLocation = Cast<AMovement>(OwnerPlayer)->Camera->GetForwardVector() * 1000 + startLocation;
-		if (GetWorld()->LineTraceSingleByChannel(hitPoint, startLocation, endLocation, ECollisionChannel::ECC_Visibility, queryParams))
+		if (GetWorld()->LineTraceSingleByChannel(hitPoint, startLocation, endLocation, ECollisionChannel::ECC_Visibility, queryParamsWrench))
 		{
 			EndLocation = hitPoint.Location;
 		}
