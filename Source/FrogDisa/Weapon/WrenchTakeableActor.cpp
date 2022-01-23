@@ -2,6 +2,7 @@
 
 
 #include "WrenchTakeableActor.h"
+#include "Materials/Material.h"
 #include "FrogDisa/Player/EProjectiles.h"
 // Sets default values
 AWrenchTakeableActor::AWrenchTakeableActor()

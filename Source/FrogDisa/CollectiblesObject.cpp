@@ -2,6 +2,7 @@
 
 
 #include "CollectiblesObject.h"
+#include "Materials/Material.h"
 #include "UObject/ConstructorHelpers.h"
 
 //#define TEST
