@@ -33,11 +33,9 @@ void AWrenchTakeableActor::Take(AMovement* Player)
 
 void AWrenchTakeableActor::SetActiveHighlightingObject(bool ActiveHighlighting)
 {
-#ifdef TEST
-	CollectiblesPointWidget->SetHiddenInGame(!ActiveHighlighting);
-#else
+
 	ActiveHighlighting ? ChangeHighlightingObject(Mesh, 1.f) : ChangeHighlightingObject(Mesh, 0.f);
-#endif
+
 }
 
 void AWrenchTakeableActor::ChangeHighlightingObject(UMeshComponent* change_mesh, float scale)

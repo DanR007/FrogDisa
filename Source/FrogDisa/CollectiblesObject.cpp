@@ -46,11 +46,7 @@ void ACollectiblesObject::Take(AMovement* Player)
 
 void ACollectiblesObject::SetActiveHighlightingObject(bool ActiveHighlighting)
 {
-#ifdef TEST
-	
-#else
 	ActiveHighlighting ? ChangeHighlightingObject(Mesh, 1.f) : ChangeHighlightingObject(Mesh, 0.f);
-#endif
 }
 
 void ACollectiblesObject::ChangeHighlightingObject(UMeshComponent* change_mesh, float scale)
