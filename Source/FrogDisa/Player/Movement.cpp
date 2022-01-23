@@ -12,6 +12,7 @@
 
 #include "FrogDisa/MyHUD.h"
 #include "FrogDisa/InteractiveObject.h"
+#include "FrogDisa/ObjectTakenInterface.h"
 
 #include "Animation/AnimInstance.h"
 #include "Kismet/GameplayStatics.h"
@@ -492,17 +493,12 @@ void AMovement::TakeCollectibles()
 {
 	if (CanMakeAction())
 	{
-		UE_LOG(LogTemp, Warning, TEXT("TAKE"))
-		FVector Start = Camera -> GetComponentLocation();
-		FVector End = Camera -> GetForwardVector() * 1000.f + Start;
-
-		if (UpdateGrapplingOrCollectibleActors->ActorCollectibleObject)
+		IObjectTakenInterface* taken_object = Cast<IObjectTakenInterface>(UpdateGrapplingOrCollectibleActors->ActorTakenObject);
+		if (taken_object)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("REALY TAKE THIS"))
-			Collectibles++;
+			taken_object->Take(this);
+			UpdateGrapplingOrCollectibleActors->ActorTakenObject = nullptr;
 			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::FromInt(Collectibles));
-			UpdateGrapplingOrCollectibleActors->ActorCollectibleObject->Destroy();
-			UpdateGrapplingOrCollectibleActors->ActorCollectibleObject = nullptr;
 		}
 	}
 }

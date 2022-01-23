@@ -13,7 +13,6 @@
 #include "AbilitySystemInterface.h"
 
 #include "FrogDisa/GrapplingObject.h"
-#include "FrogDisa/CollectiblesObject.h"
 #include "FrogDisa/MovableObject.h"
 #include "FrogDisa/InteractiveObject.h"
 #include "FrogDisa/CharacterAttributeSet.h"
@@ -50,6 +49,9 @@ public:
 
 		void SetUnwaitingState();
 
+		void AddCollectibles() { Collectibles++; }
+		void AddMoney(int money_count) {}//move it to ShopComponent later
+		
 protected:
 	// Called when the game starts or when spawned
 
@@ -212,4 +214,6 @@ private:
 	TSubclassOf<ASteamBug> SteamBug_Class;
 
 	friend class UInteractiveWithPuzzlesComponent;
+	//friend class ACollectiblesObject;
+	friend class IObjectTakenInterface;
 };

@@ -3,6 +3,26 @@
 
 #include "CollectiblesObject.h"
 #include "UObject/ConstructorHelpers.h"
+
+//#define TEST
+
+void ChangeHighlightingObject(UMeshComponent* change_mesh, float scale)
+{
+	if (change_mesh)
+	{
+		TArray<UMaterialInterface*> material_array = change_mesh->GetMaterials();
+		for (UMaterialInterface* material_in_array : material_array)
+		{
+			if (material_in_array)
+			{
+				UMaterial* material = material_in_array->GetMaterial();
+				if (material)
+					material->SetScalarParameterValueEditorOnly("select", scale);
+			}
+		}
+	}
+}
+
 // Sets default values
 ACollectiblesObject::ACollectiblesObject()
 {
@@ -31,6 +51,21 @@ void ACollectiblesObject::BeginPlay()
 
 void ACollectiblesObject::SetActiveObject(bool inVision)
 {
-	CollectiblesPointWidget->SetHiddenInGame(!inVision);
+	
+}
+
+void ACollectiblesObject::Take(AMovement* Player)
+{
+	Player->AddCollectibles();
+	Destroy();
+}
+
+void ACollectiblesObject::SetActiveHighlightingObject(bool ActiveHighlighting)
+{
+#ifdef TEST
+	CollectiblesPointWidget->SetHiddenInGame(!ActiveHighlighting);
+#else
+	ActiveHighlighting ? ChangeHighlightingObject(Mesh, 1.f) : ChangeHighlightingObject(Mesh, 0.f);
+#endif
 }
 

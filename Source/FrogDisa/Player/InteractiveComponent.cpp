@@ -26,17 +26,20 @@ bool UInteractiveComponent::TakeInteractiveObject(UStaticMeshComponent* Player_I
 {
 	FHitResult hitPoint;
 
-	FVector End = Owner->GetActorForwardVector() * 500.f + Owner->GetActorLocation();
+	UCameraComponent* CameraOwner = Cast<AMovement>(Owner)->Camera;
 
-	if (Owner->GetWorld()->LineTraceSingleByChannel(hitPoint, Owner->GetActorLocation(), End, ECC_Visibility, CollisionParams) == true)
+	FVector Start = CameraOwner->GetComponentLocation();
+	FVector End = Start + CameraOwner->GetForwardVector() * 500.f;
+
+	if (Owner->GetWorld()->LineTraceSingleByChannel(hitPoint, Start, End, ECC_Visibility, CollisionParams) == true)
 	{
 		if (hitPoint.Actor->IsA(AInteractiveObject::StaticClass()))
 		{
 			InteractiveActor = hitPoint.Actor.Get();
-			InteractiveActor->SetActorLocation(Owner->GetActorLocation() + Owner->GetActorForwardVector() * 90.f + Owner -> GetActorUpVector() * 10.f);
+			InteractiveActor->SetActorLocation(Start + CameraOwner->GetForwardVector() * 90.f);
 			InteractiveActor->SetActorRotation(Owner->GetActorRotation());
 			InteractiveMesh = InteractiveActor->FindComponentByClass<UStaticMeshComponent>();
-			InteractiveMesh->SetSimulatePhysics(false);//if simulate physics true character does not move
+			InteractiveMesh->SetSimulatePhysics(false);//if simulate physics == true character can't move
 			InteractiveMesh->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 			InteractiveActor->AttachToActor(Owner, FAttachmentTransformRules::KeepWorldTransform);
 			Player_InteractiveMesh = InteractiveMesh;

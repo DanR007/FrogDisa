@@ -3,7 +3,8 @@
 
 #include "UpdateBillboardComponent.h"
 #include "Movement.h"
-
+#include "FrogDisa/ObjectTakenInterface.h"
+#include "Materials/Material.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Engine/EngineTypes.h"
 
@@ -13,6 +14,8 @@
 
 AMovement* Owner;
 FCollisionQueryParams colQueryParams;
+IObjectTakenInterface* TakenActor;
+
 
 
 UUpdateBillboardComponent::UUpdateBillboardComponent()
@@ -85,31 +88,36 @@ void UUpdateBillboardComponent::CheckCollectibleActor()
 		FHitResult hitPoint;
 
 		FVector Start = Owner->Camera->GetComponentLocation();
-		FVector End = Owner->Camera->GetForwardVector() * 550.f + Start;
+		FVector End = Owner->Camera->GetForwardVector() * MaximumCollectibleObjectDistance + Start;
 
 		if (GetWorld()->LineTraceSingleByChannel(hitPoint, Start, End, ECC_CollectiblesObjectTraceChannel, colQueryParams))
 		{
-			
-			if (Owner->GetDistanceTo(hitPoint.Actor.Get()) < MaximumCollectibleObjectDistance && Cast<ACollectiblesObject>(hitPoint.Actor.Get()))
+			if (Cast<IObjectTakenInterface>(hitPoint.Actor.Get()))
 			{
-				ActorCollectibleObject = Cast<ACollectiblesObject>(hitPoint.Actor.Get());
-				ActorCollectibleObject->SetActiveObject(true);
+				TakenActor = Cast<IObjectTakenInterface>(hitPoint.Actor.Get());
+				if (ActorTakenObject == nullptr)
+				{
+					ActorTakenObject = hitPoint.Actor.Get();
+					TakenActor->SetActiveHighlightingObject(true);
+				}
 			}
 			else
 			{
-				if (ActorCollectibleObject)
+				if (TakenActor)
 				{
-					ActorCollectibleObject->SetActiveObject(false);
-					ActorCollectibleObject = nullptr;
+					TakenActor->SetActiveHighlightingObject(false);
+					TakenActor = nullptr;
+					ActorTakenObject = nullptr;
 				}
 			}
 		}
 		else
 		{
-			if (ActorCollectibleObject)
+			if (TakenActor)
 			{
-				ActorCollectibleObject->SetActiveObject(false);
-				ActorCollectibleObject = nullptr;
+				TakenActor->SetActiveHighlightingObject(false);
+				TakenActor = nullptr;
+				ActorTakenObject = nullptr;
 			}
 		}
 	}

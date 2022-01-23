@@ -16,7 +16,7 @@ AMovement* Player_Actor;
 //#include "UObject/ConstructorHelpers.h"
 // Sets default values for this component's properties
 
-std::map<EWeaponType, TSubclassOf<AActor>> weapon_map;
+std::map<EWeaponType, std::pair<TSubclassOf<AActor>, int /*count ammunition*/>> weapon_map;
 
 UShootComponent::UShootComponent()
 {
@@ -28,9 +28,14 @@ UShootComponent::UShootComponent()
 
 	ConstructorHelpers::FClassFinder<AMineActor> mineActorClass(TEXT("Class'/Script/FrogDisa.MineActor'"));
 
-	weapon_map[EWeaponType::EW_Wrench] = BlueprintWrench;
-	weapon_map[EWeaponType::EW_Stone] = StoneClass;
-	weapon_map[EWeaponType::EW_Mine] = mineActorClass.Class;
+	weapon_map[EWeaponType::EW_Wrench].first = BlueprintWrench;
+	weapon_map[EWeaponType::EW_Wrench].second = 1;
+
+	weapon_map[EWeaponType::EW_Stone].first = StoneClass;
+	weapon_map[EWeaponType::EW_Stone].second = 0;
+
+	weapon_map[EWeaponType::EW_Mine].first = mineActorClass.Class;
+	weapon_map[EWeaponType::EW_Mine].second = 0;
 }
 
 
@@ -79,10 +84,23 @@ void UShootComponent::Fire()
 void UShootComponent::SwitchProjectile()
 {
 	EWeaponType currentType = Player_Actor->GetCurrentWeaponType();
-	if (Current_Weapon)
+	if (weapon_map[currentType].second > 0)//if we have ammo spawn projectile else palm will be empty
+	{
+		if (Current_Weapon)
+		{
+			Current_Weapon->Destroy();
+		}
+		Current_Weapon = GetWorld()->SpawnActor<AActor>(weapon_map[currentType].first, GetOwner()->FindComponentByClass<UCameraComponent>()->GetComponentTransform());
+	}
+	else
 	{
 		Current_Weapon->Destroy();
+		Current_Weapon = nullptr;
 	}
-	Current_Weapon = GetWorld()->SpawnActor<AActor>(weapon_map[currentType], GetOwner()->FindComponentByClass<UCameraComponent>()->GetComponentTransform());
+}
+
+void UShootComponent::AddAmmunition(int ammunition_count, EWeaponType ammunition_type)
+{
+	weapon_map[ammunition_type].second += ammunition_count;
 }
 

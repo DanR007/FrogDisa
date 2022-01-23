@@ -1,12 +1,10 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
+
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
 
 #include "FrogDisa/GrapplingObject.h"
-#include "FrogDisa/CollectiblesObject.h"
 
 #include "UpdateBillboardComponent.generated.h"
 
@@ -32,7 +30,7 @@ private:
 public:	
 
 	AGrapplingObject* ActorGrapplingPoint;
-	ACollectiblesObject* ActorCollectibleObject;
+	AActor* ActorTakenObject;
 
 	void CheckGrapplingPoint(bool isGrappling, FVector &HitLocation);
 

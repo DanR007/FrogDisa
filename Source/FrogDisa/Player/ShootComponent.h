@@ -28,7 +28,7 @@ public:
 	TSubclassOf<AThrowingStone> StoneClass;
 	
 	AActor* GetActorWrench();
-
+	void AddAmmunition(int ammunition_count, EWeaponType ammunition_type);
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
