@@ -1,5 +1,7 @@
 #include "GrapplingComponent.h"
+#include"Movement.h"
 
+AMovement* Player_Character;
 // Sets default values for this component's properties
 UGrapplingComponent::UGrapplingComponent()
 {
@@ -15,7 +17,7 @@ UGrapplingComponent::UGrapplingComponent()
 void UGrapplingComponent::BeginPlay()
 {
 	Super::BeginPlay();
-
+	Player_Character = Cast<AMovement>(GetOwner());
 	// ...
 	
 }
@@ -29,16 +31,13 @@ void UGrapplingComponent::TickComponent(float DeltaTime, ELevelTick TickType, FA
 	// ...
 }
 
-void UGrapplingComponent::DrawPath_Implementation(bool f_grappling_mode_active)
-{
-
-}
 
 void UGrapplingComponent::StartGrappling()
 {
-	if (grappling_mode_active)
+	if (grappling_mode_active && can_grappling)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Start grappling"))
+		Player_Character->UseGrapplingHook();
 	}
 	else
 	{
@@ -48,6 +47,14 @@ void UGrapplingComponent::StartGrappling()
 
 void UGrapplingComponent::GrapplingToTarget()
 {
-
+	Player_Character->LerpTo(grappling_target_location);
 }
 
+void UGrapplingComponent::ChangeActiveGrapplingMode()
+{ 
+	grappling_mode_active = !grappling_mode_active;
+	if (grappling_mode_active && Player_Character)
+	{
+		Player_Character->DrawGrapplingVariant();
+	}
+}

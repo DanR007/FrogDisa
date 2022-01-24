@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "Components/TimelineComponent.h"
 #include "GrapplingComponent.generated.h"
 
 
@@ -20,25 +21,39 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-		FVector grappling_target_location;
+	
+
 
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-	bool GetGrapplingModeActive() { return grappling_mode_active; }
+	UFUNCTION(BlueprintCallable)
+		bool GetGrapplingModeActive() { return grappling_mode_active; }
 
-	void ChangeActiveGrapplingMode() { grappling_mode_active = !grappling_mode_active; DrawPath(grappling_mode_active); }
+	void ChangeActiveGrapplingMode(); 
 
 	void StartGrappling();
 	void GrapplingToTarget();
 
-	UFUNCTION(BlueprintNativeEvent)
-		void DrawPath(bool f_grappling_mode_active);
+	UFUNCTION(BlueprintCallable)
+	void SetGrapplingTargetLocation(FVector location)
+	{
+		grappling_target_location = location;
+	}
+	UFUNCTION(BlueprintCallable)
+		void SetCanGrappling(bool can) { can_grappling = can; }
 
+	bool GetCanGrappling() { return can_grappling; }
+
+	FTimerHandle GrapplingTimer;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+		FVector grappling_target_location;
 private:
 	
 	bool grappling_mode_active;
+	bool can_grappling;
+
 	
 };

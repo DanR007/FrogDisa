@@ -359,32 +359,27 @@ void AMovement::SetMeleeAttackInactive()
 
 void AMovement::UseGrapplingHook()
 {
-	//if (grapplingComponent->GetA)
-	//{
-	//	isGrappling = true;
-	//	GetCharacterMovement()->SetMovementMode(MOVE_Falling);
-	//
-	//	GetWorld()->GetTimerManager().SetTimer(GrapplingTimer, this, &AMovement::LerpTo, 0.01f, true, 0.f);
-	//}
+	if (grapplingComponent->GetCanGrappling())
+	{
+		GetCharacterMovement()->SetMovementMode(MOVE_Falling);
+		GetWorld()->GetTimerManager().SetTimer(GrapplingTimer, this, &AMovement::LerpTo, 0.01f, true, 0.f);
+	}
 }
 
-void AMovement::LerpTo()
+void AMovement::LerpTo(FVector EndLocation)
 {
 //#ifdef THIRD_PERSON
-	//if (GetDistanceTo(CheckCollectibleActors->ActorGrapplingPoint) <= 70.f)//lerp while distance > 70
-	//{
-	//	isGrappling = false;
+	if (FVector::Distance(GetActorLocation(), grapplingComponent->grappling_target_location) <= 10.f)//lerp while distance > 70
+	{
+		isGrappling = false;
 
-	//	GetWorldTimerManager().ClearTimer(GrapplingTimer);
-	//	GetMovementComponent()->Velocity = FVector::ZeroVector;
-	//	GetMovementComponent()->Velocity.Z = 500.f;
-	//	CheckCollectibleActors->ActorGrapplingPoint->SetActiveObject(false);
-	//	CheckCollectibleActors->ActorGrapplingPoint = nullptr;
-	//}
-	//else
-	//{
-	//	GetMovementComponent()->Velocity = (CheckCollectibleActors->ActorGrapplingPoint->GetActorLocation() - GetActorLocation()) * 20;
-	//}
+		GetWorldTimerManager().ClearTimer(GrapplingTimer);
+		GetMovementComponent()->Velocity = FVector::ZeroVector;
+	}
+	else
+	{
+		GetMovementComponent()->Velocity = (grapplingComponent->grappling_target_location - GetActorLocation()) * 10;
+	}
 //#else
 
 	//GetCharacterMovement()->SetMovementMode(MOVE_Falling);
@@ -560,6 +555,11 @@ void AMovement::HeightTrace()
 
 		
 	}
+}
+
+void AMovement::DrawGrapplingVariant_Implementation()
+{
+
 }
 
 void AMovement::SwitchProjectile()

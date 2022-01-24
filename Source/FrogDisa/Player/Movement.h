@@ -52,6 +52,9 @@ public:
 
 		void AddCollectibles() { Collectibles++; }
 		void AddMoney(int money_count) {}//move it to ShopComponent later
+
+		UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+			void DrawGrapplingVariant();
 		
 protected:
 	// Called when the game starts or when spawned
@@ -94,6 +97,8 @@ protected:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 		void SetNewPosses();
 
+	
+
 	UUpdateBillboardComponent* TakenActorsComponent;
 
 	void ChoiceWrench() { 
@@ -109,6 +114,9 @@ protected:
 	if(shootComponent)
 		shootComponent->SwitchProjectile();
 	}
+
+	UFUNCTION(BlueprintCallable)
+		UGrapplingComponent* GetGrapplingComponent() { return grapplingComponent; }
 
 public:
 
@@ -171,10 +179,11 @@ public:
 		int GetCountCollectibles();
 	UFUNCTION(BlueprintCallable)
 	EWeaponType GetCurrentWeaponType();
+
+	void LerpTo(FVector EndLocation);
 private:
 	void ForwardTrace();
 	void HeightTrace();
-	void LerpTo();
 	void SwitchProjectile();
 	void Fire();
 
@@ -218,5 +227,5 @@ private:
 
 	friend class UInteractiveWithPuzzlesComponent;
 	//friend class ACollectiblesObject;
-	friend class IObjectTakenInterface;
+	friend class UGrapplingComponent;
 };
