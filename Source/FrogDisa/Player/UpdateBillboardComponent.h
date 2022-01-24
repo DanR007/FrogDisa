@@ -29,10 +29,8 @@ private:
 
 public:	
 
-	AGrapplingObject* ActorGrapplingPoint;
 	AActor* ActorTakenObject;
 
-	void CheckGrapplingPoint(bool isGrappling, FVector &HitLocation);
 
-	void CheckCollectibleActor();
+	void CheckTakenObject();
 };

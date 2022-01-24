@@ -9,6 +9,7 @@
 #include "FrogDisaGameInstance.h"
 #include "UpdateBillboardComponent.h"
 #include "InteractiveWithPuzzlesComponent.h"
+#include "GrapplingComponent.h"
 
 #include "AbilitySystemInterface.h"
 
@@ -93,7 +94,7 @@ protected:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 		void SetNewPosses();
 
-	UUpdateBillboardComponent* UpdateGrapplingOrCollectibleActors;
+	UUpdateBillboardComponent* TakenActorsComponent;
 
 	void ChoiceWrench() { 
 		g_Projectile_Type = EWeaponType::EW_Wrench; GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Red, "Wrench"); 
@@ -133,9 +134,11 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 		UFrogDisaGameInstance* game_Instance;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		UInteractiveWithPuzzlesComponent* InteractiveWithPuzzlesComponent;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		UGrapplingComponent* grapplingComponent;
 	//UPROPERTY(VisibleAnywhere, Category = "Gameplay")
 	//	UAbilitySystemComponent* AbilityComponent;
 	//UPROPERTY(Transient)

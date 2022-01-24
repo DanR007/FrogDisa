@@ -44,9 +44,10 @@ AMovement::AMovement()
 
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	InteractiveComponent = CreateDefaultSubobject<UInteractiveComponent>(TEXT("InteractiveComponent"));
-	UpdateGrapplingOrCollectibleActors = CreateDefaultSubobject<UUpdateBillboardComponent>(TEXT("SetActiveBillboardComponent"));
+	TakenActorsComponent = CreateDefaultSubobject<UUpdateBillboardComponent>(TEXT("SetActiveBillboardComponent"));
 	InteractiveWithPuzzlesComponent = CreateDefaultSubobject<UInteractiveWithPuzzlesComponent>(TEXT("InteractiveWithPuzzlesComponent"));
 	shootComponent = CreateDefaultSubobject<UShootComponent>(TEXT("ShootComponent"));
+	grapplingComponent = CreateDefaultSubobject<UGrapplingComponent>(TEXT("GrapplingComponent"));
 	//AttributeSet = CreateDefaultSubobject<UCharacterAttributeSet>(TEXT("AttributeSet"));
 	//AbilityComponent = CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("AbilitySystem"));
 
@@ -135,9 +136,11 @@ void AMovement::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 	PlayerInputComponent->BindAction("Attack", IE_Pressed, this, &AMovement::Attack);
 	PlayerInputComponent->BindAction("UseSecondWeapon", IE_Pressed, this, &AMovement::Fire);
+	
 	PlayerInputComponent->BindAction("TakeInteractiveObject", IE_Pressed, this, &AMovement::InteractionWithObject);
 
-	PlayerInputComponent->BindAction("GrapplingHook", IE_Pressed, this, &AMovement::UseGrapplingHook);
+	PlayerInputComponent->BindAction("GrapplingHook", IE_Pressed, grapplingComponent, &UGrapplingComponent::ChangeActiveGrapplingMode);
+	PlayerInputComponent->BindAction("UseSecondWeapon", IE_Pressed, grapplingComponent, &UGrapplingComponent::StartGrappling);
 
 	PlayerInputComponent->BindAction("ActionWithSomeObj", IE_Pressed, this, &AMovement::TakeCollectibles);
 	PlayerInputComponent->BindAction("ActionWithSomeObj", IE_Pressed, InteractiveWithPuzzlesComponent,
@@ -177,10 +180,9 @@ void AMovement::Tick(float DeltaTime)
 		
 		ForwardTrace();
 		HeightTrace();
-		if (UpdateGrapplingOrCollectibleActors)
+		if (TakenActorsComponent)
 		{
-			UpdateGrapplingOrCollectibleActors->CheckCollectibleActor();
-			UpdateGrapplingOrCollectibleActors->CheckGrapplingPoint(isGrappling, endLoc);
+			TakenActorsComponent->CheckTakenObject();
 		}
 
 		FHitResult hitPoint;
@@ -209,7 +211,7 @@ void AMovement::Tick(float DeltaTime)
 
 void AMovement::Fire()
 {
-	if(shootComponent)
+	if(shootComponent && grapplingComponent->GetGrapplingModeActive() == false)
 		shootComponent->Fire();
 }
 
@@ -357,37 +359,37 @@ void AMovement::SetMeleeAttackInactive()
 
 void AMovement::UseGrapplingHook()
 {
-	if (UpdateGrapplingOrCollectibleActors->ActorGrapplingPoint)
-	{
-		isGrappling = true;
-		GetCharacterMovement()->SetMovementMode(MOVE_Falling);
-
-		GetWorld()->GetTimerManager().SetTimer(GrapplingTimer, this, &AMovement::LerpTo, 0.01f, true, 0.f);
-	}
+	//if (grapplingComponent->GetA)
+	//{
+	//	isGrappling = true;
+	//	GetCharacterMovement()->SetMovementMode(MOVE_Falling);
+	//
+	//	GetWorld()->GetTimerManager().SetTimer(GrapplingTimer, this, &AMovement::LerpTo, 0.01f, true, 0.f);
+	//}
 }
 
 void AMovement::LerpTo()
 {
 //#ifdef THIRD_PERSON
-	if (GetDistanceTo(UpdateGrapplingOrCollectibleActors->ActorGrapplingPoint) <= 70.f)//lerp while distance > 70
-	{
-		isGrappling = false;
+	//if (GetDistanceTo(CheckCollectibleActors->ActorGrapplingPoint) <= 70.f)//lerp while distance > 70
+	//{
+	//	isGrappling = false;
 
-		GetWorldTimerManager().ClearTimer(GrapplingTimer);
-		GetMovementComponent()->Velocity = FVector::ZeroVector;
-		GetMovementComponent()->Velocity.Z = 500.f;
-		UpdateGrapplingOrCollectibleActors->ActorGrapplingPoint->SetActiveObject(false);
-		UpdateGrapplingOrCollectibleActors->ActorGrapplingPoint = nullptr;
-	}
-	else
-	{
-		GetMovementComponent()->Velocity = (UpdateGrapplingOrCollectibleActors->ActorGrapplingPoint->GetActorLocation() - GetActorLocation()) * 5;
-	}
+	//	GetWorldTimerManager().ClearTimer(GrapplingTimer);
+	//	GetMovementComponent()->Velocity = FVector::ZeroVector;
+	//	GetMovementComponent()->Velocity.Z = 500.f;
+	//	CheckCollectibleActors->ActorGrapplingPoint->SetActiveObject(false);
+	//	CheckCollectibleActors->ActorGrapplingPoint = nullptr;
+	//}
+	//else
+	//{
+	//	GetMovementComponent()->Velocity = (CheckCollectibleActors->ActorGrapplingPoint->GetActorLocation() - GetActorLocation()) * 20;
+	//}
 //#else
 
 	//GetCharacterMovement()->SetMovementMode(MOVE_Falling);
-	//float distanceToGrapplingPoint = GetDistanceTo(UpdateGrapplingOrCollectibleActors->ActorGrapplingPoint);
-	//GetMovementComponent()->Velocity = (UpdateGrapplingOrCollectibleActors->ActorGrapplingPoint->GetActorLocation() - GetActorLocation())
+	//float distanceToGrapplingPoint = GetDistanceTo(CheckCollectibleActors->ActorGrapplingPoint);
+	//GetMovementComponent()->Velocity = (CheckCollectibleActors->ActorGrapplingPoint->GetActorLocation() - GetActorLocation())
 	//	;
 	
 //#endif
@@ -495,11 +497,11 @@ void AMovement::TakeCollectibles()
 {
 	if (CanMakeAction())
 	{
-		IObjectTakenInterface* taken_object = Cast<IObjectTakenInterface>(UpdateGrapplingOrCollectibleActors->ActorTakenObject);
+		IObjectTakenInterface* taken_object = Cast<IObjectTakenInterface>(TakenActorsComponent->ActorTakenObject);
 		if (taken_object)
 		{
 			taken_object->Take(this);
-			UpdateGrapplingOrCollectibleActors->ActorTakenObject = nullptr;
+			TakenActorsComponent->ActorTakenObject = nullptr;
 			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::FromInt(Collectibles));
 		}
 	}
