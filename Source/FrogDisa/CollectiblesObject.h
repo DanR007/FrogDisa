@@ -19,8 +19,7 @@ public:
 	ACollectiblesObject();
 	void SetActiveObject(bool inVision);
 	void Take(AMovement* Player) override;
-	void SetActiveHighlightingObject(bool ActiveHighlighting) override;
-	void ChangeHighlightingObject(UMeshComponent* change_mesh, float scale) override;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

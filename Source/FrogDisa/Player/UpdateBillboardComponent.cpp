@@ -98,14 +98,16 @@ void UUpdateBillboardComponent::CheckCollectibleActor()
 				if (ActorTakenObject == nullptr)
 				{
 					ActorTakenObject = hitPoint.Actor.Get();
-					TakenActor->SetActiveHighlightingObject(true);
+					if (ActorTakenObject)
+						TakenActor->Execute_ChangeScalarParameter(ActorTakenObject, 1.f);
 				}
 			}
 			else
 			{
 				if (TakenActor)
 				{
-					TakenActor->SetActiveHighlightingObject(false);
+					if (ActorTakenObject)
+						TakenActor->Execute_ChangeScalarParameter(ActorTakenObject, 0.f);
 					TakenActor = nullptr;
 					ActorTakenObject = nullptr;
 				}
@@ -115,7 +117,8 @@ void UUpdateBillboardComponent::CheckCollectibleActor()
 		{
 			if (TakenActor)
 			{
-				TakenActor->SetActiveHighlightingObject(false);
+				if(ActorTakenObject)
+					TakenActor->Execute_ChangeScalarParameter(ActorTakenObject, 0.f);
 				TakenActor = nullptr;
 				ActorTakenObject = nullptr;
 			}

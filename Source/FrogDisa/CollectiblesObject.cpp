@@ -45,25 +45,4 @@ void ACollectiblesObject::Take(AMovement* Player)
 	Destroy();
 }
 
-void ACollectiblesObject::SetActiveHighlightingObject(bool ActiveHighlighting)
-{
-	ActiveHighlighting ? ChangeHighlightingObject(Mesh, 1.f) : ChangeHighlightingObject(Mesh, 0.f);
-}
-
-void ACollectiblesObject::ChangeHighlightingObject(UMeshComponent* change_mesh, float scale)
-{
-	if (change_mesh)
-	{
-		TArray<UMaterialInterface*> material_array = change_mesh->GetMaterials();
-		for (UMaterialInterface* material_in_array : material_array)
-		{
-			if (material_in_array)
-			{
-				UMaterial* material = material_in_array->GetMaterial();
-				if (material)
-					material->SetScalarParameterValueEditorOnly("select", scale);
-			}
-		}
-	}
-}
 

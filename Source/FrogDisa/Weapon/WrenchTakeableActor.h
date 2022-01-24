@@ -17,8 +17,8 @@ public:
 	AWrenchTakeableActor();
 
 	void Take(AMovement* Player) override;
-	void SetActiveHighlightingObject(bool ActiveHighlighting) override;
-	void ChangeHighlightingObject(UMeshComponent* change_mesh, float scale) override;
+
+	void ChangeScalarParameter_Implementation(float scale) override { UE_LOG(LogTemp, Warning, TEXT("C++")) }
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
