@@ -180,7 +180,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	EWeaponType GetCurrentWeaponType();
 
-	void LerpTo(FVector EndLocation);
+	void LerpTo();
+	UFUNCTION(BlueprintCallable)
+		bool GetIsGrappling(){ return isGrappling; }
 private:
 	void ForwardTrace();
 	void HeightTrace();

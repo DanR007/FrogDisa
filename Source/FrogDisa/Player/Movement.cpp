@@ -361,12 +361,13 @@ void AMovement::UseGrapplingHook()
 {
 	if (grapplingComponent->GetCanGrappling())
 	{
+		isGrappling = true;
 		GetCharacterMovement()->SetMovementMode(MOVE_Falling);
 		GetWorld()->GetTimerManager().SetTimer(GrapplingTimer, this, &AMovement::LerpTo, 0.01f, true, 0.f);
 	}
 }
 
-void AMovement::LerpTo(FVector EndLocation)
+void AMovement::LerpTo()
 {
 //#ifdef THIRD_PERSON
 	if (FVector::Distance(GetActorLocation(), grapplingComponent->grappling_target_location) <= 10.f)//lerp while distance > 70

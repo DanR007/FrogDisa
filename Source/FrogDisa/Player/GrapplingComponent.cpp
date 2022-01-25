@@ -47,7 +47,7 @@ void UGrapplingComponent::StartGrappling()
 
 void UGrapplingComponent::GrapplingToTarget()
 {
-	Player_Character->LerpTo(grappling_target_location);
+	Player_Character->LerpTo();
 }
 
 void UGrapplingComponent::ChangeActiveGrapplingMode()
