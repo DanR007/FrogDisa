@@ -118,14 +118,17 @@ protected:
 	UFUNCTION(BlueprintCallable)
 		UGrapplingComponent* GetGrapplingComponent() { return grapplingComponent; }
 
+	void ChangeCrouchMode();
+
+	void SetCrouchModeSettings();
 public:
 
 	void DetachInteractiveObject();
 
 	UFUNCTION(BlueprintCallable)
 		bool GetWaitingState();
-
-	
+	UFUNCTION(BlueprintCallable)
+		bool GetCrouchMode() { return isCrouching; }
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "meshComponent")
 		UStaticMeshComponent* meshComponent;
@@ -203,6 +206,7 @@ private:
 	bool pauseMenuOpen;
 	bool isWaitingWrench;
 	bool HaveSteamBug;
+	bool isCrouching;
 
 	int Collectibles;
 	int stoneCount;
@@ -215,6 +219,9 @@ private:
 	const float ThrowImpulseValue = 1500.f;
 	const float DropImpulseValue = 0;
 	const float GrapplingForceValue = 200.f;
+
+	const float DefaultCapsuleHeight = 88;
+	const float DefaultCameraHeight = 64;
 
 	EWeaponType g_Projectile_Type;
 

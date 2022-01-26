@@ -56,7 +56,7 @@ AMovement::AMovement()
 	GetCharacterMovement()->JumpZVelocity = 600.f;
 	GetCharacterMovement()->AirControl = 0.2f;
 
-	GetCapsuleComponent()->SetCapsuleRadius(20.f);
+	GetCapsuleComponent()->SetCapsuleSize(20.f, DefaultCapsuleHeight);
 #ifdef THIRD_PERSON
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationYaw = false;
@@ -85,7 +85,7 @@ AMovement::AMovement()
 	FRotator MeshRotation = FRotator(0.f, 270.f, 0.f);
 	
 	Camera->SetupAttachment(RootComponent);
-	Camera->SetRelativeLocation(FVector(-39.56f, 1.75f, 64.f)); // Position the camera
+	Camera->SetRelativeLocation(FVector(0, 1.75f, DefaultCameraHeight)); // Position the camera
 	Camera->bUsePawnControlRotation = true;
 	GetMesh()->SetupAttachment(Camera);
 	//GetMesh()->SetSkeletalMesh(mesh.Object);
@@ -103,7 +103,8 @@ AMovement::AMovement()
 	isClimbing = false;
 	isWaitingWrench = false;
 	nearClimbingObject = false;
-	
+	isCrouching = false;
+
 	weaponArrayType[EWeaponType::EW_Wrench] = "Wrench";
 
 #ifdef TEST
@@ -155,6 +156,9 @@ void AMovement::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	PlayerInputComponent->BindAction("ChoiceWrench", IE_Pressed, this, &AMovement::ChoiceWrench);
 	PlayerInputComponent->BindAction("ChoiceStone", IE_Pressed, this, &AMovement::ChoiceStone);
 	PlayerInputComponent->BindAction("ChoiceMine", IE_Pressed, this, &AMovement::ChoiceMine);
+
+	PlayerInputComponent->BindAction("ChangeCrouchMode", IE_Pressed, this, &AMovement::ChangeCrouchMode);
+	
 }
 
 
@@ -391,6 +395,27 @@ void AMovement::LerpTo()
 	//	;
 	
 //#endif
+}
+
+void AMovement::ChangeCrouchMode()
+{
+	isCrouching = !isCrouching;
+	SetCrouchModeSettings();
+}
+
+void AMovement::SetCrouchModeSettings()
+{
+	if (isCrouching)
+	{
+		GetCapsuleComponent()->SetCapsuleHalfHeight(DefaultCapsuleHeight / 2);
+		Camera->SetRelativeLocation(FVector(0, 1.75f, DefaultCameraHeight / 2));
+	}
+	else
+	{
+		GetCapsuleComponent()->SetCapsuleHalfHeight(DefaultCapsuleHeight);
+		Camera->SetRelativeLocation(FVector(0, 1.75f, DefaultCameraHeight));
+	}
+	
 }
 
 void AMovement::InteractionWithObject()
