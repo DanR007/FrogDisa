@@ -1,6 +1,8 @@
 #include "GrapplingComponent.h"
 #include"Movement.h"
 
+#define ECC_GrapplingObjectTraceChannel ECC_GameTraceChannel2
+
 AMovement* Player_Character;
 // Sets default values for this component's properties
 UGrapplingComponent::UGrapplingComponent()

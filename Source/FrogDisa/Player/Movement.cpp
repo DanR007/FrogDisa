@@ -359,10 +359,10 @@ void AMovement::SetMeleeAttackInactive()
 
 void AMovement::UseGrapplingHook()
 {
-	if (grapplingComponent->GetCanGrappling())
+	if (grapplingComponent->GetCanGrappling()) 
 	{
 		isGrappling = true;
-		GetCharacterMovement()->SetMovementMode(MOVE_Falling);
+		GetCharacterMovement()->SetMovementMode(MOVE_Flying);
 		GetWorld()->GetTimerManager().SetTimer(GrapplingTimer, this, &AMovement::LerpTo, 0.01f, true, 0.f);
 	}
 }
@@ -370,10 +370,12 @@ void AMovement::UseGrapplingHook()
 void AMovement::LerpTo()
 {
 //#ifdef THIRD_PERSON
-	if (FVector::Distance(GetActorLocation(), grapplingComponent->grappling_target_location) <= 10.f)//lerp while distance > 70
+	//UE_LOG(LogTemp, Warning, TEXT(FString::SanitizeFloat(GetCapsuleComponent()->GetScaledCapsuleRadius())))
+	if (FVector::Distance(GetActorLocation(), grapplingComponent->grappling_target_location) <= GetCapsuleComponent()->GetScaledCapsuleRadius() + 5.f)//lerp while distance > 70
 	{
 		isGrappling = false;
-
+		GetCharacterMovement()->SetMovementMode(MOVE_Falling);
+		UE_LOG(LogTemp, Warning, TEXT("Stop Grappling"))
 		GetWorldTimerManager().ClearTimer(GrapplingTimer);
 		GetMovementComponent()->Velocity = FVector::ZeroVector;
 	}
