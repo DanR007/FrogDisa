@@ -10,8 +10,9 @@
 #include "UObject/ConstructorHelpers.h"
 
 #define FIRST
-
+#define MAX_DISTANCE 1000.f
 // Sets default values
+float hitDistance;
 float currentAlpha;
 float currentRightAlpha;
 
@@ -60,7 +61,8 @@ void AThrowProjectile::ReturnToCharacter()
 	if (projectileIsReturning == false && isLaunched == true)
 	{
 		StartLocation = GetActorLocation();
-		SetActorRotation(GetActorRotation() * -1);
+		
+		SetActorRotation(FRotator::FRotator(GetActorRotation().Pitch, GetActorRotation().Yaw * -1, GetActorRotation().Roll * -1));
 		GetWorldTimerManager().ClearTimer(MoveTimer);
 		projectileIsReturning = true;
 		inAir = true;
@@ -83,14 +85,17 @@ void AThrowProjectile::Launch()
 	{
 		FCollisionQueryParams queryParamsWrench;
 		queryParamsWrench.AddIgnoredActor(OwnerPlayer);
+		queryParamsWrench.AddIgnoredActor(this);
 		FHitResult hitPoint;
-		const FVector startLocation = Cast<AMovement>(OwnerPlayer)->Camera->GetComponentLocation(), endLocation = Cast<AMovement>(OwnerPlayer)->Camera->GetForwardVector() * 1000 + startLocation;
+		const FVector startLocation = Cast<AMovement>(OwnerPlayer)->Camera->GetComponentLocation(), endLocation = Cast<AMovement>(OwnerPlayer)->Camera->GetForwardVector() * MAX_DISTANCE + startLocation;
 		if (GetWorld()->LineTraceSingleByChannel(hitPoint, startLocation, endLocation, ECollisionChannel::ECC_Visibility, queryParamsWrench))
 		{
+			hitDistance = hitPoint.Distance;
 			EndLocation = hitPoint.Location;
 		}
 		else
 		{
+			hitDistance = MAX_DISTANCE;
 			EndLocation = endLocation;
 		}
 		SetActorRotation(Cast<AMovement>(OwnerPlayer)->Camera->GetComponentRotation());
@@ -137,7 +142,7 @@ void AThrowProjectile::Move()
 		{
 
 			RuleToMove(-1);
-			if (FVector::Distance(EndLocation, GetActorLocation()) <= 1.f)
+			if (FVector::Distance(EndLocation, GetActorLocation()) <= 5.f)
 			{
 				GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, TEXT("ReturnSt"));
 				ReturnToCharacter();
@@ -158,7 +163,7 @@ void AThrowProjectile::RuleToMove(int direction)
 #ifdef FIRST
 
 	currentDistance = FVector::Distance(EndLocation, GetActorLocation());
-	currentAlpha += 0.01f;
+	currentAlpha += 0.01f * (MAX_DISTANCE / hitDistance);
 
 	//currentAlpha = FMath::Abs(halfDistance - currentDistance) / (halfDistance / 2);
 	//currentAlpha = FMath::Clamp(currentAlpha, 0.f, 1.f);
@@ -169,7 +174,8 @@ void AThrowProjectile::RuleToMove(int direction)
 
 	SetActorLocation(nextLoc);
 
-	AddActorLocalRotation(FRotator(-10, 0, 0), false);
+	
+	AddActorLocalRotation(FRotator(-10, 0, 0));
 #else
 	currentAlpha += 0.01f;
 	currentDistance = FVector::Distance(EndLocation, GetActorLocation());
@@ -200,8 +206,12 @@ void AThrowProjectile::OnOverlap_Implementation(AActor* OverlappedActor, AActor*
 
 		if (cast)
 		{
-			if(OtherActor != OwnerPlayer)
+			if (OtherActor != OwnerPlayer)
+			{ 
 				AThrowProjectile::ReturnToCharacter();
+			}
+				
+			
 		}
 		else
 		{
