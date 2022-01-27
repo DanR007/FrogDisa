@@ -3,7 +3,7 @@
 
 #include "UpdateBillboardComponent.h"
 #include "Movement.h"
-#include "FrogDisa/ObjectTakenInterface.h"
+#include "FrogDisa/InteractiveObjectsInterface.h"
 #include "Materials/Material.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Engine/EngineTypes.h"
@@ -14,7 +14,7 @@
 
 AMovement* Owner;
 FCollisionQueryParams colQueryParams;
-IObjectTakenInterface* TakenActor;
+IInteractiveObjectsInterface* TakenActor;
 
 
 
@@ -45,9 +45,9 @@ void UUpdateBillboardComponent::CheckTakenObject()
 
 		if (GetWorld()->LineTraceSingleByChannel(hitPoint, Start, End, ECC_CollectiblesObjectTraceChannel, colQueryParams))
 		{
-			if (Cast<IObjectTakenInterface>(hitPoint.Actor.Get()))
+			if (Cast<IInteractiveObjectsInterface>(hitPoint.Actor.Get()))
 			{
-				TakenActor = Cast<IObjectTakenInterface>(hitPoint.Actor.Get());
+				TakenActor = Cast<IInteractiveObjectsInterface>(hitPoint.Actor.Get());
 				if (ActorTakenObject == nullptr)
 				{
 					ActorTakenObject = hitPoint.Actor.Get();

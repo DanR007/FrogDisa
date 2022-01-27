@@ -4,11 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
-#include "InteractiveObjectLogicInterface.generated.h"
+#include "CarriedObjectLogicInterface.generated.h"
 
 // This class does not need to be modified.
 UINTERFACE(MinimalAPI)
-class UInteractiveObjectLogicInterface : public UInterface
+class UCarriedObjectLogicInterface : public UInterface
 {
 	GENERATED_BODY()
 };
@@ -16,7 +16,7 @@ class UInteractiveObjectLogicInterface : public UInterface
 /**
  * 
  */
-class FROGDISA_API IInteractiveObjectLogicInterface
+class FROGDISA_API ICarriedObjectLogicInterface
 {
 	GENERATED_BODY()
 

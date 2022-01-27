@@ -13,6 +13,7 @@
 #include "FrogDisa/MyHUD.h"
 #include "FrogDisa/InteractiveObject.h"
 #include "FrogDisa/ObjectTakenInterface.h"
+#include "FrogDisa/InteractiveObjectsInterface.h"
 
 #include "Animation/AnimInstance.h"
 #include "Kismet/GameplayStatics.h"
@@ -520,10 +521,10 @@ void AMovement::TakeCollectibles()
 {
 	if (CanMakeAction())
 	{
-		IObjectTakenInterface* taken_object = Cast<IObjectTakenInterface>(TakenActorsComponent->ActorTakenObject);
+		IInteractiveObjectsInterface* taken_object = Cast<IInteractiveObjectsInterface>(TakenActorsComponent->ActorTakenObject);
 		if (taken_object)
 		{
-			taken_object->Take(this);
+			taken_object->Interact(this);
 			TakenActorsComponent->ActorTakenObject = nullptr;
 			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::FromInt(Collectibles));
 		}

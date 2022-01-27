@@ -6,11 +6,12 @@
 #include "GameFramework/Actor.h"
 #include "Components/SphereComponent.h"
 #include "Components/BillboardComponent.h"
+#include "InteractiveObjectsInterface.h"
 #include "ObjectTakenInterface.h"
 #include "CollectiblesObject.generated.h"
 
 UCLASS()
-class FROGDISA_API ACollectiblesObject : public AActor, public IObjectTakenInterface
+class FROGDISA_API ACollectiblesObject : public AActor, public IObjectTakenInterface, public IInteractiveObjectsInterface
 {
 	GENERATED_BODY()
 	
@@ -18,7 +19,7 @@ public:
 	// Sets default values for this actor's properties
 	ACollectiblesObject();
 	void SetActiveObject(bool inVision);
-	void Take(AMovement* Player) override;
+	void Interact(AMovement* Player) override;
 
 protected:
 	// Called when the game starts or when spawned

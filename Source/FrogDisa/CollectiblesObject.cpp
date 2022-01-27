@@ -39,7 +39,7 @@ void ACollectiblesObject::SetActiveObject(bool inVision)
 	
 }
 
-void ACollectiblesObject::Take(AMovement* Player)
+void ACollectiblesObject::Interact(AMovement* Player)
 {
 	Player->AddCollectibles();
 	Destroy();

@@ -5,10 +5,11 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "FrogDisa/ObjectTakenInterface.h"
+#include "FrogDisa/InteractiveObjectsInterface.h"
 #include "WrenchTakeableActor.generated.h"
 
 UCLASS()
-class FROGDISA_API AWrenchTakeableActor : public AActor, public IObjectTakenInterface
+class FROGDISA_API AWrenchTakeableActor : public AActor, public IObjectTakenInterface, public IInteractiveObjectsInterface
 {
 	GENERATED_BODY()
 	
@@ -16,7 +17,7 @@ public:
 	// Sets default values for this actor's properties
 	AWrenchTakeableActor();
 
-	void Take(AMovement* Player) override;
+	void Interact(AMovement* Player) override;
 
 	void ChangeScalarParameter_Implementation(float scale) override { UE_LOG(LogTemp, Warning, TEXT("C++")) }
 protected:
