@@ -7,19 +7,18 @@
 #include "Components/SphereComponent.h"
 #include "Components/BillboardComponent.h"
 #include "InteractiveObjectsInterface.h"
-#include "ObjectTakenInterface.h"
 #include "CollectiblesObject.generated.h"
 
 UCLASS()
-class FROGDISA_API ACollectiblesObject : public AActor, public IObjectTakenInterface, public IInteractiveObjectsInterface
+class FROGDISA_API ACollectiblesObject : public AActor, public IInteractiveObjectsInterface
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
 	ACollectiblesObject();
-	void SetActiveObject(bool inVision);
-	void Interact(AMovement* Player) override;
+
+	void Interact(AActor* Player) override;
 
 protected:
 	// Called when the game starts or when spawned

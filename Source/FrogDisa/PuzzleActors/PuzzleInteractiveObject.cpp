@@ -3,7 +3,7 @@
 
 #include "PuzzleInteractiveObject.h"
 
-FString APuzzleInteractiveObject::GetName()
+FString APuzzleCarriedObject::GetName()
 {
 	return Name;
 }

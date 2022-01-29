@@ -34,14 +34,9 @@ void ACollectiblesObject::BeginPlay()
 	
 }
 
-void ACollectiblesObject::SetActiveObject(bool inVision)
+void ACollectiblesObject::Interact(AActor* Player)
 {
-	
-}
-
-void ACollectiblesObject::Interact(AMovement* Player)
-{
-	Player->AddCollectibles();
+	Cast<AMovement>(Player)->AddCollectibles();
 	Destroy();
 }
 

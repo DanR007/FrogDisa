@@ -1,28 +1,31 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "CarriedObjectLogicInterface.h"
+#include "InteractiveObjectsInterface.h"
 #include "PhysicsEngine/PhysicsConstraintComponent.h"
-#include "InteractiveObject.generated.h"
+
+#include "CarriedObject.generated.h"
 
 
 UCLASS()
-class FROGDISA_API AInteractiveObject : public AActor
+class FROGDISA_API ACarriedObject : public AActor, public ICarriedObjectLogicInterface, public IInteractiveObjectsInterface
 {
 	GENERATED_BODY()
-	
-public:	
+
+public:
 	// Sets default values for this actor's properties
-	AInteractiveObject();
+	ACarriedObject();
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
+public:
 
+	//void Interact(AMovement *Player) override;
+	void Interact(AActor* Player) override{}
 	void TakeThisObject();
 
 	void DropThisObject();

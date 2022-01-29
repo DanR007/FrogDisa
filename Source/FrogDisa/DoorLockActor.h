@@ -16,7 +16,7 @@ public:
 	// Sets default values for this actor's properties
 	ADoorLockActor();
 
-	void Interact(AMovement* Player) override;
+	void Interact(AActor* Player) override;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 		UStaticMeshComponent* Pivot;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)

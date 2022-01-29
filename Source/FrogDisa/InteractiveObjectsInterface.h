@@ -27,5 +27,5 @@ public:
 	UFUNCTION(BlueprintNativeEvent)
 		void ChangeScalarParameter(float scale);
 
-	virtual void Interact(AMovement* Player) {}
+	virtual void Interact(AActor* Player) {}
 };

@@ -26,9 +26,9 @@ void AWrenchTakeableActor::Tick(float DeltaTime)
 
 }
 
-void AWrenchTakeableActor::Interact(AMovement* Player)
+void AWrenchTakeableActor::Interact(AActor* Player)
 {
-	Player->shootComponent->AddAmmunition(count_add, EWeaponType::EW_Wrench);
+	Cast<AMovement>(Player)->shootComponent->AddAmmunition(count_add, EWeaponType::EW_Wrench);
 	Destroy();
 }
 

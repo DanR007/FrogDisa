@@ -1,16 +1,14 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
 
 #include "CoreMinimal.h"
-#include "FrogDisa/InteractiveObject.h"
+#include "FrogDisa/CarriedObject.h"
 #include "PuzzleInteractiveObject.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class FROGDISA_API APuzzleInteractiveObject : public AInteractiveObject
+class FROGDISA_API APuzzleCarriedObject : public ACarriedObject
 {
 	GENERATED_BODY()
 public:

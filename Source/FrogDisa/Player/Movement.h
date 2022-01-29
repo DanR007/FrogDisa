@@ -7,15 +7,12 @@
 #include "ShootComponent.h"
 #include "InteractiveComponent.h"
 #include "FrogDisaGameInstance.h"
-#include "UpdateBillboardComponent.h"
 #include "InteractiveWithPuzzlesComponent.h"
 #include "GrapplingComponent.h"
 
 #include "AbilitySystemInterface.h"
 
-#include "FrogDisa/GrapplingObject.h"
 #include "FrogDisa/MovableObject.h"
-#include "FrogDisa/InteractiveObject.h"
 #include "FrogDisa/CharacterAttributeSet.h"
 
 #include "GameFramework/Character.h"
@@ -82,7 +79,7 @@ protected:
 	void Run(float Value);
 
 	void InteractionWithObject();
-	void TakeCollectibles();
+
 	bool CanMakeAction();
 
 	void ChangeCharacter();
@@ -99,18 +96,19 @@ protected:
 
 	
 
-	UUpdateBillboardComponent* TakenActorsComponent;
-
-	void ChoiceWrench() { 
+	void ChoiceWrench() 
+	{ 
 		g_Projectile_Type = EWeaponType::EW_Wrench; GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Red, "Wrench"); 
 		if(shootComponent)
 			shootComponent->SwitchProjectile();
 	}
-	void ChoiceStone()  { g_Projectile_Type = EWeaponType::EW_Stone; GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Red, "Stone");
+	void ChoiceStone()  
+	{ g_Projectile_Type = EWeaponType::EW_Stone; GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Red, "Stone");
 	if(shootComponent)
 		shootComponent->SwitchProjectile();
 	}
-	void ChoiceMine()   { g_Projectile_Type = EWeaponType::EW_Mine; GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Red, "Mine"); 
+	void ChoiceMine()   
+	{ g_Projectile_Type = EWeaponType::EW_Mine; GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Red, "Mine"); 
 	if(shootComponent)
 		shootComponent->SwitchProjectile();
 	}
@@ -132,22 +130,16 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "meshComponent")
 		UStaticMeshComponent* meshComponent;
-
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Camera")
 		UCameraComponent* Camera;
-
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "ShootComp")
 		UShootComponent* shootComponent;
-
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Interactive")
 		UInteractiveComponent* InteractiveComponent;
-
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 		UFrogDisaGameInstance* game_Instance;
-
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		UInteractiveWithPuzzlesComponent* InteractiveWithPuzzlesComponent;
-
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		UGrapplingComponent* grapplingComponent;
 	//UPROPERTY(VisibleAnywhere, Category = "Gameplay")
@@ -226,7 +218,6 @@ private:
 	EWeaponType g_Projectile_Type;
 
 	FCollisionQueryParams CollisionParams;
-	UStaticMeshComponent* InteractiveObject;
 	AMovableObject* movableActor;
 	ASteamBug* SteamBug;
 	FCollisionQueryParams queryParams;

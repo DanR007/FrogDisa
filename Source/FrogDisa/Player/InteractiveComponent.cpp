@@ -2,8 +2,15 @@
 
 
 #include "InteractiveComponent.h"
-#include "Movement.h"
+
 #include "FrogDisa/PuzzleActors/PuzzleInteractiveObject.h"
+
+#define ECC_InteractiveObjectTraceChannel ECC_GameTraceChannel3
+
+AMovement* Owner;
+FCollisionQueryParams colQueryParams;
+IInteractiveObjectsInterface* TakenActor;
+ICarriedObjectLogicInterface* CarriedActor;
 
 // Sets default values for this component's properties
 UInteractiveComponent::UInteractiveComponent()
@@ -18,31 +25,30 @@ UInteractiveComponent::UInteractiveComponent()
 void UInteractiveComponent::BeginPlay()
 {
 	Super::BeginPlay();
-	Owner = GetOwner();
-	CollisionParams.AddIgnoredActor(Owner);
+	Owner = Cast<AMovement>(GetOwner());
+	colQueryParams.AddIgnoredActor(Owner);
 }
 
-bool UInteractiveComponent::TakeInteractiveObject(UStaticMeshComponent* Player_InteractiveMesh)//убрать повторение кода
+bool UInteractiveComponent::TakeInteractiveObject()
 {
-	FHitResult hitPoint;
-
 	UCameraComponent* CameraOwner = Cast<AMovement>(Owner)->Camera;
 
-	FVector Start = CameraOwner->GetComponentLocation();
-	FVector End = Start + CameraOwner->GetForwardVector() * 500.f;
-
-	if (Owner->GetWorld()->LineTraceSingleByChannel(hitPoint, Start, End, ECC_Visibility, CollisionParams) == true)
+	if (CarriedActor)
 	{
-		if (hitPoint.Actor->IsA(AInteractiveObject::StaticClass()))
+		if (InteractiveActor)
 		{
-			InteractiveActor = hitPoint.Actor.Get();
-			InteractiveActor->SetActorLocation(Start + CameraOwner->GetForwardVector() * 90.f);
-			InteractiveActor->SetActorRotation(Owner->GetActorRotation());
 			InteractiveMesh = InteractiveActor->FindComponentByClass<UStaticMeshComponent>();
-			InteractiveMesh->SetSimulatePhysics(false);//if simulate physics == true character can't move
-			InteractiveMesh->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+			if (InteractiveMesh)
+			{
+				InteractiveMesh->SetSimulatePhysics(false);//if simulate physics == true character can't move
+				InteractiveMesh->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+				InteractiveMesh->SetCollisionResponseToChannel(ECC_InteractiveObjectTraceChannel, ECollisionResponse::ECR_Ignore);
+			}
+
+			
+			InteractiveActor->SetActorLocation(CameraOwner->GetComponentLocation() + CameraOwner->GetForwardVector() * DistanceInteractiveObject);
+			InteractiveActor->SetActorRotation(CameraOwner->GetComponentRotation());
 			InteractiveActor->AttachToActor(Owner, FAttachmentTransformRules::KeepWorldTransform);
-			Player_InteractiveMesh = InteractiveMesh;
 		}
 	}
 	
@@ -50,24 +56,17 @@ bool UInteractiveComponent::TakeInteractiveObject(UStaticMeshComponent* Player_I
 
 }
 
-void UInteractiveComponent::DropInteractiveObject(UStaticMeshComponent* Player_InteractiveMesh, float ImpulseValue)
+void UInteractiveComponent::DropInteractiveObject(float ImpulseValue)
 {
 	InteractiveActor->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
+
 	InteractiveMesh->SetSimulatePhysics(true);
 	InteractiveMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 	InteractiveMesh->AddImpulse(Cast<AMovement>(Owner)->Camera->GetForwardVector() * ImpulseValue * InteractiveMesh->GetMass());
+	InteractiveMesh->SetCollisionResponseToChannel(ECC_InteractiveObjectTraceChannel, ECollisionResponse::ECR_Block);
+
 	InteractiveMesh = nullptr;
 	InteractiveActor = nullptr;
-	Player_InteractiveMesh = InteractiveMesh;
-}
-
-
-bool UInteractiveComponent::IsZeroOverlappingActors()
-{
-	TArray<AActor*> overlappingActors;
-	InteractiveMesh->GetOverlappingActors(overlappingActors);
-
-	return overlappingActors.Num() == 0;
 }
 
 bool UInteractiveComponent::OverlapOnlyInteractivePuzzle()
@@ -77,7 +76,7 @@ bool UInteractiveComponent::OverlapOnlyInteractivePuzzle()
 	bool overlapOnlyInteractivePuzzleOrNothing = true;
 	for (AActor* actor : overlappingActors)
 	{
-		if (Cast<APuzzleInteractiveObject>(actor) == nullptr)
+		if (Cast<APuzzleCarriedObject>(actor) == nullptr)
 		{
 			overlapOnlyInteractivePuzzleOrNothing = false;
 			break;
@@ -87,10 +86,62 @@ bool UInteractiveComponent::OverlapOnlyInteractivePuzzle()
 	return overlapOnlyInteractivePuzzleOrNothing;
 }
 
-void UInteractiveComponent::DetachInteractiveFromParent(UStaticMeshComponent* Player_InteractiveMesh)
+void UInteractiveComponent::DetachInteractiveFromParent()
 {	
-	InteractiveActor->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
+	if(InteractiveActor)
+		InteractiveActor->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
+	if(InteractiveMesh)
+		InteractiveMesh->SetCollisionResponseToChannel(ECC_InteractiveObjectTraceChannel, ECollisionResponse::ECR_Ignore);
 	InteractiveMesh = nullptr;
 	InteractiveActor = nullptr;
-	Player_InteractiveMesh = nullptr;
+}
+
+void UInteractiveComponent::CheckInteractiveObject()
+{
+	if (Owner)
+	{
+		FHitResult hitPoint;
+
+		FVector Start = Owner->Camera->GetComponentLocation();
+		FVector End = Owner->Camera->GetForwardVector() * MaximumCollectibleObjectDistance + Start;
+
+		if (GetWorld()->LineTraceSingleByChannel(hitPoint, Start, End, ECC_InteractiveObjectTraceChannel, colQueryParams))
+		{
+			if (Cast<IInteractiveObjectsInterface>(hitPoint.Actor.Get()))
+			{
+				TakenActor = Cast<IInteractiveObjectsInterface>(hitPoint.Actor.Get());
+				if (InteractiveActor == nullptr)
+				{
+					InteractiveActor = hitPoint.Actor.Get();
+					if (InteractiveActor)
+						TakenActor->Execute_ChangeScalarParameter(InteractiveActor, 1.f);//Execute нужен чтобы вызвать функцию интерфейса в нужном объекте
+				}
+				if (Cast<ICarriedObjectLogicInterface>(hitPoint.Actor.Get()))
+				{
+					CarriedActor = Cast<ICarriedObjectLogicInterface>(hitPoint.Actor.Get());
+				}
+
+			}
+			else
+			{
+				SetNullInteractiveObject();
+			}
+		}
+		else
+		{
+			SetNullInteractiveObject();
+		}
+	}
+}
+
+void UInteractiveComponent::SetNullInteractiveObject()
+{
+	if (TakenActor)
+	{
+		if (InteractiveActor)
+			TakenActor->Execute_ChangeScalarParameter(InteractiveActor, 0.f);
+		TakenActor = nullptr;
+		InteractiveActor = nullptr;
+		CarriedActor = nullptr;
+	}
 }

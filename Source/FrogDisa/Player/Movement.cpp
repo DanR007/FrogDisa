@@ -11,8 +11,7 @@
 #include "GameFramework/PlayerController.h"
 
 #include "FrogDisa/MyHUD.h"
-#include "FrogDisa/InteractiveObject.h"
-#include "FrogDisa/ObjectTakenInterface.h"
+#include "FrogDisa/CarriedObject.h"
 #include "FrogDisa/InteractiveObjectsInterface.h"
 
 #include "Animation/AnimInstance.h"
@@ -45,7 +44,6 @@ AMovement::AMovement()
 
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	InteractiveComponent = CreateDefaultSubobject<UInteractiveComponent>(TEXT("InteractiveComponent"));
-	TakenActorsComponent = CreateDefaultSubobject<UUpdateBillboardComponent>(TEXT("SetActiveBillboardComponent"));
 	InteractiveWithPuzzlesComponent = CreateDefaultSubobject<UInteractiveWithPuzzlesComponent>(TEXT("InteractiveWithPuzzlesComponent"));
 	shootComponent = CreateDefaultSubobject<UShootComponent>(TEXT("ShootComponent"));
 	grapplingComponent = CreateDefaultSubobject<UGrapplingComponent>(TEXT("GrapplingComponent"));
@@ -144,7 +142,7 @@ void AMovement::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	PlayerInputComponent->BindAction("GrapplingHook", IE_Pressed, grapplingComponent, &UGrapplingComponent::ChangeActiveGrapplingMode);
 	PlayerInputComponent->BindAction("UseSecondWeapon", IE_Pressed, grapplingComponent, &UGrapplingComponent::StartGrappling);
 
-	PlayerInputComponent->BindAction("ActionWithSomeObj", IE_Pressed, this, &AMovement::TakeCollectibles);
+	//PlayerInputComponent->BindAction("ActionWithSomeObj", IE_Pressed, this, &AMovement::InteractObject);
 	PlayerInputComponent->BindAction("ActionWithSomeObj", IE_Pressed, InteractiveWithPuzzlesComponent,
 		&UInteractiveWithPuzzlesComponent::ActionWithPuzzleActor);
 
@@ -185,9 +183,9 @@ void AMovement::Tick(float DeltaTime)
 		
 		ForwardTrace();
 		HeightTrace();
-		if (TakenActorsComponent)
+		if (InteractiveComponent)
 		{
-			TakenActorsComponent->CheckTakenObject();
+			InteractiveComponent->CheckInteractiveObject();
 		}
 
 		FHitResult hitPoint;
@@ -315,7 +313,9 @@ void AMovement::Attack()
 #ifdef THIRD_PERSON
 		if (isAiming == true)
 		{
+#ifdef TEST
 			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Shoot"));
+#endif //TEST
 			shootComponent->ThrowProjectile(g_Projectile_Type);
 		}
 		else
@@ -327,14 +327,14 @@ void AMovement::Attack()
 		//јтака ближн€€
 		//ShootComponent->Fire();
 		//ShootComponent->ThrowProjectile(g_Projectile_Type);
-#endif
+#endif// THIRD_PERSON
 	}
 	else
 	{
-		if (InteractiveComponent->IsZeroOverlappingActors())
+		if (InteractiveComponent->OverlapOnlyInteractivePuzzle())
 		{
 			isBearObject = false;
-			InteractiveComponent->DropInteractiveObject(InteractiveObject, ThrowImpulseValue);
+			InteractiveComponent->DropInteractiveObject(ThrowImpulseValue);
 		}
 	}
 }
@@ -419,22 +419,6 @@ void AMovement::SetCrouchModeSettings()
 	
 }
 
-void AMovement::InteractionWithObject()
-{
-	if (isBearObject == true)
-	{
-		if (InteractiveComponent->OverlapOnlyInteractivePuzzle())
-		{
-			isBearObject = false;
-			InteractiveComponent->DropInteractiveObject(InteractiveObject, DropImpulseValue);
-		}
-	}
-	else
-	{
-		isBearObject = InteractiveComponent->TakeInteractiveObject(InteractiveObject);
-	}
-}
-
 void AMovement::AddControllerYawInput(float Val)
 {
 	if (Val != 0.f && Controller && Controller->IsLocalPlayerController())
@@ -517,18 +501,41 @@ void AMovement::Aim(float Value)
 }
 #endif
 
-void AMovement::TakeCollectibles()
+void AMovement::InteractionWithObject()
 {
-	if (CanMakeAction())
+	IInteractiveObjectsInterface* taken_object = Cast<IInteractiveObjectsInterface>(InteractiveComponent->GetInteractiveActor());
+	ICarriedObjectLogicInterface* carried_object = Cast<ICarriedObjectLogicInterface>(InteractiveComponent->GetInteractiveActor());
+
+	if (isBearObject == true)
 	{
-		IInteractiveObjectsInterface* taken_object = Cast<IInteractiveObjectsInterface>(TakenActorsComponent->ActorTakenObject);
-		if (taken_object)
+		if (InteractiveComponent->OverlapOnlyInteractivePuzzle())
 		{
-			taken_object->Interact(this);
-			TakenActorsComponent->ActorTakenObject = nullptr;
-			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::FromInt(Collectibles));
+			isBearObject = false;
+			InteractiveComponent->DropInteractiveObject(DropImpulseValue);
 		}
 	}
+	else
+	{
+		if (CanMakeAction())
+		{
+			if (carried_object)
+			{
+				isBearObject = InteractiveComponent->TakeInteractiveObject();
+			}
+			else
+			{
+				if (taken_object)
+				{
+					taken_object->Interact(this);
+					//InteractiveComponent->InteractiveActor = nullptr;
+#ifdef TEST
+					GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, "Collectibles: " + FString::FromInt(Collectibles));
+#endif//TEST
+				}
+			}
+		}
+	}
+
 }
 
 void AMovement::PauseMenu()
@@ -605,7 +612,7 @@ bool AMovement::CanMakeAction()
 void AMovement::DetachInteractiveObject()
 {
 	isBearObject = false;
-	InteractiveComponent->DetachInteractiveFromParent(InteractiveObject);
+	InteractiveComponent->DetachInteractiveFromParent();
 }
 
 bool AMovement::IsHaveASteamBug()

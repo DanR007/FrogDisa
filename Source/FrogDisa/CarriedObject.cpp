@@ -1,10 +1,7 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
-#include "InteractiveObject.h"
+#include "CarriedObject.h"
 
 // Sets default values
-AInteractiveObject::AInteractiveObject()
+ACarriedObject::ACarriedObject()
 {
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MainMesh"));
 
@@ -14,18 +11,18 @@ AInteractiveObject::AInteractiveObject()
 }
 
 // Called when the game starts or when spawned
-void AInteractiveObject::BeginPlay()
+void ACarriedObject::BeginPlay()
 {
 	Super::BeginPlay();
 	Mesh->SetSimulatePhysics(true);
 }
 
-void AInteractiveObject::DropThisObject()
+void ACarriedObject::DropThisObject()
 {
 	Mesh->SetSimulatePhysics(true);
 }
 
-void AInteractiveObject::TakeThisObject()
+void ACarriedObject::TakeThisObject()
 {
 	Mesh->SetSimulatePhysics(false);
 }

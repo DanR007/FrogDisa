@@ -5,7 +5,6 @@
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
 
-#include "FrogDisa/InteractiveObject.h"
 #include "InteractiveComponent.generated.h"
 
 
@@ -22,7 +21,6 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
-	AActor* Owner;
 	AActor* InteractiveActor;
 
 	UStaticMeshComponent* InteractiveMesh;
@@ -31,11 +29,20 @@ protected:
 	
 public:
 
-	bool TakeInteractiveObject(UStaticMeshComponent* Player_InteractiveMesh);
-	bool IsZeroOverlappingActors();
+	void CheckInteractiveObject();
+
+	bool TakeInteractiveObject();
 	bool OverlapOnlyInteractivePuzzle();
 
-	void DropInteractiveObject(UStaticMeshComponent* Player_InteractiveMesh, float ImpulseValue);
+	void DropInteractiveObject(float ImpulseValue);
 
-	void DetachInteractiveFromParent(UStaticMeshComponent* Player_InteractiveMesh);
+	void DetachInteractiveFromParent();
+
+	AActor* GetInteractiveActor() { return InteractiveActor; }
+	void SetInteractiveActorNull() { InteractiveActor = nullptr; }
+private:
+	const float MaximumCollectibleObjectDistance = 400.f;
+	const float DistanceInteractiveObject = 120.f;
+
+	void SetNullInteractiveObject();
 };

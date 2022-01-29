@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "InteractiveObject.h"
+#include "CarriedObject.h"
 #include "RepairInteractiveObject.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class FROGDISA_API ARepairInteractiveObject : public AInteractiveObject
+class FROGDISA_API ARepairInteractiveObject : public ACarriedObject
 {
 	GENERATED_BODY()
 	
