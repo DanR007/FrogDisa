@@ -114,7 +114,7 @@ void UInteractiveComponent::CheckInteractiveObject()
 				{
 					InteractiveActor = hitPoint.Actor.Get();
 					if (InteractiveActor)
-						TakenActor->Execute_ChangeScalarParameter(InteractiveActor, 1.f);//Execute нужен чтобы вызвать функцию интерфейса в нужном объекте
+						TakenActor->Execute_ChangeOutlines(InteractiveActor, true);//Execute нужен чтобы вызвать функцию интерфейса в нужном объекте
 				}
 				if (Cast<ICarriedObjectLogicInterface>(hitPoint.Actor.Get()))
 				{
@@ -139,7 +139,7 @@ void UInteractiveComponent::SetNullInteractiveObject()
 	if (TakenActor)
 	{
 		if (InteractiveActor)
-			TakenActor->Execute_ChangeScalarParameter(InteractiveActor, 0.f);
+			TakenActor->Execute_ChangeOutlines(InteractiveActor, false);
 		TakenActor = nullptr;
 		InteractiveActor = nullptr;
 		CarriedActor = nullptr;

@@ -25,7 +25,7 @@ class FROGDISA_API IInteractiveObjectsInterface
 public:
 
 	UFUNCTION(BlueprintNativeEvent)
-		void ChangeScalarParameter(float scale);
+		void ChangeOutlines(bool isOutline);
 
 	virtual void Interact(AActor* Player) {}
 };

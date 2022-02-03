@@ -212,8 +212,8 @@ private:
 	const float DropImpulseValue = 0;
 	const float GrapplingForceValue = 200.f;
 
-	const float DefaultCapsuleHeight = 88;
-	const float DefaultCameraHeight = 64;
+	const float DefaultCapsuleHeight = 80;
+	const float DefaultCameraHeight = 60;
 
 	EWeaponType g_Projectile_Type;
 

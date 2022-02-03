@@ -18,7 +18,7 @@ public:
 
 	void Interact(AActor* Player) override;
 
-	void ChangeScalarParameter_Implementation(float scale) override { UE_LOG(LogTemp, Warning, TEXT("C++")) }
+	void ChangeOutlines_Implementation(bool isOutline) override { UE_LOG(LogTemp, Warning, TEXT("C++")) }
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
