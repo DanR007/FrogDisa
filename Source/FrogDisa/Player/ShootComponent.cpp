@@ -47,10 +47,6 @@ void UShootComponent::BeginPlay()
 	FActorSpawnParameters SpawnParameters;
 	SpawnParameters.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 	UE_LOG(LogTemp, Warning, TEXT("SPAWN"))
-	//Current_Weapon = GetWorld()->SpawnActor<AActor>(BlueprintWrench, Player_Actor->FindComponentByClass<UCameraComponent>()->GetComponentTransform(), SpawnParameters);
-	//Wrench = GetWorld()->SpawnActor<AThrowProjectile>(BlueprintWrench, GetOwner()->FindComponentByClass<UCameraComponent>()->GetComponentTransform(), SpawnParameters);
-	//Wrench->AttachToPlayerCharacter(GetOwner());
-	//Current_Weapon = Wrench;
 }
 
 AActor *UShootComponent::GetActorWrench()
@@ -61,13 +57,6 @@ AActor *UShootComponent::GetActorWrench()
 void UShootComponent::Fire()
 {
 	//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, "Shoot");
-	//вот здесь я хочу вызвать метод Launch() у 
-	//всех типов вооружения (потому что они все унаследовали от абстрактного класса
-	//AWeaponActor этот метод) но как закастить ко всем классам я не понимаю
-	//я пробовал через словарь (map), но так не получалось
-	//как делать появление я наверное разобрался, потому что UClass* я получаю
-	//однако хардкодить через switch case (чтобы по типу оружия потом написать, к примеру, case EW_Wrench: Cast<AThrowProjectile>(CurrentWeapon); я не хочу
-	//и хотел бы понять как можно сделать
 	//Wrench = Cast<AThrowProjectile>(Current_Weapon);
 	if (Current_Weapon)
 	{
