@@ -345,7 +345,7 @@ void AMovement::ChangeCharacter()
 	{
 		FActorSpawnParameters SpawnParameters;
 		SpawnParameters.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-		FTransform bugTransform = FTransform(GetActorRotation(), Mesh->GetSocketLocation("feet_L") + FVector(70,0,0));
+		FTransform bugTransform = FTransform(GetActorRotation(), GetMesh()->GetSocketLocation("feet_L") + FVector(70,0,0));
 		SteamBug = GetWorld()->SpawnActor<ASteamBug>(SteamBug_ClassBP, bugTransform, SpawnParameters);
 		SteamBug->SetMainCharacter(this);
 		SteamBug->SetNewPosses();
@@ -452,7 +452,7 @@ void AMovement::Jump()
 		}
 #else
 
-		if (CharacterMovement->IsFalling() == false)
+		if (GetCharacterMovement()->IsFalling() == false)
 		{
 			bPressedJump = true;
 			JumpKeyHoldTime = 0.0f;
