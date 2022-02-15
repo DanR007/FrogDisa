@@ -324,7 +324,6 @@ void AMovement::Attack()
 			GetWorld()->GetTimerManager().SetTimer(GrapplingTimer, this, &AMovement::SetMeleeAttackInactive, 0.01f, false, 0.5f);
 		}
 #else
-		//јтака ближн€€
 		//ShootComponent->Fire();
 		//ShootComponent->ThrowProjectile(g_Projectile_Type);
 #endif// THIRD_PERSON
