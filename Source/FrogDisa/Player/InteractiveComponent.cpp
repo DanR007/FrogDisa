@@ -49,6 +49,8 @@ bool UInteractiveComponent::TakeInteractiveObject()
 			InteractiveActor->SetActorLocation(CameraOwner->GetComponentLocation() + CameraOwner->GetForwardVector() * DistanceInteractiveObject);
 			InteractiveActor->SetActorRotation(CameraOwner->GetComponentRotation());
 			InteractiveActor->AttachToActor(Owner, FAttachmentTransformRules::KeepWorldTransform);
+
+			TakenActor->Execute_ChangeOutlines(InteractiveActor, false);
 		}
 	}
 	
