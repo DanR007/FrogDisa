@@ -52,7 +52,14 @@ public:
 
 		UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 			void DrawGrapplingVariant();
-		
+
+		UFUNCTION(BlueprintCallable)
+			void SetCanStrangling() { canStrangling = true; }
+		UFUNCTION(BlueprintCallable)
+			void SetCantStrangling() { canStrangling = false; }
+
+		UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+			ACharacter* StrangledCharacter;
 protected:
 	// Called when the game starts or when spawned
 
@@ -178,11 +185,17 @@ public:
 	void LerpTo();
 	UFUNCTION(BlueprintCallable)
 		bool GetIsGrappling(){ return isGrappling; }
+
+	UFUNCTION(BlueprintCallable)
+		bool GetIsStrangling() { return isStrangling; }
+
+	UFUNCTION(BlueprintCallable)
+		void SetStartStrangling() { isStrangling = true; }
 private:
 	void ForwardTrace();
 	void HeightTrace();
-	void SwitchProjectile();
 	void Fire();
+	void StartStrangling() { if (canStrangling) { isStrangling = true; } }
 
 	FTimeline MyTimeline;
 	float CurveFloatValue;
@@ -199,6 +212,8 @@ private:
 	bool isWaitingWrench;
 	bool HaveSteamBug;
 	bool isCrouching;
+	bool isStrangling = false;
+	bool canStrangling = false;
 
 	int Collectibles;
 	int stoneCount;

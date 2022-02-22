@@ -143,12 +143,13 @@ void AMovement::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	PlayerInputComponent->BindAction("UseSecondWeapon", IE_Pressed, grapplingComponent, &UGrapplingComponent::StartGrappling);
 
 	//PlayerInputComponent->BindAction("ActionWithSomeObj", IE_Pressed, this, &AMovement::InteractObject);
-	PlayerInputComponent->BindAction("ActionWithSomeObj", IE_Pressed, InteractiveWithPuzzlesComponent,
-		&UInteractiveWithPuzzlesComponent::ActionWithPuzzleActor);
+	//PlayerInputComponent->BindAction("StartTakedown", IE_Pressed, InteractiveWithPuzzlesComponent,
+	//	&UInteractiveWithPuzzlesComponent::ActionWithPuzzleActor);
+	PlayerInputComponent->BindAction("StartTakedown", IE_Pressed, this,
+			&AMovement::StartStrangling);
 
 	PlayerInputComponent->BindAction("PauseMenu", IE_Pressed, this, &AMovement::PauseMenu);
 
-	PlayerInputComponent->BindAction("SwitchProjectileType", IE_Pressed, this, &AMovement::SwitchProjectile);
 
 	PlayerInputComponent->BindAction("SwitchCharacter", IE_Pressed, this, &AMovement::ChangeCharacter);
 
@@ -379,7 +380,7 @@ void AMovement::LerpTo()
 	{
 		isGrappling = false;
 		GetCharacterMovement()->SetMovementMode(MOVE_Falling);
-		UE_LOG(LogTemp, Warning, TEXT("Stop Grappling"))
+		//UE_LOG(LogTemp, Warning, TEXT("Stop Grappling"))
 		GetWorldTimerManager().ClearTimer(GrapplingTimer);
 		GetMovementComponent()->Velocity = FVector::ZeroVector;
 	}
@@ -597,10 +598,6 @@ void AMovement::DrawGrapplingVariant_Implementation()
 
 }
 
-void AMovement::SwitchProjectile()
-{
-	g_Projectile_Type == EWeaponType::EW_Stone ? g_Projectile_Type = EWeaponType::EW_Wrench : g_Projectile_Type = EWeaponType::EW_Stone;
-}
 
 bool AMovement::CanMakeAction()
 {

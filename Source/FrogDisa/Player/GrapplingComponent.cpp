@@ -38,12 +38,12 @@ void UGrapplingComponent::StartGrappling()
 {
 	if (grappling_mode_active && can_grappling)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Start grappling"))
+		//UE_LOG(LogTemp, Warning, TEXT("Start grappling"))
 		Player_Character->UseGrapplingHook();
 	}
 	else
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Grappling mode inactive"))
+		//UE_LOG(LogTemp, Warning, TEXT("Grappling mode inactive"))
 	}
 }
 
