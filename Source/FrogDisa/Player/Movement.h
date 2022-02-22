@@ -191,11 +191,18 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 		void SetStartStrangling() { isStrangling = true; }
+
+	UFUNCTION(BlueprintNativeEvent)
+		void StartStranglingBP();
 private:
 	void ForwardTrace();
 	void HeightTrace();
 	void Fire();
-	void StartStrangling() { if (canStrangling) { isStrangling = true; } }
+
+	void StartStrangling() {
+		if (canStrangling) {
+			isStrangling = true;
+	} }
 
 	FTimeline MyTimeline;
 	float CurveFloatValue;

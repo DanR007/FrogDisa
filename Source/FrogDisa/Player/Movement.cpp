@@ -304,7 +304,10 @@ void AMovement::Run(float Value)
 	else
 	{
 		isRunning = false;
-		GetCharacterMovement()->MaxWalkSpeed = DefaultSpeed;
+		if(isStrangling)
+			GetCharacterMovement()->MaxWalkSpeed = DefaultSpeed / 4;
+		else
+			GetCharacterMovement()->MaxWalkSpeed = DefaultSpeed;
 	}
 }
 void AMovement::Attack()
@@ -685,3 +688,8 @@ void AMovement::SetUnwaitingState()
 //{
 //	return AbilityComponent;
 //}
+
+void AMovement::StartStranglingBP_Implementation()
+{
+
+}
