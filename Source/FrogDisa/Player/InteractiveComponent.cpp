@@ -9,7 +9,7 @@
 
 AMovement* Owner;
 FCollisionQueryParams colQueryParams;
-IInteractiveObjectsInterface* TakenActor;
+IInteractiveObjectsInterface* InteractiveInterfaceActor;
 ICarriedObjectLogicInterface* CarriedActor;
 
 // Sets default values for this component's properties
@@ -50,7 +50,7 @@ bool UInteractiveComponent::TakeInteractiveObject()
 			InteractiveActor->SetActorRotation(CameraOwner->GetComponentRotation());
 			InteractiveActor->AttachToActor(Owner, FAttachmentTransformRules::KeepWorldTransform);
 
-			TakenActor->Execute_ChangeOutlines(InteractiveActor, false);
+			InteractiveInterfaceActor->Execute_ChangeOutlines(InteractiveActor, false);
 		}
 	}
 	
@@ -111,12 +111,12 @@ void UInteractiveComponent::CheckInteractiveObject()
 		{
 			if (Cast<IInteractiveObjectsInterface>(hitPoint.Actor.Get()))
 			{
-				TakenActor = Cast<IInteractiveObjectsInterface>(hitPoint.Actor.Get());
+				InteractiveInterfaceActor = Cast<IInteractiveObjectsInterface>(hitPoint.Actor.Get());
 				if (InteractiveActor == nullptr)
 				{
 					InteractiveActor = hitPoint.Actor.Get();
 					if (InteractiveActor)
-						TakenActor->Execute_ChangeOutlines(InteractiveActor, true);//Execute нужен чтобы вызвать функцию интерфейса в нужном объекте
+						InteractiveInterfaceActor->Execute_ChangeOutlines(InteractiveActor, true);//Execute нужен чтобы вызвать функцию интерфейса в нужном объекте
 				}
 				if (Cast<ICarriedObjectLogicInterface>(hitPoint.Actor.Get()))
 				{
@@ -138,12 +138,12 @@ void UInteractiveComponent::CheckInteractiveObject()
 
 void UInteractiveComponent::SetNullInteractiveObject()
 {
-	if (TakenActor)
+	if (InteractiveActor)
 	{
-		if (InteractiveActor)
-			TakenActor->Execute_ChangeOutlines(InteractiveActor, false);
-		TakenActor = nullptr;
+		if (InteractiveInterfaceActor)
+			InteractiveInterfaceActor->Execute_ChangeOutlines(InteractiveActor, false);
 		InteractiveActor = nullptr;
+		InteractiveInterfaceActor = nullptr;
 		CarriedActor = nullptr;
 	}
 }
