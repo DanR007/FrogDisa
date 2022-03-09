@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "AI/NPCPawn.h"
+#include "NPCPawn.h"
 
 // Sets default values
 ANPCPawn::ANPCPawn()

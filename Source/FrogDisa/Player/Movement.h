@@ -126,6 +126,9 @@ protected:
 	void ChangeCrouchMode();
 
 	void SetCrouchModeSettings();
+
+	void LookRight(float Value);
+	void LookLeft(float Value);
 public:
 
 	void DetachInteractiveObject();
@@ -221,6 +224,8 @@ private:
 	bool isCrouching;
 	bool isStrangling = false;
 	bool canStrangling = false;
+	bool isLookLeft;
+	bool isLookRight;
 
 	int Collectibles;
 	int stoneCount;
