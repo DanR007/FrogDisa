@@ -131,6 +131,9 @@ void AMovement::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 	PlayerInputComponent->BindAxis("Run", this, &AMovement::Run);
 
+	PlayerInputComponent->BindAxis("LookRight", this, &AMovement::LookRight);
+	PlayerInputComponent->BindAxis("LookLeft", this, &AMovement::LookLeft);
+
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &AMovement::Jump);
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &AMovement::StopJumping);
 
@@ -158,6 +161,7 @@ void AMovement::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	PlayerInputComponent->BindAction("ChoiceMine", IE_Pressed, this, &AMovement::ChoiceMine);
 
 	PlayerInputComponent->BindAction("ChangeCrouchMode", IE_Pressed, this, &AMovement::ChangeCrouchMode);
+	
 	
 }
 
@@ -293,6 +297,36 @@ void AMovement::MoveRight(float Value)
 	
  // 
 
+}
+
+void AMovement::LookRight(float Value)
+{
+	if (Value != 0)
+	{
+		Camera->SetRelativeLocation(FVector(0, 40, 60));
+		isLookRight = true;
+	}
+	else
+	{
+		isLookRight = false;
+		if(!isLookLeft)
+			Camera->SetRelativeLocation(FVector(0, 0, 60));
+	}
+}
+
+void AMovement::LookLeft(float Value)
+{
+	if (Value != 0)
+	{
+		isLookLeft = true;
+		Camera->SetRelativeLocation(FVector(0, -40, 60));
+	}
+	else
+	{
+		isLookLeft = false;
+		if(!isLookRight)
+			Camera->SetRelativeLocation(FVector(0, 0, 60));
+	}
 }
 
 void AMovement::Run(float Value)
