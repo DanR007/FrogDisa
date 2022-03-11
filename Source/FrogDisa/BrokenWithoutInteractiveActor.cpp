@@ -42,8 +42,8 @@ void ABrokenWithoutInteractiveActor::CheckOverlappingActor(AActor* OtherActor)
 	ARepairInteractiveObject* OverlapObject = Cast<ARepairInteractiveObject>(OtherActor);
 	if (OverlapObject && OverlapObject->Name == Need_Name && isBroken)
 	{
-		if(Cast<AMovement>(OverlapObject->GetOwner()))
-			Cast<AMovement>(OverlapObject->GetOwner())->DetachInteractiveObject();
+		if(Cast<AMovement>(OverlapObject->GetOwner())->InteractiveComponent)
+			Cast<AMovement>(OverlapObject->GetOwner())->InteractiveComponent->DetachInteractiveFromParent();
 		OverlapObject->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform);
 		OverlapObject->SetActorRelativeLocation(ColliderToCheckInteractiveObject->GetRelativeLocation());
 		

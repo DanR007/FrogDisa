@@ -6,8 +6,6 @@
 
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/Controller.h"
-#include "GameFramework/Actor.h"
-#include "GameFramework/Pawn.h"
 #include "GameFramework/PlayerController.h"
 
 #include "FrogDisa/MyHUD.h"
@@ -56,27 +54,7 @@ AMovement::AMovement()
 	GetCharacterMovement()->AirControl = 0.2f;
 
 	GetCapsuleComponent()->SetCapsuleSize(20.f, DefaultCapsuleHeight);
-#ifdef THIRD_PERSON
-	bUseControllerRotationPitch = false;
-	bUseControllerRotationYaw = false;
-	bUseControllerRotationRoll = false;
 
-	cameraComponent = CreateDefaultSubobject<USpringArmComponent>(TEXT("springarmcamera"));
-	cameraComponent->bUsePawnControlRotation = true;
-	cameraComponent->TargetArmLength = 400.f;
-	cameraComponent->SetupAttachment(RootComponent);
-	Camera->SetupAttachment(cameraComponent, USpringArmComponent::SocketName);;
-	Camera->bUsePawnControlRotation = false;
-
-	GetCharacterMovement()->bOrientRotationToMovement = true;
-
-	FVector MeshPosition = FVector(0.f, 0.f, -80.f);
-	FRotator MeshRotation = FRotator(0.f, 270.f, 0.f);
-	GetMesh()->SetSkeletalMesh(mesh.Object);
-	GetMesh()->SetRelativeLocationAndRotation(MeshPosition, MeshRotation);
-
-	
-#else
 	//bUseControllerRotationPitch = false;
 	bUseControllerRotationYaw = true;
 	//bUseControllerRotationRoll = false;
@@ -89,7 +67,7 @@ AMovement::AMovement()
 	GetMesh()->SetupAttachment(Camera);
 	//GetMesh()->SetSkeletalMesh(mesh.Object);
 	//GetMesh()->SetRelativeLocationAndRotation(MeshPosition, MeshRotation);
-#endif
+
 
 	SteamBug_ClassBP = steam_bug_bp.Class;
 
@@ -138,7 +116,7 @@ void AMovement::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &AMovement::StopJumping);
 
 	PlayerInputComponent->BindAction("Attack", IE_Pressed, this, &AMovement::Attack);
-	PlayerInputComponent->BindAction("UseSecondWeapon", IE_Pressed, this, &AMovement::Fire);
+	PlayerInputComponent->BindAction("UseSecondWeapon", IE_Pressed, shootComponent, &UShootComponent::Fire);
 	
 	PlayerInputComponent->BindAction("TakeInteractiveObject", IE_Pressed, this, &AMovement::InteractionWithObject);
 
@@ -193,34 +171,7 @@ void AMovement::Tick(float DeltaTime)
 			InteractiveComponent->CheckInteractiveObject();
 		}
 
-		FHitResult hitPoint;
-
-		FVector Start = GetActorLocation();
-		FVector End = Start + GetActorForwardVector() * 40.f;
-
-		if (GetWorld()->LineTraceSingleByChannel(hitPoint, Start, End, ECC_Visibility, queryParams))
-		{
-			movableActor = Cast<AMovableObject>(hitPoint.Actor.Get());
-			if (movableActor)
-			{
-				movableActor->SetMovable();
-			}
-		}
-		else
-		{
-			if (movableActor)
-			{
-				movableActor->SetStatic();
-				movableActor = nullptr;
-			}
-		}
 	}
-}
-
-void AMovement::Fire()
-{
-	if(shootComponent && grapplingComponent->GetGrapplingModeActive() == false)
-		shootComponent->Fire();
 }
 
 void AMovement::MoveForward(float Value)
@@ -228,75 +179,17 @@ void AMovement::MoveForward(float Value)
 	//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::SanitizeFloat(Value));
 	if (Controller && Value != 0.0f)
 	{
-#ifdef THIRD_PERSON
-		if (isAiming)
-		{
-			AddMovementInput(GetActorForwardVector(), Value);
-		}
-		else
-		{
-			if (isClimbing)
-			{
-				if (Value > 0)
-				{
-					GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Walking);
-					ACharacter::Jump();
-					isClimbing = false;
-				}
-				else
-				{
-					GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Walking);
-					const FRotator Rotation = Controller->GetControlRotation();
-					const FRotator YawRotation(0, Rotation.Yaw, 0);
-					const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
-					AddMovementInput(Direction, Value);
-					isClimbing = false;
-				}
-			}
-			else
-			{
-				const FRotator Rotation = Controller->GetControlRotation();
-				const FRotator YawRotation(0, Rotation.Yaw, 0);
-				const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
-				AddMovementInput(Direction, Value);
-			}
-			
-
-		}
-
-#else
 		AddMovementInput(GetActorForwardVector(), Value);
-#endif
+
 	}
 }
 
 void AMovement::MoveRight(float Value)
 {
-#ifdef THIRD_PERSON
-	if (Controller && Value != 0.0f && isClimbing == false)
-	{
-		if (isAiming)
-		{
-			AddMovementInput(GetActorRightVector(), Value);
-		}
-		else
-		{
-			const FRotator Rotation = Controller->GetControlRotation();
-			const FRotator YawRotation(0, Rotation.Yaw, 0);
-			const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
-			AddMovementInput(Direction, Value);
-		}
-	}
-#else
-	if (Controller && Value != 0.0f)
+if (Controller && Value != 0.0f)
 	{
 		AddMovementInput(GetActorRightVector(), Value);
 	}
-#endif
-
-	
- // 
-
 }
 
 void AMovement::LookRight(float Value)
@@ -411,8 +304,6 @@ void AMovement::UseGrapplingHook()
 
 void AMovement::LerpTo()
 {
-//#ifdef THIRD_PERSON
-	//UE_LOG(LogTemp, Warning, TEXT(FString::SanitizeFloat(GetCapsuleComponent()->GetScaledCapsuleRadius())))
 	if (FVector::Distance(GetActorLocation(), grapplingComponent->grappling_target_location) <= GetCapsuleComponent()->GetScaledCapsuleRadius() + 5.f)//lerp while distance > 70
 	{
 		isGrappling = false;
@@ -425,14 +316,6 @@ void AMovement::LerpTo()
 	{
 		GetMovementComponent()->Velocity = (grapplingComponent->grappling_target_location - GetActorLocation()) * 10;
 	}
-//#else
-
-	//GetCharacterMovement()->SetMovementMode(MOVE_Falling);
-	//float distanceToGrapplingPoint = GetDistanceTo(CheckCollectibleActors->ActorGrapplingPoint);
-	//GetMovementComponent()->Velocity = (CheckCollectibleActors->ActorGrapplingPoint->GetActorLocation() - GetActorLocation())
-	//	;
-	
-//#endif
 }
 
 void AMovement::ChangeCrouchMode()
@@ -476,26 +359,12 @@ void AMovement::AddControllerPitchInput(float Val)
 
 void AMovement::Jump()
 {
-	
-#ifdef THIRD_PERSON
-		if (nearClimbingObject)
-		{
-			//make here climbing on objects
-		}
-		else
-		{
-			bPressedJump = true;
-			JumpKeyHoldTime = 0.0f;
-		}
-#else
-
-		if (GetCharacterMovement()->IsFalling() == false)
-		{
-			bPressedJump = true;
-			JumpKeyHoldTime = 0.0f;
-		}
-#endif
-	
+	if (GetCharacterMovement()->IsFalling() == false)
+	{
+		bPressedJump = true;
+		JumpKeyHoldTime = 0.0f;
+		//make here climbing on objects
+	}
 }
 
 void AMovement::StopJumping()
@@ -503,40 +372,6 @@ void AMovement::StopJumping()
 	bPressedJump = false;
 	ResetJumpState();
 }
-#ifdef THIRD_PERSON
-void AMovement::Aim(float Value)
-{
-	if (Value != 0)
-	{
-		isAiming = true;
-		GetCharacterMovement()->bOrientRotationToMovement = false;
-		Camera->bUsePawnControlRotation = true;
-
-		cameraComponent->bUsePawnControlRotation = true;
-
-		bUseControllerRotationYaw = true;
-
-		if (cameraComponent->TargetArmLength > 140.f)
-			cameraComponent->TargetArmLength -= ChangeTargetArmSpeed;
-
-	}
-	else
-	{
-		isAiming = false;
-		GetCharacterMovement()->bOrientRotationToMovement = true;
-		Camera->bUsePawnControlRotation = false;
-
-		cameraComponent->bUsePawnControlRotation = true;
-
-		bUseControllerRotationYaw = false;
-
-		if (cameraComponent->TargetArmLength < 400.f)
-		{
-			cameraComponent->TargetArmLength += ChangeTargetArmSpeed;
-		}
-	}
-}
-#endif
 
 void AMovement::InteractionWithObject()
 {
@@ -642,12 +477,6 @@ bool AMovement::CanMakeAction()
 }
 
 
-void AMovement::DetachInteractiveObject()
-{
-	isBearObject = false;
-	InteractiveComponent->DetachInteractiveFromParent();
-}
-
 bool AMovement::IsHaveASteamBug()
 {
 	return HaveSteamBug;
@@ -658,20 +487,13 @@ bool AMovement::IsBearObject()
 	return isBearObject;
 }
 
-
-int AMovement::GetCountStones()
-{
-	return stoneCount;
-}
-
 int AMovement::GetCountCollectibles()
 {
 	return Collectibles;
 }
 
-void AMovement::SetStartSettings(int countStone, int countCollectibles, bool isHaveBug, bool isBearObj)
+void AMovement::SetStartSettings(int countCollectibles, bool isHaveBug, bool isBearObj)
 {
-	stoneCount = countStone;
 	Collectibles = countCollectibles;
 	HaveSteamBug = isHaveBug;
 	isBearObject = isBearObj;
@@ -680,16 +502,6 @@ void AMovement::SetStartSettings(int countStone, int countCollectibles, bool isH
 EWeaponType AMovement::GetCurrentWeaponType()
 {
 	return g_Projectile_Type;
-}
-
-bool AMovement::GetAimingState()
-{
-	return isAiming;
-}
-
-bool AMovement::GetRunningState()
-{
-	return isRunning;
 }
 
 AActor* AMovement::GetThrowProjectile()
@@ -702,20 +514,10 @@ bool AMovement::GetPauseState()
 	return pauseMenuOpen;
 }
 
-bool AMovement::GetWaitingState()
-{
-	return isWaitingWrench;
-}
-
 void AMovement::SetUnPause()
 {
 	GetWorld()->GetFirstPlayerController()->SetShowMouseCursor(false);
 	pauseMenuOpen = false;
-}
-
-void AMovement::SetUnwaitingState()
-{
-	isWaitingWrench = false;
 }
 
 //UAbilitySystemComponent* AMovement::GetAbilitySystemComponent() const

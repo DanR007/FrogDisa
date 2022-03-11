@@ -129,7 +129,6 @@ void AThrowProjectile::Move()
 			//ProjectileMesh->AttachToComponent(Cast<AMovement>(OwnerPlayer)->GetMesh(), FAttachmentTransformRules::KeepWorldTransform, TEXT("hand_RSocket"));
 			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, TEXT("Returned"));
 			GetWorldTimerManager().ClearTimer(MoveTimer);
-			Cast<AMovement>(OwnerPlayer)->SetUnwaitingState();
 			SetActorRotation(OwnerPlayer->GetActorRotation() + FRotator(-15, 0, 0));
 			projectileIsReturning = false;
 			isLaunched = false;

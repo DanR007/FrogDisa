@@ -45,8 +45,6 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		bool MeleeAttackIsActive;
 
-		void SetUnwaitingState();
-
 		void AddCollectibles() { Collectibles++; }
 		void AddMoney(int money_count) {}//move it to ShopComponent later
 
@@ -130,11 +128,6 @@ protected:
 	void LookRight(float Value);
 	void LookLeft(float Value);
 public:
-
-	void DetachInteractiveObject();
-
-	UFUNCTION(BlueprintCallable)
-		bool GetWaitingState();
 	UFUNCTION(BlueprintCallable)
 		bool GetCrouchMode() { return isCrouching; }
 
@@ -159,11 +152,8 @@ public:
 
 
 	UFUNCTION(BlueprintCallable)
-		void SetStartSettings(int countStone, int countCollectibles, bool isHaveBug, bool isBearObj);
-	UFUNCTION(BlueprintCallable)
-		bool GetAimingState();
-	UFUNCTION(BlueprintCallable)
-		bool GetRunningState();
+		void SetStartSettings(int countCollectibles, bool isHaveBug, bool isBearObj);
+	
 	UFUNCTION(BlueprintCallable)
 		AActor* GetThrowProjectile();
 
@@ -177,8 +167,6 @@ public:
 	UFUNCTION(BlueprintCallable)
 		bool IsBearObject();
 
-	UFUNCTION(BlueprintCallable)
-		int GetCountStones();
 
 	UFUNCTION(BlueprintCallable)
 		int GetCountCollectibles();

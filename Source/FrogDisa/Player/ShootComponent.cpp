@@ -58,7 +58,7 @@ void UShootComponent::Fire()
 {
 	//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, "Shoot");
 	//Wrench = Cast<AThrowProjectile>(Current_Weapon);
-	if (Current_Weapon)
+	if (Current_Weapon && Player_Actor->grapplingComponent->GetGrapplingModeActive() == false)
 	{
 		IWeaponLogicInterface* weaponLogicInterface = Cast<IWeaponLogicInterface>(Current_Weapon);
 
