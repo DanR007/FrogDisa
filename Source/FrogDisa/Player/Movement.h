@@ -75,12 +75,7 @@ protected:
 	virtual void AddControllerPitchInput(float Val);
 
 	void UseGrapplingHook();
-#ifdef THIRD_PERSON
-	void Aim(float Value);
 
-	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera")
-	USpringArmComponent* cameraComponent;
-#endif
 	void Run(float Value);
 
 	void InteractionWithObject();
@@ -201,7 +196,6 @@ private:
 	FTimerHandle GrapplingTimer;
 
 	bool isBearObject;
-	bool isAiming;
 	bool isRunning;
 	bool nearClimbingObject;
 	bool isGrappling;
@@ -229,6 +223,12 @@ private:
 
 	const float DefaultCapsuleHeight = 80;
 	const float DefaultCameraHeight = 60;
+
+	const float DefaultOffsetY = 0;
+	const float LeftOffsetY = -60;
+	const float RightOffsetY = 60;
+	float nowOffsetY = 0;
+
 
 	EWeaponType g_Projectile_Type;
 

@@ -74,7 +74,6 @@ AMovement::AMovement()
 	isGrappling = false;
 	MeleeAttackIsActive = false;
 	isBearObject = false;
-	isAiming = false;
 	isRunning = false;
 	pauseMenuOpen = false;
 	isClimbing = false;
@@ -196,14 +195,22 @@ void AMovement::LookRight(float Value)
 {
 	if (Value != 0)
 	{
-		Camera->SetRelativeLocation(FVector(0, 40, 60));
+		if (!isLookLeft && nowOffsetY < RightOffsetY)
+		{
+			nowOffsetY += Value * 10;
+			Camera->SetRelativeLocation(FVector(0, nowOffsetY, 60));
+		}
 		isLookRight = true;
 	}
 	else
 	{
 		isLookRight = false;
-		if(!isLookLeft)
-			Camera->SetRelativeLocation(FVector(0, 0, 60));
+		if (!isLookLeft && nowOffsetY > DefaultOffsetY)
+		{
+			//GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, FString::SanitizeFloat(Value));
+			nowOffsetY -= 10.f;
+			Camera->SetRelativeLocation(FVector(0, nowOffsetY, 60));
+		}
 	}
 }
 
@@ -212,13 +219,20 @@ void AMovement::LookLeft(float Value)
 	if (Value != 0)
 	{
 		isLookLeft = true;
-		Camera->SetRelativeLocation(FVector(0, -40, 60));
+		if (!isLookRight && nowOffsetY > LeftOffsetY)
+		{
+			nowOffsetY -= Value * 10;
+			Camera->SetRelativeLocation(FVector(0, nowOffsetY, 60));
+		}
 	}
 	else
 	{
 		isLookLeft = false;
-		if(!isLookRight)
-			Camera->SetRelativeLocation(FVector(0, 0, 60));
+		if (!isLookRight && nowOffsetY < DefaultOffsetY)
+		{
+			nowOffsetY += 10.f;
+			Camera->SetRelativeLocation(FVector(0, nowOffsetY, 60));
+		}
 	}
 }
 
@@ -239,27 +253,7 @@ void AMovement::Run(float Value)
 }
 void AMovement::Attack()
 {
-	if (isBearObject == false)
-	{
-#ifdef THIRD_PERSON
-		if (isAiming == true)
-		{
-#ifdef TEST
-			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Shoot"));
-#endif //TEST
-			shootComponent->ThrowProjectile(g_Projectile_Type);
-		}
-		else
-		{
-			MeleeAttackIsActive = true;
-			GetWorld()->GetTimerManager().SetTimer(GrapplingTimer, this, &AMovement::SetMeleeAttackInactive, 0.01f, false, 0.5f);
-		}
-#else
-		//ShootComponent->Fire();
-		//ShootComponent->ThrowProjectile(g_Projectile_Type);
-#endif// THIRD_PERSON
-	}
-	else
+	if (isBearObject)
 	{
 		if (InteractiveComponent->OverlapOnlyInteractivePuzzle())
 		{
