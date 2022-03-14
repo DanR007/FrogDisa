@@ -98,19 +98,39 @@ protected:
 
 	void ChoiceWrench() 
 	{ 
-		g_Projectile_Type = EWeaponType::EW_Wrench; GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Red, "Wrench"); 
-		if(shootComponent)
-			shootComponent->SwitchProjectile();
+		if (g_Projectile_Type != EWeaponType::EW_Wrench)
+		{
+			g_Projectile_Type = EWeaponType::EW_Wrench; GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Red, "Wrench");
+			if (shootComponent)
+				shootComponent->SwitchProjectile();
+		}
 	}
 	void ChoiceStone()  
-	{ g_Projectile_Type = EWeaponType::EW_Stone; GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Red, "Stone");
-	if(shootComponent)
-		shootComponent->SwitchProjectile();
+	{ 
+		if (g_Projectile_Type != EWeaponType::EW_Stone)
+		{
+			g_Projectile_Type = EWeaponType::EW_Stone; GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Red, "Stone");
+			if (shootComponent)
+				shootComponent->SwitchProjectile();
+		}
 	}
 	void ChoiceMine()   
-	{ g_Projectile_Type = EWeaponType::EW_Mine; GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Red, "Mine"); 
-	if(shootComponent)
-		shootComponent->SwitchProjectile();
+	{
+		if (g_Projectile_Type != EWeaponType::EW_Mine)
+		{
+			g_Projectile_Type = EWeaponType::EW_Mine; GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Red, "Mine");
+			if (shootComponent)
+				shootComponent->SwitchProjectile();
+		}
+	}
+	void ChoiceCrossbowBolt()
+	{
+		if (g_Projectile_Type != EWeaponType::EW_CrossbowBolt)
+		{
+			g_Projectile_Type = EWeaponType::EW_CrossbowBolt; GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Red, "CrossbowBolt");
+			if (shootComponent)
+				shootComponent->SwitchProjectile();
+		}
 	}
 
 	UFUNCTION(BlueprintCallable)

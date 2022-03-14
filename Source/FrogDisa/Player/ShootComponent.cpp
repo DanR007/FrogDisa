@@ -7,7 +7,7 @@
 #include "Movement.h"
 
 #include "FrogDisa/Weapon/MineActor.h"
-
+#include "FrogDisa/Weapon/CrossbowBoltActor.h"
 #include <vector>
 #include <map>
 
@@ -22,6 +22,7 @@ UShootComponent::UShootComponent()
 {
 	ConstructorHelpers::FClassFinder<AThrowProjectile> projectile_bp(TEXT("/Game/Blueprint/BP_MyThrowProjectile"));
 	BlueprintWrench = projectile_bp.Class;
+	ConstructorHelpers::FClassFinder<ACrossbowBoltActor> crossbow_letal_projectile_bp(TEXT("/Game/Blueprint/Weapons/BP_CrossbowBoltActor"));
 	
 	ConstructorHelpers::FClassFinder<AThrowingStone> stoneProjectiles(TEXT("/Game/Blueprint/BP_ThrowingStone"));
 	StoneClass = stoneProjectiles.Class;
@@ -36,6 +37,9 @@ UShootComponent::UShootComponent()
 
 	weapon_map[EWeaponType::EW_Mine].first = mineActorClass.Class;
 	weapon_map[EWeaponType::EW_Mine].second = 0;
+
+	weapon_map[EWeaponType::EW_CrossbowBolt].first = crossbow_letal_projectile_bp.Class;
+	weapon_map[EWeaponType::EW_CrossbowBolt].second = 0;
 }
 
 
@@ -65,6 +69,7 @@ void UShootComponent::Fire()
 		if (weaponLogicInterface)
 		{
 			weaponLogicInterface->Launch();
+			weapon_map[Player_Actor->GetCurrentWeaponType()].second--;
 		}
 	}
 	//Wrench->Launch();
@@ -81,17 +86,20 @@ void UShootComponent::SwitchProjectile()
 		}
 		Current_Weapon = GetWorld()->SpawnActor<AActor>(weapon_map[currentType].first, GetOwner()->FindComponentByClass<UCameraComponent>()->GetComponentTransform());
 		Cast<IWeaponLogicInterface>(Current_Weapon)->AttachToCharacter(Player_Actor);
+		
 	}
 	else
 	{
 		if(Current_Weapon)
 			Current_Weapon->Destroy();
 		Current_Weapon = nullptr;
+		
 	}
 }
 
 void UShootComponent::AddAmmunition(int ammunition_count, EWeaponType ammunition_type)
 {
 	weapon_map[ammunition_type].second += ammunition_count;
+	GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Red, FString::FromInt(weapon_map[ammunition_type].second));
 }
 

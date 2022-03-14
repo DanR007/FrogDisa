@@ -9,7 +9,7 @@
 
 
 UCLASS()
-class FROGDISA_API ABasicWeaponActor : public AActor, public AWeaponActor
+class FROGDISA_API ABasicWeaponActor : public AActor
 {
 	GENERATED_BODY()
 	
@@ -17,10 +17,11 @@ public:
 	// Sets default values for this actor's properties
 	ABasicWeaponActor();
 
-	virtual void Create() override;
-	virtual void Launch() override;
-
+	UFUNCTION(BlueprintCallable)
+		float GetDamage() { return damage; }
 protected:
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+		float damage = 10;
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 

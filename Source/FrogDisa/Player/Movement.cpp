@@ -82,6 +82,7 @@ AMovement::AMovement()
 	isCrouching = false;
 
 	weaponArrayType[EWeaponType::EW_Wrench] = "Wrench";
+	weaponArrayType[EWeaponType::EW_CrossbowBolt] = "Wrench";
 
 #ifdef TEST
 	HaveSteamBug = true;
@@ -136,6 +137,7 @@ void AMovement::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	PlayerInputComponent->BindAction("ChoiceWrench", IE_Pressed, this, &AMovement::ChoiceWrench);
 	PlayerInputComponent->BindAction("ChoiceStone", IE_Pressed, this, &AMovement::ChoiceStone);
 	PlayerInputComponent->BindAction("ChoiceMine", IE_Pressed, this, &AMovement::ChoiceMine);
+	PlayerInputComponent->BindAction("ChoiceCrossbowBolt", IE_Pressed, this, &AMovement::ChoiceCrossbowBolt);
 
 	PlayerInputComponent->BindAction("ChangeCrouchMode", IE_Pressed, this, &AMovement::ChangeCrouchMode);
 	
