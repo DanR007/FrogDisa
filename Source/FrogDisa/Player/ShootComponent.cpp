@@ -4,14 +4,14 @@
 #include "ShootComponent.h"
 #include "Camera/CameraComponent.h"
 #include "EProjectiles.h"
-#include "Movement.h"
 
 #include "FrogDisa/Weapon/MineActor.h"
 #include "FrogDisa/Weapon/CrossbowBoltActor.h"
+#include "FrogDisa/DefaultVariables.h"
+
 #include <vector>
 #include <map>
 
-AMovement* Player_Actor;
 
 //#include "UObject/ConstructorHelpers.h"
 // Sets default values for this component's properties
@@ -47,7 +47,7 @@ UShootComponent::UShootComponent()
 void UShootComponent::BeginPlay()
 {
 	Super::BeginPlay();
-	Player_Actor = Cast<AMovement>(GetOwner());
+	PlayerActor = Cast<AMovement>(GetOwner());
 	FActorSpawnParameters SpawnParameters;
 	SpawnParameters.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 	UE_LOG(LogTemp, Warning, TEXT("SPAWN"))
@@ -62,14 +62,14 @@ void UShootComponent::Fire()
 {
 	//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, "Shoot");
 	//Wrench = Cast<AThrowProjectile>(Current_Weapon);
-	if (Current_Weapon && Player_Actor->grapplingComponent->GetGrapplingModeActive() == false)
+	if (Current_Weapon && PlayerActor->grapplingComponent->GetGrapplingModeActive() == false)
 	{
 		IWeaponLogicInterface* weaponLogicInterface = Cast<IWeaponLogicInterface>(Current_Weapon);
 
 		if (weaponLogicInterface)
 		{
 			weaponLogicInterface->Launch();
-			weapon_map[Player_Actor->GetCurrentWeaponType()].second--;
+			weapon_map[PlayerActor->GetCurrentWeaponType()].second--;
 		}
 	}
 	//Wrench->Launch();
@@ -77,7 +77,7 @@ void UShootComponent::Fire()
 
 void UShootComponent::SwitchProjectile()
 {
-	EWeaponType currentType = Player_Actor->GetCurrentWeaponType();
+	EWeaponType currentType = PlayerActor->GetCurrentWeaponType();
 	if (weapon_map[currentType].second > 0)//if we have ammo spawn projectile else palm will be empty
 	{
 		if (Current_Weapon)
@@ -85,7 +85,7 @@ void UShootComponent::SwitchProjectile()
 			Current_Weapon->Destroy();
 		}
 		Current_Weapon = GetWorld()->SpawnActor<AActor>(weapon_map[currentType].first, GetOwner()->FindComponentByClass<UCameraComponent>()->GetComponentTransform());
-		Cast<IWeaponLogicInterface>(Current_Weapon)->AttachToCharacter(Player_Actor);
+		Cast<IWeaponLogicInterface>(Current_Weapon)->AttachToCharacter(PlayerActor);
 		
 	}
 	else

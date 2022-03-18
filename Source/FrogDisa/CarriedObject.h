@@ -25,7 +25,7 @@ protected:
 public:
 
 	//void Interact(AMovement *Player) override;
-	void Interact(AActor* Player) override{}
+	void Interact() override{}
 	void TakeThisObject();
 
 	void DropThisObject();

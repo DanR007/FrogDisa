@@ -28,7 +28,7 @@ void ADoorLockActor::Tick(float DeltaTime)
 
 }
 
-void ADoorLockActor::Interact(AActor* Player)
+void ADoorLockActor::Interact()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Interact"))
 	if (isLock)

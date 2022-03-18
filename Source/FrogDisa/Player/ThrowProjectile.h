@@ -34,7 +34,6 @@ public:
 	void AttachToCharacter(AActor* player_Character) override;
 	bool GetInAirState();
 
-	AActor* GetOwnerPlayer();
 	UFUNCTION(BlueprintNativeEvent)
 		void OnOverlap(AActor* OverlappedActor, AActor* OtherActor);
 protected:
@@ -59,8 +58,6 @@ protected:
 		float halfDistance;
 
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-		AActor* OwnerPlayer;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 		FVector StartLocation;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)

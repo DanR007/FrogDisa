@@ -18,7 +18,7 @@ public:
 	// Sets default values for this actor's properties
 	ACrossbowBoltActor();
 
-	void Interact(AActor* Player) override;
+	void Interact() override;
 
 	void ChangeOutlines_Implementation(bool isOutline) override { UE_LOG(LogTemp, Warning, TEXT("C++")) }
 	void Launch() override;

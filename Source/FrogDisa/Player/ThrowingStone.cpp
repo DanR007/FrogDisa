@@ -2,7 +2,7 @@
 
 
 #include "ThrowingStone.h"
-
+#include "FrogDisa/DefaultVariables.h"
 // Sets default values
 AThrowingStone::AThrowingStone()
 {
@@ -35,8 +35,9 @@ void AThrowingStone::ThrowStone(FVector VectorToTarget)
 
 void AThrowingStone::AttachToCharacter(AActor* player_Character)
 {
-	OwnerPlayer = player_Character;
-	this->AttachToActor(OwnerPlayer, FAttachmentTransformRules::KeepWorldTransform);
+	if(PlayerActor == nullptr)
+		PlayerActor = Cast<AMovement>(player_Character);
+	this->AttachToActor(PlayerActor, FAttachmentTransformRules::KeepWorldTransform);
 	//ProjectileMesh->AttachToComponent(Cast<AMovement>(OwnerPlayer)->GetMesh(),FAttachmentTransformRules::KeepWorldTransform,TEXT("hand_RSocket"));
 	SetActorRelativeLocation(FVector(100, 100, 0));
 }

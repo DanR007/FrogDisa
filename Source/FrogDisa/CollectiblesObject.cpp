@@ -4,7 +4,7 @@
 #include "CollectiblesObject.h"
 #include "Materials/Material.h"
 #include "UObject/ConstructorHelpers.h"
-
+#include "FrogDisa/DefaultVariables.h"
 //#define TEST
 
 
@@ -34,9 +34,9 @@ void ACollectiblesObject::BeginPlay()
 	
 }
 
-void ACollectiblesObject::Interact(AActor* Player)
+void ACollectiblesObject::Interact()
 {
-	Cast<AMovement>(Player)->AddCollectibles();
+	PlayerActor->AddCollectibles();
 	Destroy();
 }
 

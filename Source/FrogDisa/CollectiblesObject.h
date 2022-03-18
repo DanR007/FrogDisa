@@ -18,7 +18,7 @@ public:
 	// Sets default values for this actor's properties
 	ACollectiblesObject();
 
-	void Interact(AActor* Player) override;
+	void Interact() override;
 
 protected:
 	// Called when the game starts or when spawned

@@ -3,6 +3,7 @@
 
 #include "HealthComponent.h"
 #include "Components/TimelineComponent.h"
+#include "FrogDisa/DefaultVariables.h"
 #include "TimerManager.h"
 // Sets default values for this component's properties
 UHealthComponent::UHealthComponent()
@@ -28,17 +29,17 @@ UHealthComponent::UHealthComponent()
 void UHealthComponent::BeginPlay()
 {
 	Super::BeginPlay();
-
-	Owner = GetOwner();
-	if (Owner)
+	if(PlayerActor == nullptr)
+		PlayerActor = Cast<AMovement>(GetOwner());
+	if (PlayerActor)
 	{
-		Owner->OnTakeAnyDamage.AddDynamic(this, &UHealthComponent::TakeDamage);
+		PlayerActor->OnTakeAnyDamage.AddDynamic(this, &UHealthComponent::TakeDamage);
 	}
 	
 	if (StaminaPercentage < 1.f)
 	{
 		IsRecharging = true;
-		Owner->GetWorldTimerManager().SetTimer(StaminaRechargeTimer, this, &UHealthComponent::SetStaminaChange, 0.1f, true, 0.f);
+		PlayerActor->GetWorldTimerManager().SetTimer(StaminaRechargeTimer, this, &UHealthComponent::SetStaminaChange, 0.1f, true, 0.f);
 	}
 	else
 	{
@@ -86,13 +87,13 @@ void UHealthComponent::UpdateStamina(float StaminaChange)
 	StaminaPercentage = Stamina / MaxStamina;
 	if (StaminaPercentage == 1.f)
 	{
-		Owner->GetWorldTimerManager().ClearTimer(StaminaRechargeTimer);
+		PlayerActor->GetWorldTimerManager().ClearTimer(StaminaRechargeTimer);
 	}
 	else
 	{
 		if (StaminaChange < 0.f)
 		{
-			Owner->GetWorldTimerManager().ClearTimer(StaminaRechargeTimer);
+			PlayerActor->GetWorldTimerManager().ClearTimer(StaminaRechargeTimer);
 			GetWorld()->GetTimerManager().SetTimer(StaminaRechargeTimer, this, &UHealthComponent::SetStaminaChange, 0.1f, true, 1.f);
 			//Owner->GetWorldTimerManager().PauseTimer(StaminaRechargeTimer);
 			

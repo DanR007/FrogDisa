@@ -27,5 +27,5 @@ public:
 	UFUNCTION(BlueprintNativeEvent)
 		void ChangeOutlines(bool isOutline);
 
-	virtual void Interact(AActor* Player) {}
+	virtual void Interact() {}
 };

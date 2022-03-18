@@ -3,7 +3,7 @@
 
 #include "BrokenWithoutInteractiveActor.h"
 #include "RepairInteractiveObject.h"
-#include "Player/Movement.h"
+#include "FrogDisa/DefaultVariables.h"
 // Sets default values
 ABrokenWithoutInteractiveActor::ABrokenWithoutInteractiveActor()
 {
@@ -42,8 +42,8 @@ void ABrokenWithoutInteractiveActor::CheckOverlappingActor(AActor* OtherActor)
 	ARepairInteractiveObject* OverlapObject = Cast<ARepairInteractiveObject>(OtherActor);
 	if (OverlapObject && OverlapObject->Name == Need_Name && isBroken)
 	{
-		if(Cast<AMovement>(OverlapObject->GetOwner())->InteractiveComponent)
-			Cast<AMovement>(OverlapObject->GetOwner())->InteractiveComponent->DetachInteractiveFromParent();
+		if(PlayerActor->InteractiveComponent)
+			PlayerActor->InteractiveComponent->DetachInteractiveFromParent();
 		OverlapObject->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform);
 		OverlapObject->SetActorRelativeLocation(ColliderToCheckInteractiveObject->GetRelativeLocation());
 		

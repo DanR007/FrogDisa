@@ -1,9 +1,8 @@
 #include "GrapplingComponent.h"
-#include"Movement.h"
+#include "FrogDisa/DefaultVariables.h"
 
 #define ECC_GrapplingObjectTraceChannel ECC_GameTraceChannel2
 
-AMovement* Player_Character;
 // Sets default values for this component's properties
 UGrapplingComponent::UGrapplingComponent()
 {
@@ -19,7 +18,8 @@ UGrapplingComponent::UGrapplingComponent()
 void UGrapplingComponent::BeginPlay()
 {
 	Super::BeginPlay();
-	Player_Character = Cast<AMovement>(GetOwner());
+	if(PlayerActor == nullptr)
+		PlayerActor = Cast<AMovement>(GetOwner());
 	// ...
 	
 }
@@ -39,7 +39,7 @@ void UGrapplingComponent::StartGrappling()
 	if (grappling_mode_active && can_grappling)
 	{
 		//UE_LOG(LogTemp, Warning, TEXT("Start grappling"))
-		Player_Character->UseGrapplingHook();
+		PlayerActor->UseGrapplingHook();
 	}
 	else
 	{
@@ -49,14 +49,14 @@ void UGrapplingComponent::StartGrappling()
 
 void UGrapplingComponent::GrapplingToTarget()
 {
-	Player_Character->LerpTo();
+	PlayerActor->LerpTo();
 }
 
 void UGrapplingComponent::ChangeActiveGrapplingMode()
 { 
 	grappling_mode_active = !grappling_mode_active;
-	if (grappling_mode_active && Player_Character)
+	if (grappling_mode_active && PlayerActor)
 	{
-		Player_Character->DrawGrapplingVariant();
+		PlayerActor->DrawGrapplingVariant();
 	}
 }

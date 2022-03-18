@@ -55,7 +55,6 @@ public:
 
 	bool IsRecharging;
 	float StaminaValue;
-	AActor* Owner;
 	FTimerHandle StaminaRechargeTimer;
 	/** Get Health */
 	UFUNCTION(BlueprintCallable, Category = "Health")

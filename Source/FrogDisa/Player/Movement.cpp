@@ -394,11 +394,7 @@ void AMovement::InteractionWithObject()
 			{
 				if (taken_object)
 				{
-					taken_object->Interact(this);
-					//InteractiveComponent->InteractiveActor = nullptr;
-#ifdef TEST
-					GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, "Collectibles: " + FString::FromInt(Collectibles));
-#endif//TEST
+					taken_object->Interact();
 				}
 			}
 		}

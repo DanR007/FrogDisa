@@ -21,7 +21,6 @@ public:
 	virtual void Create() override;
 	virtual void AttachToCharacter(AActor* player_Character) override;
 private:
-	AActor* OwnerPlayer;
 
 	int Time_Before_Explosion;
 

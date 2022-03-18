@@ -2,6 +2,7 @@
 
 
 #include "MineActor.h"
+#include "FrogDisa/DefaultVariables.h"
 
 AMineActor::AMineActor()
 {
@@ -21,8 +22,9 @@ void AMineActor::Launch()
 
 void AMineActor::AttachToCharacter(AActor* player_Character)
 {
-	OwnerPlayer = player_Character;
-	this->AttachToActor(OwnerPlayer, FAttachmentTransformRules::KeepWorldTransform);
+	if(PlayerActor == nullptr)
+		PlayerActor = Cast<AMovement>(player_Character);
+	this->AttachToActor(PlayerActor, FAttachmentTransformRules::KeepWorldTransform);
 	//ProjectileMesh->AttachToComponent(Cast<AMovement>(OwnerPlayer)->GetMesh(),FAttachmentTransformRules::KeepWorldTransform,TEXT("hand_RSocket"));
 	SetActorRelativeLocation(FVector(100, 100, 0));
 }

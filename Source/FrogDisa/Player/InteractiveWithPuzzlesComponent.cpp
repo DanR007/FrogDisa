@@ -2,11 +2,12 @@
 
 
 #include "InteractiveWithPuzzlesComponent.h"
-#include "Movement.h"
 
 #include "FrogDisa/PuzzleActors/PuzzlePyatnashky.h"
 #include "FrogDisa/PuzzleActors/TestPuzzleActor.h"
 #include "FrogDisa/PuzzleActors/RotatablePuzzleActor.h"
+
+#include "FrogDisa/DefaultVariables.h"
 
 #include "DrawDebugHelpers.h"
 
@@ -28,8 +29,9 @@ UInteractiveWithPuzzlesComponent::UInteractiveWithPuzzlesComponent()
 void UInteractiveWithPuzzlesComponent::BeginPlay()
 {
 	Super::BeginPlay();
-	OwnerPlayer = Cast<AMovement>(GetOwner());
-	queryParams.AddIgnoredActor(OwnerPlayer);
+	if(PlayerActor == nullptr)
+		PlayerActor = Cast<AMovement>(GetOwner());
+	queryParams.AddIgnoredActor(PlayerActor);
 	// ...
 	
 }
@@ -37,12 +39,12 @@ void UInteractiveWithPuzzlesComponent::BeginPlay()
 
 void UInteractiveWithPuzzlesComponent::ActionWithPuzzleActor()
 {
-	if (OwnerPlayer->CanMakeAction())
+	if (PlayerActor->CanMakeAction())
 	{
 		
 		FHitResult hitPoint;
-		FVector Start = OwnerPlayer->Camera->GetComponentLocation();
-		FVector End = OwnerPlayer->Camera->GetForwardVector() * 1000.f + Start;
+		FVector Start = PlayerActor->Camera->GetComponentLocation();
+		FVector End = PlayerActor->Camera->GetForwardVector() * 1000.f + Start;
 
 
 		if (GetWorld()->LineTraceSingleByChannel(hitPoint, Start, End, ECC_GameTraceChannel5, queryParams))

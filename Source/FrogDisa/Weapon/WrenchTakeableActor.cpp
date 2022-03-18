@@ -3,6 +3,7 @@
 
 #include "WrenchTakeableActor.h"
 #include "Materials/Material.h"
+#include "FrogDisa/DefaultVariables.h"
 #include "FrogDisa/Player/EProjectiles.h"
 // Sets default values
 AWrenchTakeableActor::AWrenchTakeableActor()
@@ -26,9 +27,9 @@ void AWrenchTakeableActor::Tick(float DeltaTime)
 
 }
 
-void AWrenchTakeableActor::Interact(AActor* Player)
+void AWrenchTakeableActor::Interact()
 {
-	Cast<AMovement>(Player)->shootComponent->AddAmmunition(count_add, EWeaponType::EW_Wrench);
+	PlayerActor->shootComponent->AddAmmunition(count_add, EWeaponType::EW_Wrench);
 	Destroy();
 }
 

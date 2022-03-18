@@ -4,8 +4,8 @@
 #include "ThrowProjectile.h"
 #include "Kismet/KismetMathLibrary.h"
 
-#include "Movement.h"
 #include "FrogDisa/DropItAfterShot.h"
+#include "FrogDisa/DefaultVariables.h"
 
 #include "UObject/ConstructorHelpers.h"
 
@@ -37,7 +37,6 @@ AThrowProjectile::AThrowProjectile()
 void AThrowProjectile::BeginPlay()
 {
 	Super::BeginPlay();
-	OwnerPlayer = GetOwner();
 	inAir = false;
 	isLaunched = false;
 	projectileIsReturning = false;
@@ -45,8 +44,9 @@ void AThrowProjectile::BeginPlay()
 
 void AThrowProjectile::AttachToCharacter(AActor* player_Character)
 {
-	OwnerPlayer = player_Character;
-	this->AttachToActor(OwnerPlayer, FAttachmentTransformRules::KeepWorldTransform);
+	if(PlayerActor == nullptr)
+		PlayerActor = Cast<AMovement>(player_Character);
+	this->AttachToActor(PlayerActor, FAttachmentTransformRules::KeepWorldTransform);
 	//ProjectileMesh->AttachToComponent(Cast<AMovement>(OwnerPlayer)->GetMesh(),FAttachmentTransformRules::KeepWorldTransform,TEXT("hand_RSocket"));
 	SetActorRelativeLocation(FVector(100, 100 , 0));
 }
@@ -66,7 +66,7 @@ void AThrowProjectile::ReturnToCharacter()
 		GetWorldTimerManager().ClearTimer(MoveTimer);
 		projectileIsReturning = true;
 		inAir = true;
-		halfDistance = GetDistanceTo(OwnerPlayer) / 2;
+		halfDistance = GetDistanceTo(PlayerActor) / 2;
 		currentAlpha = 0.f;
 		GetWorld()->GetTimerManager().SetTimer(MoveTimer, this, &AThrowProjectile::Move, 0.01f, true, 0.f);
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, TEXT("ReturnSt"));
@@ -84,10 +84,10 @@ void AThrowProjectile::Launch()
 	if (isLaunched == false)
 	{
 		FCollisionQueryParams queryParamsWrench;
-		queryParamsWrench.AddIgnoredActor(OwnerPlayer);
+		queryParamsWrench.AddIgnoredActor(PlayerActor);
 		queryParamsWrench.AddIgnoredActor(this);
 		FHitResult hitPoint;
-		const FVector startLocation = Cast<AMovement>(OwnerPlayer)->Camera->GetComponentLocation(), endLocation = Cast<AMovement>(OwnerPlayer)->Camera->GetForwardVector() * MAX_DISTANCE + startLocation;
+		const FVector startLocation = PlayerActor->Camera->GetComponentLocation(), endLocation = PlayerActor->Camera->GetForwardVector() * MAX_DISTANCE + startLocation;
 		if (GetWorld()->LineTraceSingleByChannel(hitPoint, startLocation, endLocation, ECollisionChannel::ECC_Visibility, queryParamsWrench))
 		{
 			hitDistance = hitPoint.Distance;
@@ -98,7 +98,7 @@ void AThrowProjectile::Launch()
 			hitDistance = MAX_DISTANCE;
 			EndLocation = endLocation;
 		}
-		SetActorRotation(Cast<AMovement>(OwnerPlayer)->Camera->GetComponentRotation());
+		SetActorRotation(PlayerActor->Camera->GetComponentRotation());
 
 		DetachRootComponentFromParent(true);
 		StartLocation = GetActorLocation();
@@ -121,15 +121,15 @@ void AThrowProjectile::Move()
 		
 		RuleToMove(1);//1 is a left direction and -1 is a right direction
 
-		if (FVector::Distance(Cast<AMovement>(OwnerPlayer)->GetActorLocation()/*GetMesh()->GetSocketLocation(TEXT("hand_RSocket"))*/, GetActorLocation()) < 7)
+		if (FVector::Distance(PlayerActor->GetActorLocation()/*GetMesh()->GetSocketLocation(TEXT("hand_RSocket"))*/, GetActorLocation()) < 7)
 		{
 			ProjectileMesh->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 			//ProjectileMesh->AttachToActor(OwnerPlayer, FAttachmentTransformRules::KeepWorldTransform);
-			this->AttachToActor(OwnerPlayer, FAttachmentTransformRules::KeepWorldTransform);
+			this->AttachToActor(PlayerActor, FAttachmentTransformRules::KeepWorldTransform);
 			//ProjectileMesh->AttachToComponent(Cast<AMovement>(OwnerPlayer)->GetMesh(), FAttachmentTransformRules::KeepWorldTransform, TEXT("hand_RSocket"));
 			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, TEXT("Returned"));
 			GetWorldTimerManager().ClearTimer(MoveTimer);
-			SetActorRotation(OwnerPlayer->GetActorRotation() + FRotator(-15, 0, 0));
+			SetActorRotation(PlayerActor->GetActorRotation() + FRotator(-15, 0, 0));
 			projectileIsReturning = false;
 			isLaunched = false;
 			inAir = false;
@@ -155,7 +155,7 @@ void AThrowProjectile::RuleToMove(int direction)
 {
 	if (direction == 1)
 	{
-		EndLocation = OwnerPlayer->GetActorLocation();
+		EndLocation = PlayerActor->GetActorLocation();
 		//EndLocation = Cast<AMovement>(OwnerPlayer)->GetMesh()->GetSocketLocation(TEXT("hand_RSocket"));//easing function
 	}
 
@@ -205,7 +205,7 @@ void AThrowProjectile::OnOverlap_Implementation(AActor* OverlappedActor, AActor*
 
 		if (cast)
 		{
-			if (OtherActor != OwnerPlayer)
+			if (OtherActor != PlayerActor)
 			{ 
 				AThrowProjectile::ReturnToCharacter();
 			}
@@ -228,10 +228,6 @@ bool AThrowProjectile::GetInAirState()
 	return inAir;
 }
 
-AActor* AThrowProjectile::GetOwnerPlayer()
-{
-	return OwnerPlayer;
-}
 
 void AThrowProjectile::Create()
 {

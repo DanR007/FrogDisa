@@ -5,9 +5,9 @@
 
 #include "FrogDisa/PuzzleActors/PuzzleInteractiveObject.h"
 
+#include "FrogDisa/DefaultVariables.h"
 #define ECC_InteractiveObjectTraceChannel ECC_GameTraceChannel3
 
-AMovement* Owner;
 FCollisionQueryParams colQueryParams;
 IInteractiveObjectsInterface* InteractiveInterfaceActor;
 ICarriedObjectLogicInterface* CarriedActor;
@@ -25,13 +25,14 @@ UInteractiveComponent::UInteractiveComponent()
 void UInteractiveComponent::BeginPlay()
 {
 	Super::BeginPlay();
-	Owner = Cast<AMovement>(GetOwner());
-	colQueryParams.AddIgnoredActor(Owner);
+	if(PlayerActor == nullptr)
+		PlayerActor = Cast<AMovement>(GetOwner());
+	colQueryParams.AddIgnoredActor(PlayerActor);
 }
 
 bool UInteractiveComponent::TakeInteractiveObject()
 {
-	UCameraComponent* CameraOwner = Cast<AMovement>(Owner)->Camera;
+	UCameraComponent* CameraOwner = PlayerActor->Camera;
 
 	if (CarriedActor)
 	{
@@ -48,7 +49,7 @@ bool UInteractiveComponent::TakeInteractiveObject()
 			
 			InteractiveActor->SetActorLocation(CameraOwner->GetComponentLocation() + CameraOwner->GetForwardVector() * DistanceInteractiveObject);
 			InteractiveActor->SetActorRotation(CameraOwner->GetComponentRotation());
-			InteractiveActor->AttachToActor(Owner, FAttachmentTransformRules::KeepWorldTransform);
+			InteractiveActor->AttachToActor(PlayerActor, FAttachmentTransformRules::KeepWorldTransform);
 
 			InteractiveInterfaceActor->Execute_ChangeOutlines(InteractiveActor, false);
 		}
@@ -64,7 +65,7 @@ void UInteractiveComponent::DropInteractiveObject(float ImpulseValue)
 
 	InteractiveMesh->SetSimulatePhysics(true);
 	InteractiveMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
-	InteractiveMesh->AddImpulse(Cast<AMovement>(Owner)->Camera->GetForwardVector() * ImpulseValue * InteractiveMesh->GetMass());
+	InteractiveMesh->AddImpulse(PlayerActor->Camera->GetForwardVector() * ImpulseValue * InteractiveMesh->GetMass());
 	InteractiveMesh->SetCollisionResponseToChannel(ECC_InteractiveObjectTraceChannel, ECollisionResponse::ECR_Block);
 
 	InteractiveMesh = nullptr;
@@ -100,12 +101,12 @@ void UInteractiveComponent::DetachInteractiveFromParent()
 
 void UInteractiveComponent::CheckInteractiveObject()
 {
-	if (Owner)
+	if (PlayerActor)
 	{
 		FHitResult hitPoint;
 
-		FVector Start = Owner->Camera->GetComponentLocation();
-		FVector End = Owner->Camera->GetForwardVector() * MaximumCollectibleObjectDistance + Start;
+		FVector Start = PlayerActor->Camera->GetComponentLocation();
+		FVector End = PlayerActor->Camera->GetForwardVector() * MaximumCollectibleObjectDistance + Start;
 
 		if (GetWorld()->LineTraceSingleByChannel(hitPoint, Start, End, ECC_InteractiveObjectTraceChannel, colQueryParams))
 		{

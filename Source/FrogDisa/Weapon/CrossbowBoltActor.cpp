@@ -2,9 +2,9 @@
 
 
 #include "CrossbowBoltActor.h"
-#include "FrogDisa/Player/Movement.h"
+#include "FrogDisa/DefaultVariables.h"
 
-AActor* OwnerPlayer;
+
 // Sets default values
 ACrossbowBoltActor::ACrossbowBoltActor()
 {
@@ -28,25 +28,25 @@ void ACrossbowBoltActor::Tick(float DeltaTime)
 
 }
 
-void ACrossbowBoltActor::Interact(AActor* Player)
+void ACrossbowBoltActor::Interact()
 {
-	Cast<AMovement>(Player)->shootComponent->AddAmmunition(count_add, EWeaponType::EW_CrossbowBolt);
+	PlayerActor->shootComponent->AddAmmunition(count_add, EWeaponType::EW_CrossbowBolt);
 	Destroy();
 }
 
 void ACrossbowBoltActor::Launch()
 {
-
 	DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
 	crossbow_bolt_mesh->SetSimulatePhysics(true);
-	crossbow_bolt_mesh->AddImpulse(Cast<AMovement>(OwnerPlayer)->FindComponentByClass<UCameraComponent>()->
+	crossbow_bolt_mesh->AddImpulse(PlayerActor->FindComponentByClass<UCameraComponent>()->
 		GetForwardVector()*crossbow_bolt_mesh->GetMass() * 2000);
 }
 
 void ACrossbowBoltActor::AttachToCharacter(AActor* player_Character)
 {
-	OwnerPlayer = player_Character;
-	this->AttachToComponent(Cast<AMovement>(OwnerPlayer)->FindComponentByClass<UCameraComponent>(), FAttachmentTransformRules::KeepWorldTransform);
+	if(PlayerActor == nullptr)
+		PlayerActor = Cast<AMovement>(player_Character);
+	this->AttachToComponent(PlayerActor->FindComponentByClass<UCameraComponent>(), FAttachmentTransformRules::KeepWorldTransform);
 	//ProjectileMesh->AttachToComponent(Cast<AMovement>(OwnerPlayer)->GetMesh(),FAttachmentTransformRules::KeepWorldTransform,TEXT("hand_RSocket"));
 	SetActorRelativeLocation(FVector(0, 0, 0));
 }
