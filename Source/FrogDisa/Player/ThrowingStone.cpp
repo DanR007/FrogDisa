@@ -33,11 +33,10 @@ void AThrowingStone::ThrowStone(FVector VectorToTarget)
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, VectorToTarget.ToString());
 }
 
-void AThrowingStone::AttachToCharacter(AActor* player_Character)
+void AThrowingStone::AttachToCharacter()
 {
-	if(PlayerActor == nullptr)
-		PlayerActor = Cast<AMovement>(player_Character);
-	this->AttachToActor(PlayerActor, FAttachmentTransformRules::KeepWorldTransform);
+	if(PlayerActor)
+		this->AttachToActor(PlayerActor, FAttachmentTransformRules::KeepWorldTransform);
 	//ProjectileMesh->AttachToComponent(Cast<AMovement>(OwnerPlayer)->GetMesh(),FAttachmentTransformRules::KeepWorldTransform,TEXT("hand_RSocket"));
 	SetActorRelativeLocation(FVector(100, 100, 0));
 }

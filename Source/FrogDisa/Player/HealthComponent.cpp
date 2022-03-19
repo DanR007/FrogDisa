@@ -29,8 +29,7 @@ UHealthComponent::UHealthComponent()
 void UHealthComponent::BeginPlay()
 {
 	Super::BeginPlay();
-	if(PlayerActor == nullptr)
-		PlayerActor = Cast<AMovement>(GetOwner());
+
 	if (PlayerActor)
 	{
 		PlayerActor->OnTakeAnyDamage.AddDynamic(this, &UHealthComponent::TakeDamage);

@@ -42,10 +42,9 @@ void AThrowProjectile::BeginPlay()
 	projectileIsReturning = false;
 }
 
-void AThrowProjectile::AttachToCharacter(AActor* player_Character)
+void AThrowProjectile::AttachToCharacter()
 {
-	if(PlayerActor == nullptr)
-		PlayerActor = Cast<AMovement>(player_Character);
+	if(PlayerActor)
 	this->AttachToActor(PlayerActor, FAttachmentTransformRules::KeepWorldTransform);
 	//ProjectileMesh->AttachToComponent(Cast<AMovement>(OwnerPlayer)->GetMesh(),FAttachmentTransformRules::KeepWorldTransform,TEXT("hand_RSocket"));
 	SetActorRelativeLocation(FVector(100, 100 , 0));

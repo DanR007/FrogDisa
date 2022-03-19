@@ -31,7 +31,7 @@ public:
 	virtual void Launch() override;
 	virtual void Create() override;
 	//virtual void OnActorBeginOverlap() override;
-	void AttachToCharacter(AActor* player_Character) override;
+	void AttachToCharacter() override;
 	bool GetInAirState();
 
 	UFUNCTION(BlueprintNativeEvent)

@@ -26,5 +26,5 @@ public:
 
 	virtual void Launch() {}
 	virtual void Create() {}
-	virtual void AttachToCharacter(AActor* player_Character) {}
+	virtual void AttachToCharacter() {}
 };

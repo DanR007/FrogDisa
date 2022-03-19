@@ -27,8 +27,6 @@ UInteractiveComponent::UInteractiveComponent()
 void UInteractiveComponent::BeginPlay()
 {
 	Super::BeginPlay();
-	if(PlayerActor == nullptr)
-		PlayerActor = Cast<AMovement>(GetOwner());
 	colQueryParams.AddIgnoredActor(PlayerActor);
 }
 
@@ -103,7 +101,7 @@ void UInteractiveComponent::DetachInteractiveFromParent()
 
 void UInteractiveComponent::CheckInteractiveObject()
 {
-	if (PlayerActor)
+	if (PlayerActor && PlayerActor->Camera)
 	{
 		FHitResult hitPoint;
 

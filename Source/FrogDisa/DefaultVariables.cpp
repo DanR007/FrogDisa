@@ -3,10 +3,3 @@
 
 #include "DefaultVariables.h"
 
-DefaultVariables::DefaultVariables()
-{
-}
-
-DefaultVariables::~DefaultVariables()
-{
-}

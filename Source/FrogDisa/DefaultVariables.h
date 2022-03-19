@@ -6,13 +6,12 @@
 #include "Player/Movement.h"
 
 
-static AMovement* PlayerActor;
+extern AMovement* PlayerActor;
 /**
  * 
  */
 class FROGDISA_API DefaultVariables
 {
 public:
-	DefaultVariables();
-	~DefaultVariables();
+	
 };

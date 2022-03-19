@@ -19,7 +19,7 @@ public:
 	AMineActor();
 	virtual void Launch() override;
 	virtual void Create() override;
-	virtual void AttachToCharacter(AActor* player_Character) override;
+	virtual void AttachToCharacter() override;
 private:
 
 	int Time_Before_Explosion;

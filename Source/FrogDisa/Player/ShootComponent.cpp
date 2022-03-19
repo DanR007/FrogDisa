@@ -47,7 +47,6 @@ UShootComponent::UShootComponent()
 void UShootComponent::BeginPlay()
 {
 	Super::BeginPlay();
-	PlayerActor = Cast<AMovement>(GetOwner());
 	FActorSpawnParameters SpawnParameters;
 	SpawnParameters.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 	UE_LOG(LogTemp, Warning, TEXT("SPAWN"))
@@ -70,6 +69,11 @@ void UShootComponent::Fire()
 		{
 			weaponLogicInterface->Launch();
 			weapon_map[PlayerActor->GetCurrentWeaponType()].second--;
+			if (weapon_map[PlayerActor->GetCurrentWeaponType()].second > 0)
+			{
+				Current_Weapon = GetWorld()->SpawnActor<AActor>(weapon_map[PlayerActor->GetCurrentWeaponType()].first, GetOwner()->FindComponentByClass<UCameraComponent>()->GetComponentTransform());
+				Cast<IWeaponLogicInterface>(Current_Weapon)->AttachToCharacter();
+			}
 		}
 	}
 	//Wrench->Launch();
@@ -85,7 +89,7 @@ void UShootComponent::SwitchProjectile()
 			Current_Weapon->Destroy();
 		}
 		Current_Weapon = GetWorld()->SpawnActor<AActor>(weapon_map[currentType].first, GetOwner()->FindComponentByClass<UCameraComponent>()->GetComponentTransform());
-		Cast<IWeaponLogicInterface>(Current_Weapon)->AttachToCharacter(PlayerActor);
+		Cast<IWeaponLogicInterface>(Current_Weapon)->AttachToCharacter();
 		
 	}
 	else

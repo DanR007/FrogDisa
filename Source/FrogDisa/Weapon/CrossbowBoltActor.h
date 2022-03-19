@@ -22,7 +22,7 @@ public:
 
 	void ChangeOutlines_Implementation(bool isOutline) override { UE_LOG(LogTemp, Warning, TEXT("C++")) }
 	void Launch() override;
-	void AttachToCharacter(AActor* player_Character) override;
+	void AttachToCharacter() override;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

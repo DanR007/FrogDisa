@@ -28,5 +28,5 @@ public:
 	
 	virtual void Launch() override{ GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Blue, "Stone"); } ;
 	virtual void Create() override { GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Blue, "Stone"); };
-	virtual void AttachToCharacter(AActor* player_Character) override;
+	virtual void AttachToCharacter() override;
 };

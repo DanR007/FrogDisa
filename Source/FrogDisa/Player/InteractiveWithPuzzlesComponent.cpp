@@ -29,8 +29,6 @@ UInteractiveWithPuzzlesComponent::UInteractiveWithPuzzlesComponent()
 void UInteractiveWithPuzzlesComponent::BeginPlay()
 {
 	Super::BeginPlay();
-	if(PlayerActor == nullptr)
-		PlayerActor = Cast<AMovement>(GetOwner());
 	queryParams.AddIgnoredActor(PlayerActor);
 	// ...
 	

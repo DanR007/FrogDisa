@@ -11,6 +11,7 @@
 #include "FrogDisa/MyHUD.h"
 #include "FrogDisa/CarriedObject.h"
 #include "FrogDisa/InteractiveObjectsInterface.h"
+#include "FrogDisa/DefaultVariables.h"
 
 #include "Animation/AnimInstance.h"
 #include "Kismet/GameplayStatics.h"
@@ -27,7 +28,7 @@
 #define TEST
 
 #define ECC_ClimbingTraceChannel ECC_GameTraceChannel1
-
+AMovement* PlayerActor;
 std::map<EWeaponType, FString> weaponArrayType;
 
 // Sets default values
@@ -148,12 +149,14 @@ void AMovement::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 // Called when the game starts or when spawned
 void AMovement::BeginPlay()
 {
-	queryParams.AddIgnoredActor(this);
 	Super::BeginPlay();
-	if(shootComponent)
+	queryParams.AddIgnoredActor(this);
+	if (shootComponent)
 		UE_LOG(LogTemp, Warning, TEXT("Some warning message"))
 	else
 		UE_LOG(LogTemp, Warning, TEXT("ShootComponent is null"))
+
+	PlayerActor = this;
 }
 
 // Called every frame

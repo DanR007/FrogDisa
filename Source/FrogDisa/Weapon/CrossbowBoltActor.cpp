@@ -40,13 +40,17 @@ void ACrossbowBoltActor::Launch()
 	crossbow_bolt_mesh->SetSimulatePhysics(true);
 	crossbow_bolt_mesh->AddImpulse(PlayerActor->FindComponentByClass<UCameraComponent>()->
 		GetForwardVector()*crossbow_bolt_mesh->GetMass() * 2000);
+	crossbow_bolt_mesh->SetCollisionResponseToChannel(ECollisionChannel::ECC_GameTraceChannel3, ECollisionResponse::ECR_Block);
 }
 
-void ACrossbowBoltActor::AttachToCharacter(AActor* player_Character)
+void ACrossbowBoltActor::AttachToCharacter()
 {
-	if(PlayerActor == nullptr)
-		PlayerActor = Cast<AMovement>(player_Character);
-	this->AttachToComponent(PlayerActor->FindComponentByClass<UCameraComponent>(), FAttachmentTransformRules::KeepWorldTransform);
-	//ProjectileMesh->AttachToComponent(Cast<AMovement>(OwnerPlayer)->GetMesh(),FAttachmentTransformRules::KeepWorldTransform,TEXT("hand_RSocket"));
-	SetActorRelativeLocation(FVector(0, 0, 0));
+	if (PlayerActor && PlayerActor->FindComponentByClass<UCameraComponent>())
+	{
+		this->AttachToComponent(PlayerActor->FindComponentByClass<UCameraComponent>(), FAttachmentTransformRules::KeepWorldTransform);
+		//ProjectileMesh->AttachToComponent(Cast<AMovement>(OwnerPlayer)->GetMesh(),FAttachmentTransformRules::KeepWorldTransform,TEXT("hand_RSocket"));
+		SetActorRelativeLocation(FVector(0, 0, 0));
+		GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Red, "Spawn spawn spaaaaaaaawn");
+		crossbow_bolt_mesh->SetCollisionResponseToChannel(ECollisionChannel::ECC_GameTraceChannel3, ECollisionResponse::ECR_Ignore);
+	}
 }
