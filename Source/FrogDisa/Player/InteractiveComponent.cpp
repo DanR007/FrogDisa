@@ -5,6 +5,8 @@
 
 #include "FrogDisa/PuzzleActors/PuzzleInteractiveObject.h"
 
+#include "DrawDebugHelpers.h"
+
 #include "FrogDisa/DefaultVariables.h"
 #define ECC_InteractiveObjectTraceChannel ECC_GameTraceChannel3
 
@@ -107,7 +109,6 @@ void UInteractiveComponent::CheckInteractiveObject()
 
 		FVector Start = PlayerActor->Camera->GetComponentLocation();
 		FVector End = PlayerActor->Camera->GetForwardVector() * MaximumCollectibleObjectDistance + Start;
-
 		if (GetWorld()->LineTraceSingleByChannel(hitPoint, Start, End, ECC_InteractiveObjectTraceChannel, colQueryParams))
 		{
 			if (Cast<IInteractiveObjectsInterface>(hitPoint.Actor.Get()))

@@ -39,7 +39,7 @@ UShootComponent::UShootComponent()
 	weapon_map[EWeaponType::EW_Mine].second = 0;
 
 	weapon_map[EWeaponType::EW_CrossbowBolt].first = crossbow_letal_projectile_bp.Class;
-	weapon_map[EWeaponType::EW_CrossbowBolt].second = 0;
+	weapon_map[EWeaponType::EW_CrossbowBolt].second = 100;
 }
 
 
