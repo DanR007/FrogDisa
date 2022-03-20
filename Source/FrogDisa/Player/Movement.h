@@ -142,6 +142,8 @@ protected:
 
 	void LookRight(float Value);
 	void LookLeft(float Value);
+
+	void ChangeCrouchHeight();
 public:
 	UFUNCTION(BlueprintCallable)
 		bool GetCrouchMode() { return isCrouching; }

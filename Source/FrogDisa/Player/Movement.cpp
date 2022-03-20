@@ -31,6 +31,8 @@
 AMovement* PlayerActor;
 std::map<EWeaponType, FString> weaponArrayType;
 
+float CapsuleRadius;
+
 // Sets default values
 AMovement::AMovement()
 {
@@ -63,7 +65,7 @@ AMovement::AMovement()
 	FRotator MeshRotation = FRotator(0.f, 270.f, 0.f);
 	
 	Camera->SetupAttachment(RootComponent);
-	Camera->SetRelativeLocation(FVector(0, 1.75f, DefaultCameraHeight)); // Position the camera
+	Camera->SetRelativeLocation(FVector(0, 0, DefaultCameraHeight)); // Position the camera
 	Camera->bUsePawnControlRotation = true;
 	GetMesh()->SetupAttachment(Camera);
 	//GetMesh()->SetSkeletalMesh(mesh.Object);
@@ -156,6 +158,7 @@ void AMovement::BeginPlay()
 	else
 		UE_LOG(LogTemp, Warning, TEXT("ShootComponent is null"))
 
+		CapsuleRadius = GetCapsuleComponent()->GetScaledCapsuleRadius();
 	PlayerActor = this;
 }
 
@@ -175,6 +178,11 @@ void AMovement::Tick(float DeltaTime)
 			InteractiveComponent->CheckInteractiveObject();
 		}
 
+	}
+
+	if (isCrouching)
+	{
+		ChangeCrouchHeight();
 	}
 }
 
@@ -330,12 +338,12 @@ void AMovement::SetCrouchModeSettings()
 	if (isCrouching)
 	{
 		GetCapsuleComponent()->SetCapsuleHalfHeight(DefaultCapsuleHeight / 2);
-		Camera->SetRelativeLocation(FVector(0, 1.75f, DefaultCameraHeight / 2));
+		Camera->SetRelativeLocation(FVector(0, 0, DefaultCameraHeight / 2));
 	}
 	else
 	{
 		GetCapsuleComponent()->SetCapsuleHalfHeight(DefaultCapsuleHeight);
-		Camera->SetRelativeLocation(FVector(0, 1.75f, DefaultCameraHeight));
+		Camera->SetRelativeLocation(FVector(0, 0, DefaultCameraHeight));
 	}
 	
 }
@@ -460,6 +468,38 @@ void AMovement::HeightTrace()
 
 		
 	}
+}
+
+void AMovement::ChangeCrouchHeight()
+{
+	/*FHitResult hit_res;
+	FCollisionShape capsule;
+	TArray<AActor*> arr_ignored_actors;
+	GetAllChildActors(arr_ignored_actors);
+	queryParams.AddIgnoredActors(arr_ignored_actors);
+	capsule.SetCapsule(CapsuleRadius, DefaultCapsuleHeight / 2);
+	FVector Start = GetActorLocation() + GetActorForwardVector() * CapsuleRadius * 2.1 - GetActorUpVector() * (DefaultCapsuleHeight / 2 - 10),
+		End = GetActorLocation() + FVector(CapsuleRadius * 2.1, 0, DefaultCapsuleHeight);
+	GEngine->AddOnScreenDebugMessage(-1, 0.1, FColor::Blue, Start.ToCompactString());
+	if (GetWorld()->SweepSingleByChannel(hit_res, Start, End
+		, GetActorRotation().Quaternion(), ECollisionChannel::ECC_Visibility, capsule, queryParams))
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 0.2, FColor::Red, FString::SanitizeFloat(FVector::Distance(hit_res.Location, Start)));
+		GEngine->AddOnScreenDebugMessage(-1, 0.2, FColor::Red, hit_res.Actor.Get()->GetName());
+
+		if (hit_res.Distance >= DefaultCapsuleHeight / 3 * 2 && hit_res.Distance <= DefaultCapsuleHeight)
+		{
+			GetCapsuleComponent()->SetCapsuleHalfHeight(DefaultCapsuleHeight / 3);
+			Camera->SetRelativeLocation(FVector(0, 0, DefaultCameraHeight / 3));
+			GEngine->AddOnScreenDebugMessage(-1, 0.2, FColor::Red, "High");
+		}
+		else
+		{
+			GetCapsuleComponent()->SetCapsuleHalfHeight(DefaultCapsuleHeight / 2);
+			Camera->SetRelativeLocation(FVector(0, 0, DefaultCameraHeight / 2));
+			//GEngine->AddOnScreenDebugMessage(-1, 0.2, FColor::Red, "Low");
+		}
+	}*/
 }
 
 void AMovement::DrawGrapplingVariant_Implementation()
