@@ -297,6 +297,7 @@ void AMovement::UseGrapplingHook()
 	{
 		isGrappling = true;
 		GetCharacterMovement()->SetMovementMode(MOVE_Flying);
+		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 		GetWorld()->GetTimerManager().SetTimer(GrapplingTimer, this, &AMovement::LerpTo, 0.01f, true, 0.f);
 	}
 }
@@ -310,6 +311,7 @@ void AMovement::LerpTo()
 		//UE_LOG(LogTemp, Warning, TEXT("Stop Grappling"))
 		GetWorldTimerManager().ClearTimer(GrapplingTimer);
 		GetMovementComponent()->Velocity = FVector::ZeroVector;
+		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 	}
 	else
 	{
