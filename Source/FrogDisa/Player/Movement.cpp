@@ -128,7 +128,6 @@ void AMovement::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 	PlayerInputComponent->BindAction("GrapplingHook", IE_Pressed, grapplingComponent, &UGrapplingComponent::ChangeActiveGrapplingMode);
 	PlayerInputComponent->BindAction("UseSecondWeapon", IE_Pressed, grapplingComponent, &UGrapplingComponent::StartGrappling);
-
 	//PlayerInputComponent->BindAction("ActionWithSomeObj", IE_Pressed, this, &AMovement::InteractObject);
 	//PlayerInputComponent->BindAction("StartTakedown", IE_Pressed, InteractiveWithPuzzlesComponent,
 	//	&UInteractiveWithPuzzlesComponent::ActionWithPuzzleActor);
@@ -303,20 +302,30 @@ void AMovement::UseGrapplingHook()
 	
 	if (grapplingComponent->GetCanGrappling())
 	{
-		if (HUDComponent && HUDComponent->Stamina - 10.f > 0.f)
+		if (isGrappling)
 		{
-			HUDComponent->UpdateStamina(-10.f);
-			isGrappling = true;
-			GetCharacterMovement()->SetMovementMode(MOVE_Flying);
-			GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-			GetWorld()->GetTimerManager().SetTimer(GrapplingTimer, this, &AMovement::LerpTo, 0.01f, true, 0.f);
+			isGrappling = false;
+			GetCharacterMovement()->SetMovementMode(MOVE_Falling);
+			GetWorldTimerManager().ClearTimer(GrapplingTimer);
+			GetMovementComponent()->Velocity = FVector::ZeroVector;
+			GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 		}
+		else
+			if (HUDComponent && HUDComponent->Stamina - 10.f > 0.f)
+			{
+				HUDComponent->UpdateStamina(-10.f);
+				isGrappling = true;
+				GetCharacterMovement()->SetMovementMode(MOVE_Flying);
+				GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+				GetWorld()->GetTimerManager().SetTimer(GrapplingTimer, this, &AMovement::LerpTo, 0.01f, true, 0.f);
+			}
 	}
 }
 
 void AMovement::LerpTo()
 {
-	if (FVector::Distance(GetActorLocation(), grapplingComponent->grappling_target_location) <= GetCapsuleComponent()->GetScaledCapsuleRadius() + 5.f)//lerp while distance > 70
+	if (/*FVector::Distance(GetActorLocation(), grapplingComponent->grappling_target_location) <= GetCapsuleComponent()->GetScaledCapsuleRadius() + 5.f*/isGrappling &&
+		HUDComponent->Stamina - 0.2f <= 0)//lerp while distance > 70
 	{
 		isGrappling = false;
 		GetCharacterMovement()->SetMovementMode(MOVE_Falling);
@@ -327,6 +336,7 @@ void AMovement::LerpTo()
 	}
 	else
 	{
+		HUDComponent->UpdateStamina(-0.2f);
 		GetMovementComponent()->Velocity = (grapplingComponent->grappling_target_location - GetActorLocation()) * 10;
 	}
 }
