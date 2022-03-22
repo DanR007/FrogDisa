@@ -243,8 +243,8 @@ private:
 	const float DropImpulseValue = 0;
 	const float GrapplingForceValue = 200.f;
 
-	const float DefaultCapsuleHeight = 80;
-	const float DefaultCameraHeight = 60;
+	const float DefaultCapsuleHeight = 90;
+	const float DefaultCameraHeight = 87;
 
 	const float DefaultOffsetY = 0;
 	const float LeftOffsetY = -60;

@@ -31,6 +31,7 @@
 AMovement* PlayerActor;
 std::map<EWeaponType, FString> weaponArrayType;
 
+FVector offset = FVector::ZeroVector;
 float CapsuleRadius;
 
 // Sets default values
@@ -51,18 +52,19 @@ AMovement::AMovement()
 	//AttributeSet = CreateDefaultSubobject<UCharacterAttributeSet>(TEXT("AttributeSet"));
 	//AbilityComponent = CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("AbilitySystem"));
 
+
 	GetCharacterMovement()->bOrientRotationToMovement = false; // Character moves in the direction of input...	
 	GetCharacterMovement()->RotationRate = FRotator(0.0f, 540.0f, 0.0f); // ...at this rotation rate
 	GetCharacterMovement()->JumpZVelocity = 600.f;
 	GetCharacterMovement()->AirControl = 0.2f;
 
 	GetCapsuleComponent()->SetCapsuleSize(20.f, DefaultCapsuleHeight);
-
 	//bUseControllerRotationPitch = false;
 	bUseControllerRotationYaw = true;
 	//bUseControllerRotationRoll = false;
 	FVector MeshPosition = FVector(0.f, 0.f, -80.f);
 	FRotator MeshRotation = FRotator(0.f, 270.f, 0.f);
+	
 	
 	Camera->SetupAttachment(RootComponent);
 	Camera->SetRelativeLocation(FVector(0, 0, DefaultCameraHeight)); // Position the camera
@@ -472,34 +474,35 @@ void AMovement::HeightTrace()
 
 void AMovement::ChangeCrouchHeight()
 {
-	/*FHitResult hit_res;
+	FHitResult hit_res;
 	FCollisionShape capsule;
 	TArray<AActor*> arr_ignored_actors;
 	GetAllChildActors(arr_ignored_actors);
 	queryParams.AddIgnoredActors(arr_ignored_actors);
-	capsule.SetCapsule(CapsuleRadius, DefaultCapsuleHeight / 2);
-	FVector Start = GetActorLocation() + GetActorForwardVector() * CapsuleRadius * 2.1 - GetActorUpVector() * (DefaultCapsuleHeight / 2 - 10),
-		End = GetActorLocation() + FVector(CapsuleRadius * 2.1, 0, DefaultCapsuleHeight);
-	GEngine->AddOnScreenDebugMessage(-1, 0.1, FColor::Blue, Start.ToCompactString());
-	if (GetWorld()->SweepSingleByChannel(hit_res, Start, End
-		, GetActorRotation().Quaternion(), ECollisionChannel::ECC_Visibility, capsule, queryParams))
+	capsule.SetCapsule(CapsuleRadius, /*GetCapsuleComponent()->GetScaledCapsuleHalfHeight() */ DefaultCapsuleHeight / 2 );
+	
+	FVector StartForward = GetActorLocation() + GetActorForwardVector() * CapsuleRadius * 2 + offset,
+		EndForward = GetActorLocation() + FVector(CapsuleRadius * 2, 0, DefaultCapsuleHeight / 2) + offset,
+		StartUpper = GetActorLocation(), EndUpper = GetActorLocation() + GetActorUpVector() * DefaultCapsuleHeight / 3;
+	//GEngine->AddOnScreenDebugMessage(-1, 0.1, FColor::Blue, Start.ToCompactString());
+	if (GetWorld()->SweepSingleByChannel(hit_res, StartForward, EndForward
+		, GetActorRotation().Quaternion(), ECollisionChannel::ECC_Visibility, capsule, queryParams) || 
+		GetWorld()->SweepSingleByChannel(hit_res, StartUpper, EndUpper
+			, GetActorRotation().Quaternion(), ECollisionChannel::ECC_Visibility, capsule, queryParams))
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 0.2, FColor::Red, FString::SanitizeFloat(FVector::Distance(hit_res.Location, Start)));
 		GEngine->AddOnScreenDebugMessage(-1, 0.2, FColor::Red, hit_res.Actor.Get()->GetName());
-
-		if (hit_res.Distance >= DefaultCapsuleHeight / 3 * 2 && hit_res.Distance <= DefaultCapsuleHeight)
-		{
-			GetCapsuleComponent()->SetCapsuleHalfHeight(DefaultCapsuleHeight / 3);
-			Camera->SetRelativeLocation(FVector(0, 0, DefaultCameraHeight / 3));
-			GEngine->AddOnScreenDebugMessage(-1, 0.2, FColor::Red, "High");
-		}
-		else
-		{
-			GetCapsuleComponent()->SetCapsuleHalfHeight(DefaultCapsuleHeight / 2);
-			Camera->SetRelativeLocation(FVector(0, 0, DefaultCameraHeight / 2));
-			//GEngine->AddOnScreenDebugMessage(-1, 0.2, FColor::Red, "Low");
-		}
-	}*/
+		GetCapsuleComponent()->SetCapsuleHalfHeight(DefaultCapsuleHeight / 3);
+		Camera->SetRelativeLocation(FVector(0, 0, DefaultCameraHeight / 3));
+		GEngine->AddOnScreenDebugMessage(-1, 0.2, FColor::Red, "High");
+		offset = FVector(0, 0, DefaultCapsuleHeight / 3);
+	}
+	else
+	{
+		GetCapsuleComponent()->SetCapsuleHalfHeight(DefaultCapsuleHeight / 2);
+		Camera->SetRelativeLocation(FVector(0, 0, DefaultCameraHeight / 2));
+		//GEngine->AddOnScreenDebugMessage(-1, 0.2, FColor::Red, "Low");
+		offset = FVector::ZeroVector;
+	}
 }
 
 void AMovement::DrawGrapplingVariant_Implementation()
