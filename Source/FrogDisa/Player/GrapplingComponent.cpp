@@ -18,10 +18,6 @@ UGrapplingComponent::UGrapplingComponent()
 void UGrapplingComponent::BeginPlay()
 {
 	Super::BeginPlay();
-	if (PlayerActor)
-		GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Red, "Da");
-	else
-		GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Red, "No");
 	// ...
 	
 }

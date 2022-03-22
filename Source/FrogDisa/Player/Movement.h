@@ -9,6 +9,7 @@
 #include "FrogDisaGameInstance.h"
 #include "InteractiveWithPuzzlesComponent.h"
 #include "GrapplingComponent.h"
+#include "HealthComponent.h"
 
 #include "AbilitySystemInterface.h"
 
@@ -162,6 +163,8 @@ public:
 		UInteractiveWithPuzzlesComponent* InteractiveWithPuzzlesComponent;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		UGrapplingComponent* grapplingComponent;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		UHealthComponent* HUDComponent;
 	//UPROPERTY(VisibleAnywhere, Category = "Gameplay")
 	//	UAbilitySystemComponent* AbilityComponent;
 	//UPROPERTY(Transient)

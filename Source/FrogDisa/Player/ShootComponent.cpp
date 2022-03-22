@@ -49,7 +49,7 @@ void UShootComponent::BeginPlay()
 	Super::BeginPlay();
 	FActorSpawnParameters SpawnParameters;
 	SpawnParameters.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-	UE_LOG(LogTemp, Warning, TEXT("SPAWN"))
+	//UE_LOG(LogTemp, Warning, TEXT("SPAWN"))
 }
 
 AActor *UShootComponent::GetActorWrench()

@@ -38,6 +38,7 @@ void UHealthComponent::BeginPlay()
 	if (StaminaPercentage < 1.f)
 	{
 		IsRecharging = true;
+		if(PlayerActor)
 		PlayerActor->GetWorldTimerManager().SetTimer(StaminaRechargeTimer, this, &UHealthComponent::SetStaminaChange, 0.1f, true, 0.f);
 	}
 	else
@@ -103,13 +104,5 @@ void UHealthComponent::UpdateStamina(float StaminaChange)
 void UHealthComponent::SetStaminaChange()
 {
 	UpdateStamina(0.4f);
-	//if (StaminaChange < 0)
-	//{
-		//if(Owner->GetWorldTimerManager().IsTimerActive(StaminaRechargeTimer) == true)
-			//Owner->GetWorldTimerManager().ClearTimer(StaminaRechargeTimer);
-
-		//GetWorld()->GetTimerManager().SetTimer(StaminaRechargeTimer, this, &UHealthComponent::SetStaminaChange, 0.2f, true, 0.f);
-	//}
-	//GetOwner()->ֿוף
 }
 

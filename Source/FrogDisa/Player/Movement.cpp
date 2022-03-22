@@ -49,6 +49,7 @@ AMovement::AMovement()
 	InteractiveWithPuzzlesComponent = CreateDefaultSubobject<UInteractiveWithPuzzlesComponent>(TEXT("InteractiveWithPuzzlesComponent"));
 	shootComponent = CreateDefaultSubobject<UShootComponent>(TEXT("ShootComponent"));
 	grapplingComponent = CreateDefaultSubobject<UGrapplingComponent>(TEXT("GrapplingComponent"));
+	HUDComponent = CreateDefaultSubobject<UHealthComponent>(TEXT("HUD Component"));
 	//AttributeSet = CreateDefaultSubobject<UCharacterAttributeSet>(TEXT("AttributeSet"));
 	//AbilityComponent = CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("AbilitySystem"));
 
@@ -155,12 +156,8 @@ void AMovement::BeginPlay()
 {
 	Super::BeginPlay();
 	queryParams.AddIgnoredActor(this);
-	if (shootComponent)
-		UE_LOG(LogTemp, Warning, TEXT("Some warning message"))
-	else
-		UE_LOG(LogTemp, Warning, TEXT("ShootComponent is null"))
 
-		CapsuleRadius = GetCapsuleComponent()->GetScaledCapsuleRadius();
+	CapsuleRadius = GetCapsuleComponent()->GetScaledCapsuleRadius();
 	PlayerActor = this;
 }
 
@@ -303,12 +300,17 @@ void AMovement::SetMeleeAttackInactive()
 
 void AMovement::UseGrapplingHook()
 {
-	if (grapplingComponent->GetCanGrappling()) 
+	
+	if (grapplingComponent->GetCanGrappling())
 	{
-		isGrappling = true;
-		GetCharacterMovement()->SetMovementMode(MOVE_Flying);
-		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-		GetWorld()->GetTimerManager().SetTimer(GrapplingTimer, this, &AMovement::LerpTo, 0.01f, true, 0.f);
+		if (HUDComponent && HUDComponent->Stamina - 10.f > 0.f)
+		{
+			HUDComponent->UpdateStamina(-10.f);
+			isGrappling = true;
+			GetCharacterMovement()->SetMovementMode(MOVE_Flying);
+			GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+			GetWorld()->GetTimerManager().SetTimer(GrapplingTimer, this, &AMovement::LerpTo, 0.01f, true, 0.f);
+		}
 	}
 }
 
