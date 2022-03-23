@@ -88,8 +88,10 @@ AMovement::AMovement()
 	isCrouching = false;
 
 	weaponArrayType[EWeaponType::EW_Wrench] = "Wrench";
-	weaponArrayType[EWeaponType::EW_CrossbowBolt] = "Wrench";
+	weaponArrayType[EWeaponType::EW_CrossbowBolt] = "CrossbowBolt";
 
+	CapsuleRadius = GetCapsuleComponent()->GetScaledCapsuleRadius();
+	PlayerActor = this;
 #ifdef TEST
 	HaveSteamBug = true;
 #else
@@ -146,18 +148,17 @@ void AMovement::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 	PlayerInputComponent->BindAction("ChangeCrouchMode", IE_Pressed, this, &AMovement::ChangeCrouchMode);
 	
-	
 }
 
 
 // Called when the game starts or when spawned
 void AMovement::BeginPlay()
 {
-	Super::BeginPlay();
 	queryParams.AddIgnoredActor(this);
+	
 
-	CapsuleRadius = GetCapsuleComponent()->GetScaledCapsuleRadius();
-	PlayerActor = this;
+	Super::BeginPlay();
+	
 }
 
 // Called every frame
@@ -538,10 +539,8 @@ void AMovement::ChangeCrouchHeight()
 		GetWorld()->SweepSingleByChannel(hit_res, StartUpper, EndUpper
 			, GetActorRotation().Quaternion(), ECollisionChannel::ECC_Visibility, capsule, queryParams))
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 0.2, FColor::Red, hit_res.Actor.Get()->GetName());
 		GetCapsuleComponent()->SetCapsuleHalfHeight(DefaultCapsuleHeight / 3);
 		Camera->SetRelativeLocation(FVector(0, 0, DefaultCameraHeight / 3));
-		GEngine->AddOnScreenDebugMessage(-1, 0.2, FColor::Red, "High");
 		offset = FVector(0, 0, DefaultCapsuleHeight / 3);
 	}
 	else
