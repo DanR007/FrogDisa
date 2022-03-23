@@ -209,7 +209,16 @@ void AMovement::LookRight(float Value)
 		if (!isLookLeft && nowOffsetY < RightOffsetY)
 		{
 			nowOffsetY += Value * 10;
-			Camera->SetRelativeLocation(FVector(0, nowOffsetY, 60));
+			if (isCrouching)
+			{
+				Camera->SetRelativeRotation(FRotator(0.f, nowOffsetY, 0.f));
+				Camera->SetRelativeLocation(FVector(0, nowOffsetY, DefaultCameraHeight / 2));
+			}
+			else
+			{
+				Camera->SetRelativeRotation(FRotator(0.f, nowOffsetY, 0.f));
+				Camera->SetRelativeLocation(FVector(0, nowOffsetY, DefaultCameraHeight));
+			}
 		}
 		isLookRight = true;
 	}
@@ -220,7 +229,16 @@ void AMovement::LookRight(float Value)
 		{
 			//GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, FString::SanitizeFloat(Value));
 			nowOffsetY -= 10.f;
-			Camera->SetRelativeLocation(FVector(0, nowOffsetY, 60));
+			if (isCrouching)
+			{
+				Camera->SetRelativeRotation(FRotator(0.f, nowOffsetY, 0.f));
+				Camera->SetRelativeLocation(FVector(0, nowOffsetY, DefaultCameraHeight / 2));
+			}
+			else
+			{
+				Camera->SetRelativeRotation(FRotator(0.f, nowOffsetY, 0.f));
+				Camera->SetRelativeLocation(FVector(0, nowOffsetY, DefaultCameraHeight));
+			}
 		}
 	}
 }
@@ -233,7 +251,16 @@ void AMovement::LookLeft(float Value)
 		if (!isLookRight && nowOffsetY > LeftOffsetY)
 		{
 			nowOffsetY -= Value * 10;
-			Camera->SetRelativeLocation(FVector(0, nowOffsetY, 60));
+			if (isCrouching)
+			{
+				Camera->SetRelativeRotation(FRotator(0.f, nowOffsetY, 0.f));
+				Camera->SetRelativeLocation(FVector(0, nowOffsetY, DefaultCameraHeight / 2));
+			}
+			else
+			{
+				Camera->SetRelativeRotation(FRotator(0.f, nowOffsetY, 0.f));
+				Camera->SetRelativeLocation(FVector(0, nowOffsetY, DefaultCameraHeight));
+			}
 		}
 	}
 	else
@@ -242,7 +269,16 @@ void AMovement::LookLeft(float Value)
 		if (!isLookRight && nowOffsetY < DefaultOffsetY)
 		{
 			nowOffsetY += 10.f;
-			Camera->SetRelativeLocation(FVector(0, nowOffsetY, 60));
+			if (isCrouching)
+			{
+				Camera->SetRelativeRotation(FRotator(0.f, nowOffsetY, 0.f));
+				Camera->SetRelativeLocation(FVector(0, nowOffsetY, DefaultCameraHeight / 2));
+			}
+			else
+			{
+				Camera->SetRelativeRotation(FRotator(0.f, nowOffsetY, 0.f));
+				Camera->SetRelativeLocation(FVector(0, nowOffsetY, DefaultCameraHeight));
+			}
 		}
 	}
 }
