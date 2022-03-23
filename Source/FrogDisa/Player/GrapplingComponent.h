@@ -37,9 +37,10 @@ public:
 	void GrapplingToTarget();
 
 	UFUNCTION(BlueprintCallable)
-	void SetGrapplingTargetLocation(FVector location)
+	void SetGrapplingTargetLocation(FVector location, bool grappling_to_upper)
 	{
 		grappling_target_location = location;
+		grappling_upper_object = grappling_to_upper;
 	}
 	UFUNCTION(BlueprintCallable)
 		void SetCanGrappling(bool can) { can_grappling = can; }
@@ -50,10 +51,15 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 		FVector grappling_target_location;
+
+	bool GetIsGrapplingToUpper()
+	{
+		return grappling_upper_object;
+	}
 private:
 	
 	bool grappling_mode_active;
 	bool can_grappling;
-
+	bool grappling_upper_object;
 	
 };

@@ -194,6 +194,8 @@ public:
 	EWeaponType GetCurrentWeaponType();
 
 	void LerpTo();
+	void LerpToUpperObject();
+
 	UFUNCTION(BlueprintCallable)
 		bool GetIsGrappling(){ return isGrappling; }
 
@@ -205,6 +207,8 @@ public:
 
 	UFUNCTION(BlueprintNativeEvent)
 		void StartStranglingBP();
+
+	bool CheckCanStand();
 private:
 	void ForwardTrace();
 	void HeightTrace();
