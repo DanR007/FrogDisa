@@ -1,5 +1,6 @@
 #include "GrapplingComponent.h"
 #include "FrogDisa/DefaultVariables.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 #define ECC_GrapplingObjectTraceChannel ECC_GameTraceChannel2
 
@@ -36,8 +37,35 @@ void UGrapplingComponent::StartGrappling()
 {
 	if (grappling_mode_active && can_grappling)
 	{
-		//UE_LOG(LogTemp, Warning, TEXT("Start grappling"))
-		PlayerActor->UseGrapplingHook();
+
+		if (PlayerActor->isGrappling)
+		{
+			PlayerActor->isGrappling = false;
+			PlayerActor->GetCharacterMovement()->SetMovementMode(MOVE_Falling);
+			PlayerActor->GetWorldTimerManager().ClearTimer(GrapplingTimer);
+			PlayerActor->GetCharacterMovement()->Velocity = FVector::ZeroVector;
+			PlayerActor->GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+		}
+		else
+			if (PlayerActor->HUDComponent && PlayerActor->HUDComponent->Stamina - 10.f > 0.f)
+			{
+				PlayerActor->HUDComponent->UpdateStamina(-10.f);
+
+				PlayerActor->GetCharacterMovement()->SetMovementMode(MOVE_Flying);
+				PlayerActor->GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+				GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Blue, grappling_upper_object ? "Upper" : "Down");
+				if (grappling_upper_object)
+				{
+					ChangeActiveGrapplingMode();
+					PlayerActor->GetWorld()->GetTimerManager().SetTimer(GrapplingTimer, this, &UGrapplingComponent::LerpToUpperObject, 0.01f, true, 0.f);
+				}
+				else
+				{
+					PlayerActor->isGrappling = true;
+					PlayerActor->GetWorld()->GetTimerManager().SetTimer(GrapplingTimer, this, &UGrapplingComponent::LerpTo, 0.01f, true, 0.f);
+				}
+			}
+
 	}
 	else
 	{
@@ -47,7 +75,7 @@ void UGrapplingComponent::StartGrappling()
 
 void UGrapplingComponent::GrapplingToTarget()
 {
-	PlayerActor->LerpTo();
+//	PlayerActor->LerpTo();
 }
 
 void UGrapplingComponent::ChangeActiveGrapplingMode()
@@ -56,5 +84,42 @@ void UGrapplingComponent::ChangeActiveGrapplingMode()
 	if (grappling_mode_active && PlayerActor)
 	{
 		PlayerActor->DrawGrapplingVariant();
+	}
+}
+
+void UGrapplingComponent::LerpTo()
+{
+	if (PlayerActor->isGrappling &&
+		PlayerActor->HUDComponent->Stamina - 0.2f <= 0)
+	{
+		PlayerActor->isGrappling = false;
+		PlayerActor->GetCharacterMovement()->SetMovementMode(MOVE_Falling);
+		//UE_LOG(LogTemp, Warning, TEXT("Stop Grappling"))
+		PlayerActor->GetWorldTimerManager().ClearTimer(GrapplingTimer);
+		PlayerActor->GetMovementComponent()->Velocity = FVector::ZeroVector;
+		PlayerActor->GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+	}
+	else
+	{
+		PlayerActor->HUDComponent->UpdateStamina(-0.2f);
+
+		PlayerActor->GetMovementComponent()->Velocity = (grappling_target_location - PlayerActor->GetActorLocation()) * 10;
+	}
+}
+
+void UGrapplingComponent::LerpToUpperObject()//lerp while distance > 70
+{
+	if (FVector::Distance(PlayerActor->GetActorLocation(), grappling_target_location) <= PlayerActor->CapsuleRadius + 2.f)
+	{
+		PlayerActor->GetCharacterMovement()->SetMovementMode(MOVE_Falling);
+		PlayerActor->GetWorldTimerManager().ClearTimer(GrapplingTimer);
+		PlayerActor->GetMovementComponent()->Velocity = FVector::ZeroVector;
+		PlayerActor->GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+		GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Blue, "StopGrappling");
+		ChangeActiveGrapplingMode();
+	}
+	else
+	{
+		PlayerActor->GetMovementComponent()->Velocity = (grappling_target_location - PlayerActor->GetActorLocation()) * 10;
 	}
 }

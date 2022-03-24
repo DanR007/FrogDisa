@@ -191,8 +191,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	EWeaponType GetCurrentWeaponType();
 
-	void LerpTo();
-	void LerpToUpperObject();
+	//void LerpTo();
+	//void LerpToUpperObject();
 
 	UFUNCTION(BlueprintCallable)
 		bool GetIsGrappling(){ return isGrappling; }
@@ -211,6 +211,7 @@ private:
 	void ForwardTrace();
 	void HeightTrace();
 	void Fire();
+	//UPawnMovementComponent* GetMovementForComponents() { return GetMovementComponent(); }
 
 	void StartStrangling() {
 		if (canStrangling) {
@@ -255,7 +256,8 @@ private:
 	const float LeftOffsetY = -60;
 	const float RightOffsetY = 60;
 	float nowOffsetY = 0;
-
+	float nowOffsetZ;
+	float CapsuleRadius;
 
 	EWeaponType g_Projectile_Type;
 

@@ -32,7 +32,6 @@ AMovement* PlayerActor;
 std::map<EWeaponType, FString> weaponArrayType;
 
 FVector offset = FVector::ZeroVector;
-float CapsuleRadius;
 
 // Sets default values
 AMovement::AMovement()
@@ -211,16 +210,8 @@ void AMovement::LookRight(float Value)
 		if (!isLookLeft && nowOffsetY < RightOffsetY)
 		{
 			nowOffsetY += Value * 10;
-			float offsetZ;
-			if (isCrouching)
-			{
-				offsetZ = DefaultCameraHeight / 2;
-			}
-			else
-			{
-				offsetZ = DefaultCameraHeight;
-			}
-			Camera->SetRelativeLocation(FVector(0, nowOffsetY, offsetZ));
+			
+			Camera->SetRelativeLocation(FVector(0, nowOffsetY, nowOffsetZ));
 		}
 	}
 	else
@@ -229,16 +220,7 @@ void AMovement::LookRight(float Value)
 		if (!isLookLeft && nowOffsetY > DefaultOffsetY)
 		{
 			nowOffsetY -= 10.f;
-			float offsetZ;
-			if (isCrouching)
-			{
-				offsetZ = DefaultCameraHeight / 2;
-			}
-			else
-			{
-				offsetZ = DefaultCameraHeight;
-			}
-			Camera->SetRelativeLocation(FVector(0, nowOffsetY, offsetZ));
+			Camera->SetRelativeLocation(FVector(0, nowOffsetY, nowOffsetZ));
 		}
 	}
 }
@@ -251,16 +233,7 @@ void AMovement::LookLeft(float Value)
 		if (!isLookRight && nowOffsetY > LeftOffsetY)
 		{
 			nowOffsetY -= Value * 10;
-			float offsetZ;
-			if (isCrouching)
-			{
-				offsetZ = DefaultCameraHeight / 2;
-			}
-			else
-			{
-				offsetZ = DefaultCameraHeight;
-			}
-			Camera->SetRelativeLocation(FVector(0, nowOffsetY, offsetZ));
+			Camera->SetRelativeLocation(FVector(0, nowOffsetY, nowOffsetZ));
 		}
 	}
 	else
@@ -269,16 +242,7 @@ void AMovement::LookLeft(float Value)
 		if (!isLookRight && nowOffsetY < DefaultOffsetY)
 		{
 			nowOffsetY += 10.f;
-			float offsetZ;
-			if (isCrouching)
-			{
-				offsetZ = DefaultCameraHeight / 2;
-			}
-			else
-			{
-				offsetZ = DefaultCameraHeight;
-			}
-			Camera->SetRelativeLocation(FVector(0, nowOffsetY, offsetZ));
+			Camera->SetRelativeLocation(FVector(0, nowOffsetY, nowOffsetZ));
 		}
 	}
 }
@@ -357,18 +321,18 @@ void AMovement::UseGrapplingHook()
 				if (grapplingComponent->GetIsGrapplingToUpper())
 				{
 					grapplingComponent->ChangeActiveGrapplingMode();
-					GetWorld()->GetTimerManager().SetTimer(GrapplingTimer, this, &AMovement::LerpToUpperObject, 0.01f, true, 0.f);
+					//GetWorld()->GetTimerManager().SetTimer(GrapplingTimer, this, &AMovement::LerpToUpperObject, 0.01f, true, 0.f);
 				}
 				else
 				{
 					isGrappling = true;
-					GetWorld()->GetTimerManager().SetTimer(GrapplingTimer, this, &AMovement::LerpTo, 0.01f, true, 0.f);
+					//GetWorld()->GetTimerManager().SetTimer(GrapplingTimer, this, &AMovement::LerpTo, 0.01f, true, 0.f);
 				}
 			}
 	}
 }
 
-void AMovement::LerpTo()
+/*void AMovement::LerpTo()
 {
 	if (isGrappling &&
 		HUDComponent->Stamina - 0.2f <= 0)
@@ -404,7 +368,7 @@ void AMovement::LerpToUpperObject()//lerp while distance > 70
 		GetMovementComponent()->Velocity = (grapplingComponent->grappling_target_location - GetActorLocation()) * 10;
 	}
 }
-
+*/
 void AMovement::ChangeCrouchMode()
 {
 	if (!isCrouching)
@@ -412,6 +376,7 @@ void AMovement::ChangeCrouchMode()
 		GetCapsuleComponent()->SetCapsuleHalfHeight(DefaultCapsuleHeight / 2);
 		Camera->SetRelativeLocation(FVector(0, 0, DefaultCameraHeight / 2));
 		isCrouching = true;
+		nowOffsetZ = DefaultCameraHeight / 2;
 	}
 	else
 	{
@@ -421,6 +386,7 @@ void AMovement::ChangeCrouchMode()
 			GetCapsuleComponent()->SetCapsuleHalfHeight(DefaultCapsuleHeight);
 			Camera->SetRelativeLocation(FVector(0, 0, DefaultCameraHeight));
 			isCrouching = false;
+			nowOffsetZ = DefaultCameraHeight;
 		}
 		else
 		{

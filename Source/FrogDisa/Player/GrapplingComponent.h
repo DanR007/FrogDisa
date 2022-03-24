@@ -56,6 +56,9 @@ public:
 	{
 		return grappling_upper_object;
 	}
+
+	void LerpTo();
+	void LerpToUpperObject();
 private:
 	
 	bool grappling_mode_active;
