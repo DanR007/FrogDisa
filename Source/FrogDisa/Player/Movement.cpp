@@ -207,39 +207,38 @@ void AMovement::LookRight(float Value)
 {
 	if (Value != 0)
 	{
+		isLookRight = true;
 		if (!isLookLeft && nowOffsetY < RightOffsetY)
 		{
 			nowOffsetY += Value * 10;
+			float offsetZ;
 			if (isCrouching)
 			{
-				Camera->SetRelativeRotation(FRotator(0.f, nowOffsetY, 0.f));
-				Camera->SetRelativeLocation(FVector(0, nowOffsetY, DefaultCameraHeight / 2));
+				offsetZ = DefaultCameraHeight / 2;
 			}
 			else
 			{
-				Camera->SetRelativeRotation(FRotator(0.f, nowOffsetY, 0.f));
-				Camera->SetRelativeLocation(FVector(0, nowOffsetY, DefaultCameraHeight));
+				offsetZ = DefaultCameraHeight;
 			}
+			Camera->SetRelativeLocation(FVector(0, nowOffsetY, offsetZ));
 		}
-		isLookRight = true;
 	}
 	else
 	{
 		isLookRight = false;
 		if (!isLookLeft && nowOffsetY > DefaultOffsetY)
 		{
-			//GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Red, FString::SanitizeFloat(Value));
 			nowOffsetY -= 10.f;
+			float offsetZ;
 			if (isCrouching)
 			{
-				Camera->SetRelativeRotation(FRotator(0.f, nowOffsetY, 0.f));
-				Camera->SetRelativeLocation(FVector(0, nowOffsetY, DefaultCameraHeight / 2));
+				offsetZ = DefaultCameraHeight / 2;
 			}
 			else
 			{
-				Camera->SetRelativeRotation(FRotator(0.f, nowOffsetY, 0.f));
-				Camera->SetRelativeLocation(FVector(0, nowOffsetY, DefaultCameraHeight));
+				offsetZ = DefaultCameraHeight;
 			}
+			Camera->SetRelativeLocation(FVector(0, nowOffsetY, offsetZ));
 		}
 	}
 }
@@ -252,16 +251,16 @@ void AMovement::LookLeft(float Value)
 		if (!isLookRight && nowOffsetY > LeftOffsetY)
 		{
 			nowOffsetY -= Value * 10;
+			float offsetZ;
 			if (isCrouching)
 			{
-				Camera->SetRelativeRotation(FRotator(0.f, nowOffsetY, 0.f));
-				Camera->SetRelativeLocation(FVector(0, nowOffsetY, DefaultCameraHeight / 2));
+				offsetZ = DefaultCameraHeight / 2;
 			}
 			else
 			{
-				Camera->SetRelativeRotation(FRotator(0.f, nowOffsetY, 0.f));
-				Camera->SetRelativeLocation(FVector(0, nowOffsetY, DefaultCameraHeight));
+				offsetZ = DefaultCameraHeight;
 			}
+			Camera->SetRelativeLocation(FVector(0, nowOffsetY, offsetZ));
 		}
 	}
 	else
@@ -270,16 +269,16 @@ void AMovement::LookLeft(float Value)
 		if (!isLookRight && nowOffsetY < DefaultOffsetY)
 		{
 			nowOffsetY += 10.f;
+			float offsetZ;
 			if (isCrouching)
 			{
-				Camera->SetRelativeRotation(FRotator(0.f, nowOffsetY, 0.f));
-				Camera->SetRelativeLocation(FVector(0, nowOffsetY, DefaultCameraHeight / 2));
+				offsetZ = DefaultCameraHeight / 2;
 			}
 			else
 			{
-				Camera->SetRelativeRotation(FRotator(0.f, nowOffsetY, 0.f));
-				Camera->SetRelativeLocation(FVector(0, nowOffsetY, DefaultCameraHeight));
+				offsetZ = DefaultCameraHeight;
 			}
+			Camera->SetRelativeLocation(FVector(0, nowOffsetY, offsetZ));
 		}
 	}
 }
@@ -408,23 +407,20 @@ void AMovement::LerpToUpperObject()//lerp while distance > 70
 
 void AMovement::ChangeCrouchMode()
 {
-	isCrouching = !isCrouching;
-	SetCrouchModeSettings();
-}
-
-void AMovement::SetCrouchModeSettings()
-{
-	if (isCrouching)
+	if (!isCrouching)
 	{
 		GetCapsuleComponent()->SetCapsuleHalfHeight(DefaultCapsuleHeight / 2);
 		Camera->SetRelativeLocation(FVector(0, 0, DefaultCameraHeight / 2));
+		isCrouching = true;
 	}
 	else
 	{
 		if (CheckCanStand() == false)
 		{
+			AddActorWorldOffset(FVector(0, 0, DefaultCapsuleHeight / 2));
 			GetCapsuleComponent()->SetCapsuleHalfHeight(DefaultCapsuleHeight);
 			Camera->SetRelativeLocation(FVector(0, 0, DefaultCameraHeight));
+			isCrouching = false;
 		}
 		else
 		{
@@ -432,7 +428,6 @@ void AMovement::SetCrouchModeSettings()
 			UE_LOG(LogTemp, Warning, TEXT("YOU CANT STAND NOW"))
 		}
 	}
-	
 }
 
 void AMovement::AddControllerYawInput(float Val)
@@ -576,13 +571,13 @@ void AMovement::ChangeCrouchHeight()
 			, GetActorRotation().Quaternion(), ECollisionChannel::ECC_Visibility, capsule, queryParams))
 	{
 		GetCapsuleComponent()->SetCapsuleHalfHeight(DefaultCapsuleHeight / 3);
-		Camera->SetRelativeLocation(FVector(0, 0, DefaultCameraHeight / 3));
+		Camera->SetRelativeLocation(FVector(0, nowOffsetY, DefaultCameraHeight / 3));
 		offset = FVector(0, 0, DefaultCapsuleHeight / 3);
 	}
 	else
 	{
 		GetCapsuleComponent()->SetCapsuleHalfHeight(DefaultCapsuleHeight / 2);
-		Camera->SetRelativeLocation(FVector(0, 0, DefaultCameraHeight / 2));
+		Camera->SetRelativeLocation(FVector(0, nowOffsetY, DefaultCameraHeight / 2));
 		offset = FVector::ZeroVector;
 	}
 }
