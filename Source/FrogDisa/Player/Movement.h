@@ -75,8 +75,6 @@ protected:
 	virtual void AddControllerYawInput(float Val);
 	virtual void AddControllerPitchInput(float Val);
 
-	void UseGrapplingHook();
-
 	void Run(float Value);
 
 	void InteractionWithObject();
@@ -191,9 +189,6 @@ public:
 	UFUNCTION(BlueprintCallable)
 	EWeaponType GetCurrentWeaponType();
 
-	//void LerpTo();
-	//void LerpToUpperObject();
-
 	UFUNCTION(BlueprintCallable)
 		bool GetIsGrappling(){ return isGrappling; }
 
@@ -247,7 +242,6 @@ private:
 	const float ChangeTargetArmSpeed = 20.f;
 	const float ThrowImpulseValue = 1500.f;
 	const float DropImpulseValue = 0;
-	const float GrapplingForceValue = 200.f;
 
 	const float DefaultCapsuleHeight = 90;
 	const float DefaultCameraHeight = 87;

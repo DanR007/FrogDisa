@@ -297,78 +297,6 @@ void AMovement::SetMeleeAttackInactive()
 	MeleeAttackIsActive = false;
 }
 
-void AMovement::UseGrapplingHook()
-{
-	
-	if (grapplingComponent->GetCanGrappling())
-	{
-		if (isGrappling)
-		{
-			isGrappling = false;
-			GetCharacterMovement()->SetMovementMode(MOVE_Falling);
-			GetWorldTimerManager().ClearTimer(GrapplingTimer);
-			GetMovementComponent()->Velocity = FVector::ZeroVector;
-			GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
-		}
-		else
-			if (HUDComponent && HUDComponent->Stamina - 10.f > 0.f)
-			{
-				HUDComponent->UpdateStamina(-10.f);
-				
-				GetCharacterMovement()->SetMovementMode(MOVE_Flying);
-				GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-				GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Blue, grapplingComponent->GetIsGrapplingToUpper() ? "Upper" : "Down");
-				if (grapplingComponent->GetIsGrapplingToUpper())
-				{
-					grapplingComponent->ChangeActiveGrapplingMode();
-					//GetWorld()->GetTimerManager().SetTimer(GrapplingTimer, this, &AMovement::LerpToUpperObject, 0.01f, true, 0.f);
-				}
-				else
-				{
-					isGrappling = true;
-					//GetWorld()->GetTimerManager().SetTimer(GrapplingTimer, this, &AMovement::LerpTo, 0.01f, true, 0.f);
-				}
-			}
-	}
-}
-
-/*void AMovement::LerpTo()
-{
-	if (isGrappling &&
-		HUDComponent->Stamina - 0.2f <= 0)
-	{
-		isGrappling = false;
-		GetCharacterMovement()->SetMovementMode(MOVE_Falling);
-		//UE_LOG(LogTemp, Warning, TEXT("Stop Grappling"))
-		GetWorldTimerManager().ClearTimer(GrapplingTimer);
-		GetMovementComponent()->Velocity = FVector::ZeroVector;
-		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
-	}
-	else
-	{
-		HUDComponent->UpdateStamina(-0.2f);
-		
-		GetMovementComponent()->Velocity = (grapplingComponent->grappling_target_location - GetActorLocation()) * 10;
-	}
-}
-
-void AMovement::LerpToUpperObject()//lerp while distance > 70
-{
-	if (FVector::Distance(GetActorLocation(), grapplingComponent->grappling_target_location) <= CapsuleRadius + 2.f)
-	{
-		GetCharacterMovement()->SetMovementMode(MOVE_Falling);
-		GetWorldTimerManager().ClearTimer(GrapplingTimer);
-		GetMovementComponent()->Velocity = FVector::ZeroVector;
-		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
-		GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Blue, "StopGrappling");
-		grapplingComponent->ChangeActiveGrapplingMode();
-	}
-	else
-	{
-		GetMovementComponent()->Velocity = (grapplingComponent->grappling_target_location - GetActorLocation()) * 10;
-	}
-}
-*/
 void AMovement::ChangeCrouchMode()
 {
 	if (!isCrouching)
@@ -558,9 +486,10 @@ bool AMovement::CheckCanStand()
 	capsule.SetCapsule(CapsuleRadius, DefaultCapsuleHeight);
 
 	FVector StartUpper = GetActorLocation(), EndUpper = GetActorLocation() + GetActorUpVector() * DefaultCapsuleHeight / 3;
+
 	if (GetCapsuleComponent()->GetScaledCapsuleHalfHeight() == DefaultCapsuleHeight / 2)
 		EndUpper = GetActorLocation() + GetActorUpVector() * DefaultCapsuleHeight / 2;
-	//GEngine->AddOnScreenDebugMessage(-1, 0.1, FColor::Blue, Start.ToCompactString());
+
 	return GetWorld()->SweepSingleByChannel(hit_res, StartUpper, EndUpper
 		, GetActorRotation().Quaternion(), ECollisionChannel::ECC_Visibility, capsule, queryParams);
 }

@@ -34,7 +34,6 @@ public:
 	void ChangeActiveGrapplingMode(); 
 
 	void StartGrappling();
-	void GrapplingToTarget();
 
 	UFUNCTION(BlueprintCallable)
 	void SetGrapplingTargetLocation(FVector location, bool grappling_to_upper)

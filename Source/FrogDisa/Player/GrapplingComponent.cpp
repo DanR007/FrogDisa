@@ -53,7 +53,6 @@ void UGrapplingComponent::StartGrappling()
 
 				PlayerActor->GetCharacterMovement()->SetMovementMode(MOVE_Flying);
 				PlayerActor->GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-				GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Blue, grappling_upper_object ? "Upper" : "Down");
 				if (grappling_upper_object)
 				{
 					ChangeActiveGrapplingMode();
@@ -71,11 +70,6 @@ void UGrapplingComponent::StartGrappling()
 	{
 		//UE_LOG(LogTemp, Warning, TEXT("Grappling mode inactive"))
 	}
-}
-
-void UGrapplingComponent::GrapplingToTarget()
-{
-//	PlayerActor->LerpTo();
 }
 
 void UGrapplingComponent::ChangeActiveGrapplingMode()
@@ -115,7 +109,6 @@ void UGrapplingComponent::LerpToUpperObject()//lerp while distance > 70
 		PlayerActor->GetWorldTimerManager().ClearTimer(GrapplingTimer);
 		PlayerActor->GetMovementComponent()->Velocity = FVector::ZeroVector;
 		PlayerActor->GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
-		GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Blue, "StopGrappling");
 		ChangeActiveGrapplingMode();
 	}
 	else
