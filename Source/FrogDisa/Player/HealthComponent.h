@@ -5,6 +5,8 @@
 #include "CoreMinimal.h"
 #include "Engine/EngineTypes.h"
 #include "Components/ActorComponent.h"
+#include "EProjectiles.h"
+#include <map>
 #include "HealthComponent.generated.h"
 
 
@@ -74,4 +76,10 @@ public:
 
 	UFUNCTION()
 		void SetStaminaChange();
+
+	std::map<EObjectType, std::pair<int, int>> objects_map;
+
+	void AddHealthObject(int count, EObjectType object_type);
+	const int max_count_health = 10;
+	const int max_count_stamina = 10;
 };

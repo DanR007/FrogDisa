@@ -10,6 +10,7 @@
 #include "InteractiveWithPuzzlesComponent.h"
 #include "GrapplingComponent.h"
 #include "HealthComponent.h"
+#include "ShopComponent.h"
 
 #include "AbilitySystemInterface.h"
 
@@ -47,7 +48,7 @@ public:
 		bool MeleeAttackIsActive;
 
 		void AddCollectibles() { Collectibles++; }
-		void AddMoney(int money_count) {}//move it to ShopComponent later
+		
 
 		UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 			void DrawGrapplingVariant();
@@ -76,8 +77,6 @@ protected:
 	virtual void AddControllerPitchInput(float Val);
 
 	void Run(float Value);
-
-	void InteractionWithObject();
 
 	bool CanMakeAction();
 
@@ -161,6 +160,8 @@ public:
 		UGrapplingComponent* grapplingComponent;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		UHealthComponent* HUDComponent;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		UShopComponent* shopComponent;
 	//UPROPERTY(VisibleAnywhere, Category = "Gameplay")
 	//	UAbilitySystemComponent* AbilityComponent;
 	//UPROPERTY(Transient)
@@ -266,4 +267,5 @@ private:
 	friend class UInteractiveWithPuzzlesComponent;
 	//friend class ACollectiblesObject;
 	friend class UGrapplingComponent;
+	friend class UInteractiveComponent;
 };

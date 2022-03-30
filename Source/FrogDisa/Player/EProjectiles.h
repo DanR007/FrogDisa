@@ -18,7 +18,16 @@ enum class EWeaponType: uint8
 	EW_SmokeMine UMETA(DisplayName = "EW_SmokeMine"),
 	EW_FlashbangMine UMETA(DisplayName = "EW_FlashbangMine"),
 	EW_Mine UMETA(DisplayName = "EW_Mine"),
-	EW_Wrench UMETA(DisplayName = "EW_Wrench")
+	EW_Wrench UMETA(DisplayName = "EW_Wrench"),
+	EW_None UMETA(DisplayName = "EW_None")
+};
+
+UENUM(BlueprintType)
+enum class EObjectType : uint8
+{
+	EO_HelthUp UMETA(DisplayName = "EO_HelthUp"),
+	EO_StaminaUp UMETA(DisplayName = "EO_StaminaUp"),
+	EO_None UMETA(DisplayName = "EO_None")
 };
 //UENUM()
 enum ERotatorDirection

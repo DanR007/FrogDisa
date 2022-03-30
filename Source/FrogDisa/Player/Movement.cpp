@@ -49,6 +49,7 @@ AMovement::AMovement()
 	shootComponent = CreateDefaultSubobject<UShootComponent>(TEXT("ShootComponent"));
 	grapplingComponent = CreateDefaultSubobject<UGrapplingComponent>(TEXT("GrapplingComponent"));
 	HUDComponent = CreateDefaultSubobject<UHealthComponent>(TEXT("HUD Component"));
+	shopComponent = CreateDefaultSubobject<UShopComponent>(TEXT("Shop Component"));
 	//AttributeSet = CreateDefaultSubobject<UCharacterAttributeSet>(TEXT("AttributeSet"));
 	//AbilityComponent = CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("AbilitySystem"));
 
@@ -125,7 +126,7 @@ void AMovement::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	PlayerInputComponent->BindAction("Attack", IE_Pressed, this, &AMovement::Attack);
 	PlayerInputComponent->BindAction("UseSecondWeapon", IE_Pressed, shootComponent, &UShootComponent::Fire);
 	
-	PlayerInputComponent->BindAction("TakeInteractiveObject", IE_Pressed, this, &AMovement::InteractionWithObject);
+	PlayerInputComponent->BindAction("TakeInteractiveObject", IE_Pressed, InteractiveComponent, &UInteractiveComponent::InteractionWithObject);
 
 	PlayerInputComponent->BindAction("GrapplingHook", IE_Pressed, grapplingComponent, &UGrapplingComponent::ChangeActiveGrapplingMode);
 	PlayerInputComponent->BindAction("UseSecondWeapon", IE_Pressed, grapplingComponent, &UGrapplingComponent::StartGrappling);
@@ -358,38 +359,6 @@ void AMovement::StopJumping()
 	ResetJumpState();
 }
 
-void AMovement::InteractionWithObject()
-{
-	IInteractiveObjectsInterface* taken_object = Cast<IInteractiveObjectsInterface>(InteractiveComponent->GetInteractiveActor());
-	ICarriedObjectLogicInterface* carried_object = Cast<ICarriedObjectLogicInterface>(InteractiveComponent->GetInteractiveActor());
-
-	if (isBearObject == true)
-	{
-		if (InteractiveComponent->OverlapOnlyInteractivePuzzle())
-		{
-			isBearObject = false;
-			InteractiveComponent->DropInteractiveObject(DropImpulseValue);
-		}
-	}
-	else
-	{
-		if (CanMakeAction())
-		{
-			if (carried_object)
-			{
-				isBearObject = InteractiveComponent->TakeInteractiveObject();
-			}
-			else
-			{
-				if (taken_object)
-				{
-					taken_object->Interact();
-				}
-			}
-		}
-	}
-
-}
 
 void AMovement::PauseMenu()
 {

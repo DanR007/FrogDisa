@@ -12,8 +12,10 @@
 
 AMyHUD::AMyHUD()
 {
-	ConstructorHelpers::FClassFinder<UUserWidget> projectiles(TEXT("/Game/Blueprint/HealthBar"));
-	HUDWidgetClass = projectiles.Class;
+	ConstructorHelpers::FClassFinder<UUserWidget> HUDWidget(TEXT("/Game/Blueprint/HealthBar"));
+	HUDWidgetClass = HUDWidget.Class;
+	ConstructorHelpers::FClassFinder<UUserWidget> ShopWidget(TEXT("/Game/Blueprint/ShopWidget"));
+	ShopWidgetClass = ShopWidget.Class;
 	//InputComponent->
 
 }
@@ -31,7 +33,7 @@ void AMyHUD::BeginPlay()
 	Super::BeginPlay();
 	if (HUDWidgetClass != nullptr)
 	{
-		CurrentWidget = CreateWidget<UUserWidget>(GetWorld(), HUDWidgetClass);
+		CurrentWidget = CreateWidget<UUserWidget>(GetWorld()->GetFirstPlayerController(), HUDWidgetClass);
 
 		if (CurrentWidget)
 		{
@@ -39,4 +41,29 @@ void AMyHUD::BeginPlay()
 		}
 	}
 	
+}
+
+void AMyHUD::ShopMenu(bool isShopOpen)
+{
+	if (ShopWidgetClass)
+	{
+		if (isShopOpen)
+		{
+			CurrentWidget->RemoveFromViewport();
+			CurrentWidget->Destruct();
+			CurrentWidget = CreateWidget<UUserWidget>(GetWorld()->GetFirstPlayerController(), HUDWidgetClass);
+
+			if (CurrentWidget)
+				CurrentWidget->AddToViewport();
+		}
+		else
+		{
+			CurrentWidget->RemoveFromViewport();
+			CurrentWidget->Destruct();
+			CurrentWidget = CreateWidget<UUserWidget>(GetWorld()->GetFirstPlayerController(), ShopWidgetClass);
+
+			if (CurrentWidget)
+				CurrentWidget->AddToViewport();
+		}
+	}
 }

@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Player/Movement.h"
 
+#define TEST
 
 extern AMovement* PlayerActor;
 /**

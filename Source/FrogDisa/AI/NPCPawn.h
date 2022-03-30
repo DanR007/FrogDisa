@@ -4,10 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
+#include "FrogDisa/InteractiveObjectsInterface.h"
 #include "NPCPawn.generated.h"
 
 UCLASS()
-class FROGDISA_API ANPCPawn : public APawn
+class FROGDISA_API ANPCPawn : public APawn, public IInteractiveObjectsInterface
 {
 	GENERATED_BODY()
 
@@ -15,10 +16,16 @@ public:
 	// Sets default values for this pawn's properties
 	ANPCPawn();
 
+	void Interact() override;
+
+	void ChangeOutlines_Implementation(bool isOutline) override { UE_LOG(LogTemp, Warning, TEXT("C++")) }
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+		USkeletalMeshComponent* skeletal_mesh;
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

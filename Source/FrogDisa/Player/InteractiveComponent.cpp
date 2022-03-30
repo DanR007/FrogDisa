@@ -147,3 +147,37 @@ void UInteractiveComponent::SetNullInteractiveObject()
 		CarriedActor = nullptr;
 	}
 }
+
+
+void UInteractiveComponent::InteractionWithObject()
+{
+	IInteractiveObjectsInterface* interactive_object = Cast<IInteractiveObjectsInterface>(InteractiveActor);
+	ICarriedObjectLogicInterface* carried_object = Cast<ICarriedObjectLogicInterface>(InteractiveActor);
+
+	if (PlayerActor->isBearObject == true)
+	{
+		if (OverlapOnlyInteractivePuzzle())
+		{
+			PlayerActor->isBearObject = false;
+			DropInteractiveObject(PlayerActor->DropImpulseValue);
+		}
+	}
+	else
+	{
+		if (PlayerActor->CanMakeAction())
+		{
+			if (carried_object)
+			{
+				PlayerActor->isBearObject = TakeInteractiveObject();
+			}
+			else
+			{
+				if (interactive_object)
+				{
+					interactive_object->Interact();
+				}
+			}
+		}
+	}
+
+}

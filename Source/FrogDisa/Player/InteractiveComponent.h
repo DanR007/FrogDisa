@@ -40,6 +40,8 @@ public:
 
 	AActor* GetInteractiveActor() { return InteractiveActor; }
 	void SetInteractiveActorNull() { InteractiveActor = nullptr; }
+
+	void InteractionWithObject();
 private:
 	const float MaximumCollectibleObjectDistance = 400.f;
 	const float DistanceInteractiveObject = 120.f;

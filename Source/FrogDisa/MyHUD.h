@@ -23,9 +23,12 @@ public:
 
 	virtual void BeginPlay() override;
 
+	UFUNCTION(BlueprintCallable)
+		void ShopMenu(bool isShopOpen);
+
 protected:
-	/** Crosshair asset pointer */
-	class UTexture2D* CrosshairTex;
+
 	UUserWidget* CurrentWidget;
 	TSubclassOf<UUserWidget> HUDWidgetClass;
+	TSubclassOf<UUserWidget> ShopWidgetClass;
 };

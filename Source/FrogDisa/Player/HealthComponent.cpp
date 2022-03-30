@@ -22,6 +22,11 @@ UHealthComponent::UHealthComponent()
 	StaminaPercentage = Stamina / MaxStamina;
 	PreviousStamina = StaminaPercentage;
 	IsRecharging = true;
+
+	objects_map[EObjectType::EO_HelthUp].first = 0;
+	objects_map[EObjectType::EO_HelthUp].second = 10;
+	objects_map[EObjectType::EO_StaminaUp].first = 0;
+	objects_map[EObjectType::EO_StaminaUp].second = 10;
 }
 
 
@@ -106,3 +111,8 @@ void UHealthComponent::SetStaminaChange()
 	UpdateStamina(0.4f);
 }
 
+
+void UHealthComponent::AddHealthObject(int count, EObjectType object_type)
+{
+	objects_map[object_type].first += count;
+}
