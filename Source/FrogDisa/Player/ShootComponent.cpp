@@ -6,6 +6,7 @@
 #include "EProjectiles.h"
 
 #include "FrogDisa/Weapon/MineActor.h"
+#include "FrogDisa/Weapon/GrenadeActor.h"
 #include "FrogDisa/Weapon/CrossbowBoltActor.h"
 #include "FrogDisa/DefaultVariables.h"
 
@@ -27,7 +28,8 @@ UShootComponent::UShootComponent()
 	ConstructorHelpers::FClassFinder<AThrowingStone> stoneProjectiles(TEXT("/Game/Blueprint/BP_ThrowingStone"));
 	StoneClass = stoneProjectiles.Class;
 
-	ConstructorHelpers::FClassFinder<AMineActor> mineActorClass(TEXT("Class'/Script/FrogDisa.MineActor'"));
+	ConstructorHelpers::FClassFinder<AMineActor> mineActorClass(TEXT("/Game/Blueprint/Weapons/BP_MineActor"));
+	ConstructorHelpers::FClassFinder<AGrenadeActor> grenadeActorClass(TEXT("/Game/Blueprint/Weapons/BP_GrenadeActor"));
 
 	weapon_map[EWeaponType::EW_Wrench].first = BlueprintWrench;
 	weapon_map[EWeaponType::EW_Wrench].second = 0;
@@ -36,10 +38,13 @@ UShootComponent::UShootComponent()
 	weapon_map[EWeaponType::EW_Stone].second = 0;
 
 	weapon_map[EWeaponType::EW_Mine].first = mineActorClass.Class;
-	weapon_map[EWeaponType::EW_Mine].second = 0;
+	weapon_map[EWeaponType::EW_Mine].second = 10;
 
 	weapon_map[EWeaponType::EW_CrossbowBolt].first = crossbow_letal_projectile_bp.Class;
 	weapon_map[EWeaponType::EW_CrossbowBolt].second = 100;
+
+	weapon_map[EWeaponType::EW_Grenade].first = grenadeActorClass.Class;
+	weapon_map[EWeaponType::EW_Grenade].second = 10;
 }
 
 
@@ -59,8 +64,6 @@ AActor *UShootComponent::GetActorWrench()
 
 void UShootComponent::Fire()
 {
-	//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, "Shoot");
-	//Wrench = Cast<AThrowProjectile>(Current_Weapon);
 	if (Current_Weapon && PlayerActor->grapplingComponent->GetGrapplingModeActive() == false)
 	{
 		IWeaponLogicInterface* weaponLogicInterface = Cast<IWeaponLogicInterface>(Current_Weapon);
@@ -76,7 +79,6 @@ void UShootComponent::Fire()
 			}
 		}
 	}
-	//Wrench->Launch();
 }
 
 void UShootComponent::SwitchProjectile()

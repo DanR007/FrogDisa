@@ -19,6 +19,8 @@ public:
 	void Interact() override;
 
 	void ChangeOutlines_Implementation(bool isOutline) override { UE_LOG(LogTemp, Warning, TEXT("C++")) }
+	UFUNCTION(BlueprintNativeEvent)
+		void Die();
 
 protected:
 	// Called when the game starts or when spawned

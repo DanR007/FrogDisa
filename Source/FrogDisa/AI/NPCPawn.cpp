@@ -41,3 +41,8 @@ void ANPCPawn::Interact()
 	controller->SetShowMouseCursor(true);
 	controller->SetPause(true);
 }
+
+void ANPCPawn::Die_Implementation()
+{
+
+}
