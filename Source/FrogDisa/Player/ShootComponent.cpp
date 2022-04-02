@@ -8,7 +8,9 @@
 #include "FrogDisa/Weapon/MineActor.h"
 #include "FrogDisa/Weapon/GrenadeActor.h"
 #include "FrogDisa/Weapon/CrossbowBoltActor.h"
+#include "FrogDisa/Weapon/PistolActor.h"
 #include "FrogDisa/DefaultVariables.h"
+
 
 #include <vector>
 #include <map>
@@ -30,6 +32,7 @@ UShootComponent::UShootComponent()
 
 	ConstructorHelpers::FClassFinder<AMineActor> mineActorClass(TEXT("/Game/Blueprint/Weapons/BP_MineActor"));
 	ConstructorHelpers::FClassFinder<AGrenadeActor> grenadeActorClass(TEXT("/Game/Blueprint/Weapons/BP_GrenadeActor"));
+	ConstructorHelpers::FClassFinder<APistolActor> pistolActorClass(TEXT("/Game/Blueprint/Weapons/BP_PistolActor"));
 
 	weapon_map[EWeaponType::EW_Wrench].first = BlueprintWrench;
 	weapon_map[EWeaponType::EW_Wrench].second = 0;
@@ -45,6 +48,9 @@ UShootComponent::UShootComponent()
 
 	weapon_map[EWeaponType::EW_Grenade].first = grenadeActorClass.Class;
 	weapon_map[EWeaponType::EW_Grenade].second = 10;
+
+	weapon_map[EWeaponType::EW_Pistol].first = pistolActorClass.Class;
+	weapon_map[EWeaponType::EW_Pistol].second = 10;
 }
 
 

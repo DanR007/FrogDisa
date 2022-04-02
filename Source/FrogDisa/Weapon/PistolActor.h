@@ -4,10 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "WeaponActor.h"
+#include "FrogDisa/InteractiveObjectsInterface.h"
+#include "WeaponLogicInterface.h"
 #include "PistolActor.generated.h"
 
 UCLASS()
-class FROGDISA_API APistolActor : public AActor
+class FROGDISA_API APistolActor : public ABasicWeaponActor, public IWeaponLogicInterface
 {
 	GENERATED_BODY()
 	
@@ -15,12 +18,17 @@ public:
 	// Sets default values for this actor's properties
 	APistolActor();
 
+	virtual void Launch() override;
+	virtual void AttachToCharacter() override;
 
-	void Shoot();
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+		UStaticMeshComponent* pistol_mesh;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+		float PistolRangeDistance = 2000;
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

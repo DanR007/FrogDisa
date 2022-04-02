@@ -32,7 +32,6 @@ public:
 	void CheckInteractiveObject();
 
 	bool TakeInteractiveObject();
-	bool OverlapOnlyInteractivePuzzle();
 
 	void DropInteractiveObject(float ImpulseValue);
 

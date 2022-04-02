@@ -7,7 +7,6 @@
 #include "ShootComponent.h"
 #include "InteractiveComponent.h"
 #include "FrogDisaGameInstance.h"
-#include "InteractiveWithPuzzlesComponent.h"
 #include "GrapplingComponent.h"
 #include "HealthComponent.h"
 #include "ShopComponent.h"
@@ -103,11 +102,11 @@ protected:
 				shootComponent->SwitchProjectile();
 		}
 	}
-	void ChoiceStone()  
+	void ChoicePistol()  
 	{ 
-		if (g_Projectile_Type != EWeaponType::EW_Stone)
+		if (g_Projectile_Type != EWeaponType::EW_Pistol)
 		{
-			g_Projectile_Type = EWeaponType::EW_Stone; GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Red, "Stone");
+			g_Projectile_Type = EWeaponType::EW_Pistol; GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Red, "Pistol");
 			if (shootComponent)
 				shootComponent->SwitchProjectile();
 		}
@@ -154,8 +153,6 @@ public:
 		UInteractiveComponent* InteractiveComponent;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 		UFrogDisaGameInstance* game_Instance;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-		UInteractiveWithPuzzlesComponent* InteractiveWithPuzzlesComponent;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		UGrapplingComponent* grapplingComponent;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)

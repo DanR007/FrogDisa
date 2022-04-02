@@ -3,7 +3,8 @@
 
 #include "InteractiveComponent.h"
 
-#include "FrogDisa/PuzzleActors/PuzzleInteractiveObject.h"
+#include "FrogDisa/InteractiveObjectsInterface.h"
+#include "FrogDisa/CarriedObjectLogicInterface.h"
 
 #include "DrawDebugHelpers.h"
 
@@ -72,25 +73,9 @@ void UInteractiveComponent::DropInteractiveObject(float ImpulseValue)
 	InteractiveActor = nullptr;
 }
 
-bool UInteractiveComponent::OverlapOnlyInteractivePuzzle()
-{
-	TArray<AActor*> overlappingActors;
-	InteractiveMesh->GetOverlappingActors(overlappingActors);
-	bool overlapOnlyInteractivePuzzleOrNothing = true;
-	for (AActor* actor : overlappingActors)
-	{
-		if (Cast<APuzzleCarriedObject>(actor) == nullptr)
-		{
-			overlapOnlyInteractivePuzzleOrNothing = false;
-			break;
-		}
-	}
-
-	return overlapOnlyInteractivePuzzleOrNothing;
-}
 
 void UInteractiveComponent::DetachInteractiveFromParent()
-{	
+{
 	if(InteractiveActor)
 		InteractiveActor->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
 	if(InteractiveMesh)
@@ -156,11 +141,8 @@ void UInteractiveComponent::InteractionWithObject()
 
 	if (PlayerActor->isBearObject == true)
 	{
-		if (OverlapOnlyInteractivePuzzle())
-		{
-			PlayerActor->isBearObject = false;
-			DropInteractiveObject(PlayerActor->DropImpulseValue);
-		}
+		PlayerActor->isBearObject = false;
+		DropInteractiveObject(PlayerActor->DropImpulseValue);
 	}
 	else
 	{

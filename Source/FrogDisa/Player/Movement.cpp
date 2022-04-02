@@ -45,7 +45,6 @@ AMovement::AMovement()
 
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	InteractiveComponent = CreateDefaultSubobject<UInteractiveComponent>(TEXT("InteractiveComponent"));
-	InteractiveWithPuzzlesComponent = CreateDefaultSubobject<UInteractiveWithPuzzlesComponent>(TEXT("InteractiveWithPuzzlesComponent"));
 	shootComponent = CreateDefaultSubobject<UShootComponent>(TEXT("ShootComponent"));
 	grapplingComponent = CreateDefaultSubobject<UGrapplingComponent>(TEXT("GrapplingComponent"));
 	HUDComponent = CreateDefaultSubobject<UHealthComponent>(TEXT("HUD Component"));
@@ -142,7 +141,7 @@ void AMovement::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	PlayerInputComponent->BindAction("SwitchCharacter", IE_Pressed, this, &AMovement::ChangeCharacter);
 
 	PlayerInputComponent->BindAction("ChoiceWrench", IE_Pressed, this, &AMovement::ChoiceWrench);
-	PlayerInputComponent->BindAction("ChoiceStone", IE_Pressed, this, &AMovement::ChoiceStone);
+	PlayerInputComponent->BindAction("ChoicePistol", IE_Pressed, this, &AMovement::ChoicePistol);
 	PlayerInputComponent->BindAction("ChoiceMine", IE_Pressed, this, &AMovement::ChoiceMine);
 	PlayerInputComponent->BindAction("ChoiceCrossbowBolt", IE_Pressed, this, &AMovement::ChoiceCrossbowBolt);
 
@@ -267,11 +266,8 @@ void AMovement::Attack()
 {
 	if (isBearObject)
 	{
-		if (InteractiveComponent->OverlapOnlyInteractivePuzzle())
-		{
-			isBearObject = false;
-			InteractiveComponent->DropInteractiveObject(ThrowImpulseValue);
-		}
+		isBearObject = false;
+		InteractiveComponent->DropInteractiveObject(ThrowImpulseValue);
 	}
 }
 
