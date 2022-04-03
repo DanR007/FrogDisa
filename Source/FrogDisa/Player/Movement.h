@@ -97,7 +97,7 @@ protected:
 	{ 
 		if (g_Projectile_Type != EWeaponType::EW_Wrench)
 		{
-			g_Projectile_Type = EWeaponType::EW_Wrench; GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Red, "Wrench");
+			g_Projectile_Type = EWeaponType::EW_Wrench; GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Yellow, "Wrench");
 			if (shootComponent)
 				shootComponent->SwitchProjectile();
 		}
@@ -106,7 +106,7 @@ protected:
 	{ 
 		if (g_Projectile_Type != EWeaponType::EW_Pistol)
 		{
-			g_Projectile_Type = EWeaponType::EW_Pistol; GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Red, "Pistol");
+			g_Projectile_Type = EWeaponType::EW_Pistol; GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Yellow, "Pistol");
 			if (shootComponent)
 				shootComponent->SwitchProjectile();
 		}
@@ -115,7 +115,7 @@ protected:
 	{
 		if (g_Projectile_Type != EWeaponType::EW_Mine)
 		{
-			g_Projectile_Type = EWeaponType::EW_Mine; GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Red, "Mine");
+			g_Projectile_Type = EWeaponType::EW_Mine; GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Yellow, "Mine");
 			if (shootComponent)
 				shootComponent->SwitchProjectile();
 		}
@@ -124,7 +124,16 @@ protected:
 	{
 		if (g_Projectile_Type != EWeaponType::EW_CrossbowBolt)
 		{
-			g_Projectile_Type = EWeaponType::EW_CrossbowBolt; GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Red, "CrossbowBolt");
+			g_Projectile_Type = EWeaponType::EW_CrossbowBolt; GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Yellow, "CrossbowBolt");
+			if (shootComponent)
+				shootComponent->SwitchProjectile();
+		}
+	}
+	void ChoiceTranquilizer()
+	{
+		if (g_Projectile_Type != EWeaponType::EW_Tranquilizer)
+		{
+			g_Projectile_Type = EWeaponType::EW_Tranquilizer; GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Yellow , "Tranquilizer");
 			if (shootComponent)
 				shootComponent->SwitchProjectile();
 		}
@@ -200,6 +209,8 @@ public:
 		void StartStranglingBP();
 
 	bool CheckCanStand();
+
+	void CallCircleMenu(float Value);
 private:
 	void ForwardTrace();
 	void HeightTrace();
@@ -229,6 +240,7 @@ private:
 	bool canStrangling = false;
 	bool isLookLeft;
 	bool isLookRight;
+
 
 	int Collectibles;
 	int stoneCount;

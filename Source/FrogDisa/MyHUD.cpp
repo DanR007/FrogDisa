@@ -16,6 +16,8 @@ AMyHUD::AMyHUD()
 	HUDWidgetClass = HUDWidget.Class;
 	ConstructorHelpers::FClassFinder<UUserWidget> ShopWidget(TEXT("/Game/Blueprint/ShopWidget"));
 	ShopWidgetClass = ShopWidget.Class;
+	ConstructorHelpers::FClassFinder<UUserWidget> CircleWidget(TEXT("/Game/Blueprint/CircleMenu"));
+	CircleMenuWidgetClass = CircleWidget.Class;
 	//InputComponent->
 
 }

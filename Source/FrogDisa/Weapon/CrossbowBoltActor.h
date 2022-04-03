@@ -18,11 +18,11 @@ public:
 	// Sets default values for this actor's properties
 	ACrossbowBoltActor();
 
-	void Interact() override;
+	virtual void Interact() override;
 
-	void ChangeOutlines_Implementation(bool isOutline) override { UE_LOG(LogTemp, Warning, TEXT("C++")) }
-	void Launch() override;
-	void AttachToCharacter() override;
+	virtual void ChangeOutlines_Implementation(bool isOutline) override { UE_LOG(LogTemp, Warning, TEXT("C++")) }
+	virtual void Launch() override;
+	virtual void AttachToCharacter() override;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

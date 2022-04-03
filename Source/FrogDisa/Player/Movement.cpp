@@ -113,14 +113,13 @@ void AMovement::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	PlayerInputComponent->BindAxis("MoveRight", this, &AMovement::MoveRight);
 	PlayerInputComponent->BindAxis("Turn", this, &AMovement::AddControllerYawInput);
 	PlayerInputComponent->BindAxis("LookUp", this, &AMovement::AddControllerPitchInput);
-
 	PlayerInputComponent->BindAxis("Run", this, &AMovement::Run);
+	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &AMovement::Jump);
 
 	PlayerInputComponent->BindAxis("LookRight", this, &AMovement::LookRight);
 	PlayerInputComponent->BindAxis("LookLeft", this, &AMovement::LookLeft);
 
-	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &AMovement::Jump);
-	PlayerInputComponent->BindAction("Jump", IE_Released, this, &AMovement::StopJumping);
+	PlayerInputComponent->BindAxis("CallCircleMenu", this, &AMovement::CallCircleMenu);
 
 	PlayerInputComponent->BindAction("Attack", IE_Pressed, this, &AMovement::Attack);
 	PlayerInputComponent->BindAction("UseSecondWeapon", IE_Pressed, shootComponent, &UShootComponent::Fire);
@@ -129,14 +128,11 @@ void AMovement::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 	PlayerInputComponent->BindAction("GrapplingHook", IE_Pressed, grapplingComponent, &UGrapplingComponent::ChangeActiveGrapplingMode);
 	PlayerInputComponent->BindAction("UseSecondWeapon", IE_Pressed, grapplingComponent, &UGrapplingComponent::StartGrappling);
-	//PlayerInputComponent->BindAction("ActionWithSomeObj", IE_Pressed, this, &AMovement::InteractObject);
-	//PlayerInputComponent->BindAction("StartTakedown", IE_Pressed, InteractiveWithPuzzlesComponent,
-	//	&UInteractiveWithPuzzlesComponent::ActionWithPuzzleActor);
+	
 	PlayerInputComponent->BindAction("StartTakedown", IE_Pressed, this,
 			&AMovement::StartStrangling);
 
 	PlayerInputComponent->BindAction("PauseMenu", IE_Pressed, this, &AMovement::PauseMenu);
-
 
 	PlayerInputComponent->BindAction("SwitchCharacter", IE_Pressed, this, &AMovement::ChangeCharacter);
 
@@ -144,6 +140,7 @@ void AMovement::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	PlayerInputComponent->BindAction("ChoicePistol", IE_Pressed, this, &AMovement::ChoicePistol);
 	PlayerInputComponent->BindAction("ChoiceMine", IE_Pressed, this, &AMovement::ChoiceMine);
 	PlayerInputComponent->BindAction("ChoiceCrossbowBolt", IE_Pressed, this, &AMovement::ChoiceCrossbowBolt);
+	PlayerInputComponent->BindAction("ChoiceTranquilizer", IE_Pressed, this, &AMovement::ChoiceTranquilizer);
 
 	PlayerInputComponent->BindAction("ChangeCrouchMode", IE_Pressed, this, &AMovement::ChangeCrouchMode);
 	
@@ -262,6 +259,19 @@ void AMovement::Run(float Value)
 			GetCharacterMovement()->MaxWalkSpeed = DefaultSpeed;
 	}
 }
+
+void AMovement::CallCircleMenu(float Value)
+{
+	if (Value != 0)
+	{
+		circleMenuIsOpen = true;
+	}
+	else
+	{
+		circleMenuIsOpen = false;
+	}
+}
+
 void AMovement::Attack()
 {
 	if (isBearObject)

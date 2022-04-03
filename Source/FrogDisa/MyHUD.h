@@ -31,4 +31,5 @@ protected:
 	UUserWidget* CurrentWidget;
 	TSubclassOf<UUserWidget> HUDWidgetClass;
 	TSubclassOf<UUserWidget> ShopWidgetClass;
+	TSubclassOf<UUserWidget> CircleMenuWidgetClass;
 };
