@@ -30,6 +30,19 @@ enum class EObjectType : uint8
 	EO_StaminaUp UMETA(DisplayName = "EO_StaminaUp"),
 	EO_None UMETA(DisplayName = "EO_None")
 };
+
+UENUM(BlueprintType)
+enum class EAICondition : uint8
+{
+	EAIC_Patrol UMETA(DisplayeName = "EAIC_Patrol"),
+	EAIC_Angry UMETA(DisplayeName = "EAIC_Angry"),
+	EAIC_Searching UMETA(DisplayeName = "EAIC_Searching"),
+	EAIC_Panic UMETA(DisplayeName = "EAIC_Panic"),
+	EAIC_Detection UMETA(DisplayeName = "EAIC_Detection"),
+	EAIC_Calm UMETA(DisplayName = "EAIC_Calm"),
+	EAIC_None UMETA(DisplayName = "EAIC_None")
+
+};
 //UENUM()
 enum ERotatorDirection
 {
