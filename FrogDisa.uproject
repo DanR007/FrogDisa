@@ -11,7 +11,8 @@
 			"AdditionalDependencies": [
 				"Engine",
 				"CableComponent",
-				"GameplayAbilities"
+				"GameplayAbilities",
+				"AIModule"
 			]
 		}
 	],

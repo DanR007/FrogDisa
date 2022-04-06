@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
 #include "FrogDisa/InteractiveObjectsInterface.h"
+#include "NPCAIController.h"
 #include "NPCPawn.generated.h"
 
 UCLASS()
@@ -28,6 +29,8 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 		USkeletalMeshComponent* skeletal_mesh;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+		ANPCAIController* npc_controller;
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
