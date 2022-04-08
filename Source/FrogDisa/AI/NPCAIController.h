@@ -4,9 +4,15 @@
 
 #include "CoreMinimal.h"
 #include "AIController.h"
+
 #include "Perception/AIPerceptionTypes.h"
 #include "Perception/AIPerceptionComponent.h"
+#include "Perception/AISenseConfig.h"
+#include "Perception/AISenseConfig_Sight.h"
+
 #include "FrogDisa/DefaultVariables.h"
+#include "FrogDisa/Player/EProjectiles.h"
+
 #include "NPCAIController.generated.h"
 
 /**
@@ -22,8 +28,35 @@ class FROGDISA_API ANPCAIController : public AAIController
 	virtual void Tick(float DeltaTime) override;
 	virtual void BeginPlay() override;
 	
+	UAISenseConfig_Sight* SightSense;
 
-protected:	
+	TArray<AActor*> actors_in_sight;
+	AActor* PlayerInSight;
+
+	AActor* ControlledActor;
+
+public:
+	void SetOwnerActor(AActor* own_actor) { ControlledActor = own_actor; }
+
+protected:
 	UFUNCTION()
 	void NewPerception(AActor* NewActorPerception, FAIStimulus stimulus);
+
+	void CalculateAlarmScale(float deltaTime);
+private:
+	const float SightSenseRadius = 1500.f;
+	const float SightAngle = 45.f;
+
+	const float MeleeSightDistance = SightSenseRadius / 2;
+
+	const float MaxAlarmScale = 100.f;
+	float AlarmScale = 0;
+
+	const float MaxSearchingTimeScale = MaxAlarmScale * 1.5f;
+	float SearchingTimeScale = 0;
+
+	EAICondition current_condition = EAICondition::EAIC_Idle;
+
+	bool isSeeTrigger;
+	bool isWarning = false;
 };

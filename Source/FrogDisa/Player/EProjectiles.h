@@ -39,7 +39,8 @@ enum class EAICondition : uint8
 	EAIC_Searching UMETA(DisplayeName = "EAIC_Searching"),
 	EAIC_Panic UMETA(DisplayeName = "EAIC_Panic"),
 	EAIC_Detection UMETA(DisplayeName = "EAIC_Detection"),
-	EAIC_Calm UMETA(DisplayName = "EAIC_Calm"),
+	EAIC_Idle UMETA(DisplayName = "EAIC_Idle"),
+	EAIC_Warning UMETA(DisplayName = "EAIC_Warning"),
 	EAIC_None UMETA(DisplayName = "EAIC_None")
 
 };

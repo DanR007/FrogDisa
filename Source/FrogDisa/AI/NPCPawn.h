@@ -6,6 +6,9 @@
 #include "GameFramework/Pawn.h"
 #include "FrogDisa/InteractiveObjectsInterface.h"
 #include "NPCAIController.h"
+
+#include "Components/WidgetComponent.h"
+
 #include "NPCPawn.generated.h"
 
 UCLASS()
@@ -31,6 +34,9 @@ protected:
 		USkeletalMeshComponent* skeletal_mesh;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 		ANPCAIController* npc_controller;
+
+	TSubclassOf<ANPCAIController> controllerSubclass;
+	bool isDead = false;
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -38,4 +44,5 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	bool GetIsDead() { return isDead; }
 };

@@ -11,13 +11,17 @@ ANPCPawn::ANPCPawn()
 	PrimaryActorTick.bCanEverTick = true;
 	skeletal_mesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("SkeletalMesh"));
 	
+	ConstructorHelpers::FClassFinder<ANPCAIController> controllerClass(TEXT("Class'/Script/FrogDisa.NPCAIController'"));
+	controllerSubclass = controllerClass.Class;
+	AIControllerClass = controllerSubclass;
+
 }
 
 // Called when the game starts or when spawned
 void ANPCPawn::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	Cast<ANPCAIController>(Controller)->SetOwnerActor(this);
 }
 
 // Called every frame
