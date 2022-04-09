@@ -22,6 +22,7 @@ void ANPCPawn::BeginPlay()
 {
 	Super::BeginPlay();
 	Cast<ANPCAIController>(Controller)->SetOwnerActor(this);
+	Cast<ANPCAIController>(Controller)->StartBehaviorTreeFromParent();
 }
 
 // Called every frame

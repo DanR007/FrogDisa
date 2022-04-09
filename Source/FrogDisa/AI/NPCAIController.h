@@ -43,11 +43,14 @@ class FROGDISA_API ANPCAIController : public AAIController
 public:
 	void SetOwnerActor(AActor* own_actor) { ControlledActor = own_actor; }
 
+	void StartBehaviorTreeFromParent();
 protected:
 	UFUNCTION()
 	void NewPerception(AActor* NewActorPerception, FAIStimulus stimulus);
-
 	void CalculateAlarmScale(float deltaTime);
+
+	void ControlWhenPlayerInSight();
+	void ControlWhenPlayerNotInSight();
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 		UBlackboardComponent* BlackboardComp;
@@ -72,6 +75,8 @@ private:
 
 	const float MaxSearchingTimeScale = MaxAlarmScale * 1.5f;
 	float SearchingTimeScale = 0;
+
+	const float DefaultDeltaTime = 0.1f;
 
 	EAICondition current_condition = EAICondition::EAIC_Idle;
 

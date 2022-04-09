@@ -34,64 +34,90 @@ void ANPCAIController::BeginPlay()
 	
 }
 
+void ANPCAIController::StartBehaviorTreeFromParent()
+{
+	ANPCPawn* CtrlPawn = Cast<ANPCPawn>(ControlledActor);
+	if (CtrlPawn && CtrlPawn->GetBehaviorTree()->BlackboardAsset)
+	{
+		BlackboardComp->InitializeBlackboard(*CtrlPawn->GetBehaviorTree()->BlackboardAsset);
+		BehaviorTreeComp->StartTree(*CtrlPawn->GetBehaviorTree());
+		GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Blue, "Tree start");
+	}
+	else
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Red, "Tree doesnt start");
+	}
+}
+
 void ANPCAIController::Tick(float DeltaTime)
 {
 	if (PlayerInSight)
 	{
-		if (isWarning && current_condition == EAICondition::EAIC_Searching)
+		ControlWhenPlayerInSight();
+	}
+	else
+	{
+		ControlWhenPlayerNotInSight();
+	}
+
+	BlackboardComp->SetValueAsEnum(CurrentConditionKey, (uint8)current_condition);
+}
+
+void ANPCAIController::ControlWhenPlayerInSight()
+{
+	if (isWarning && current_condition == EAICondition::EAIC_Searching)
+	{
+		AlarmScale = MaxAlarmScale;
+	}
+	else
+	{
+		CalculateAlarmScale(DefaultDeltaTime);
+	}
+
+
+	if (AlarmScale == MaxAlarmScale)
+	{
+		current_condition = EAICondition::EAIC_Angry;
+		SearchingTimeScale = MaxSearchingTimeScale;
+		isWarning = true;
+	}
+	else
+	{
+		if (AlarmScale >= MaxAlarmScale / 2)
 		{
-			AlarmScale = MaxAlarmScale;
+			current_condition = EAICondition::EAIC_Warning;
+			SearchingTimeScale = MaxSearchingTimeScale / 2;
 		}
 		else
 		{
-			CalculateAlarmScale(DeltaTime);
+			current_condition = EAICondition::EAIC_Detection;
 		}
+	}
+}
 
-		
-		if (AlarmScale == MaxAlarmScale)
+void ANPCAIController::ControlWhenPlayerNotInSight()
+{
+	if (current_condition == EAICondition::EAIC_Angry || current_condition == EAICondition::EAIC_Warning
+		|| current_condition == EAICondition::EAIC_Searching)
+	{
+		current_condition = EAICondition::EAIC_Searching;
+		SearchingTimeScale = UKismetMathLibrary::FClamp(SearchingTimeScale - DefaultDeltaTime * 2, 0, MaxSearchingTimeScale);
+		if (SearchingTimeScale == 0)
 		{
-			current_condition = EAICondition::EAIC_Angry;
-			SearchingTimeScale = MaxSearchingTimeScale;
-			isWarning = true;
-		}
-		else 
-		{
-			if (AlarmScale >= MaxAlarmScale / 2)
-			{
-				current_condition = EAICondition::EAIC_Warning;
-				SearchingTimeScale = MaxSearchingTimeScale / 2;
-			}
-			else
-			{
-				current_condition = EAICondition::EAIC_Detection;
-			}
+			current_condition = EAICondition::EAIC_Idle;
 		}
 	}
 	else
 	{
-		if (current_condition == EAICondition::EAIC_Angry || current_condition == EAICondition::EAIC_Warning
-			|| current_condition == EAICondition::EAIC_Searching)
+		if (current_condition == EAICondition::EAIC_Detection)
 		{
-			current_condition = EAICondition::EAIC_Searching;
-			SearchingTimeScale = UKismetMathLibrary::FClamp(SearchingTimeScale - DeltaTime * 2, 0, MaxSearchingTimeScale);
-			if (SearchingTimeScale == 0)
+			AlarmScale = UKismetMathLibrary::FClamp(AlarmScale - DefaultDeltaTime * 2, 0, MaxAlarmScale);
+
+			if (AlarmScale == 0)
 			{
 				current_condition = EAICondition::EAIC_Idle;
 			}
 		}
-		else
-		{
-			if (current_condition == EAICondition::EAIC_Detection)
-			{
-				AlarmScale = UKismetMathLibrary::FClamp(AlarmScale - DeltaTime * 2, 0, MaxAlarmScale);
-
-				if (AlarmScale == 0)
-				{
-					current_condition = EAICondition::EAIC_Idle;
-				}
-			}
-		}
-
 	}
 }
 

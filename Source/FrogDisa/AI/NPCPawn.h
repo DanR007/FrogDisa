@@ -9,6 +9,8 @@
 
 #include "Components/WidgetComponent.h"
 
+#include "BehaviorTree/BehaviorTree.h"
+
 #include "NPCPawn.generated.h"
 
 UCLASS()
@@ -26,6 +28,7 @@ public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 		void Die();
 
+	UBehaviorTree* GetBehaviorTree() { return BehaviorTree; }
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -34,6 +37,9 @@ protected:
 		USkeletalMeshComponent* skeletal_mesh;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 		ANPCAIController* npc_controller;
+
+	UPROPERTY(EditDefaultsOnly)
+		UBehaviorTree* BehaviorTree;
 
 	TSubclassOf<ANPCAIController> controllerSubclass;
 	bool isDead = false;
