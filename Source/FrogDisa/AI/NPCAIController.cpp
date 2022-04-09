@@ -11,6 +11,9 @@ ANPCAIController::ANPCAIController()
 	PerceptionComponent = CreateDefaultSubobject<UAIPerceptionComponent>(TEXT("PerceptionComponent"));
 	PerceptionComponent->OnTargetPerceptionUpdated.AddDynamic(this, &ANPCAIController::NewPerception);
 
+	BlackboardComp = CreateDefaultSubobject<UBlackboardComponent>(TEXT("BlackboardComp"));
+	BehaviorTreeComp = CreateDefaultSubobject<UBehaviorTreeComponent>(TEXT("BehaviorComp"));
+
 	SightSense = CreateDefaultSubobject<UAISenseConfig_Sight>(TEXT("Sight Sense"));
 
 	SightSense->SightRadius = SightSenseRadius;
