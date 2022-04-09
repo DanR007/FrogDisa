@@ -38,7 +38,7 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 		ANPCAIController* npc_controller;
 
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 		UBehaviorTree* BehaviorTree;
 
 	TSubclassOf<ANPCAIController> controllerSubclass;

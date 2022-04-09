@@ -30,6 +30,7 @@ ANPCAIController::ANPCAIController()
 
 void ANPCAIController::BeginPlay()
 {
+	Super::BeginPlay();
 	//UE_LOG(LogTemp, Warning, TEXT("SPAWN ANPCAIController"));
 	
 }
@@ -51,6 +52,7 @@ void ANPCAIController::StartBehaviorTreeFromParent()
 
 void ANPCAIController::Tick(float DeltaTime)
 {
+	Super::Tick(DeltaTime);
 	if (PlayerInSight)
 	{
 		ControlWhenPlayerInSight();

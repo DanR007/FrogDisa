@@ -29,10 +29,10 @@ class FROGDISA_API ANPCAIController : public AAIController
 	GENERATED_BODY()
 
 	ANPCAIController();
-
+public:
 	virtual void Tick(float DeltaTime) override;
 	virtual void BeginPlay() override;
-	
+private:
 	UAISenseConfig_Sight* SightSense;
 
 	TArray<AActor*> actors_in_sight;
@@ -76,7 +76,7 @@ private:
 	const float MaxSearchingTimeScale = MaxAlarmScale * 1.5f;
 	float SearchingTimeScale = 0;
 
-	const float DefaultDeltaTime = 0.1f;
+	const float DefaultDeltaTime = 0.01f;
 
 	EAICondition current_condition = EAICondition::EAIC_Idle;
 
