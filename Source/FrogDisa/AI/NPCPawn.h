@@ -6,6 +6,11 @@
 #include "GameFramework/Pawn.h"
 #include "FrogDisa/InteractiveObjectsInterface.h"
 #include "NPCAIController.h"
+
+#include "Components/WidgetComponent.h"
+
+#include "BehaviorTree/BehaviorTree.h"
+
 #include "NPCPawn.generated.h"
 
 UCLASS()
@@ -23,6 +28,7 @@ public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 		void Die();
 
+	UBehaviorTree* GetBehaviorTree() { return BehaviorTree; }
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -31,6 +37,12 @@ protected:
 		USkeletalMeshComponent* skeletal_mesh;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 		ANPCAIController* npc_controller;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+		UBehaviorTree* BehaviorTree;
+
+	TSubclassOf<ANPCAIController> controllerSubclass;
+	bool isDead = false;
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -38,4 +50,5 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	bool GetIsDead() { return isDead; }
 };
