@@ -19,7 +19,7 @@
 #include "NPCPawn.generated.h"
 
 UCLASS()
-class FROGDISA_API ANPCPawn : public APawn, public IInteractiveObjectsInterface
+class FROGDISA_API ANPCPawn : public ACharacter, public IInteractiveObjectsInterface
 {
 	GENERATED_BODY()
 
@@ -54,8 +54,8 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-		USkeletalMeshComponent* skeletal_mesh;
+	//UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	//	USkeletalMeshComponent* skeletal_mesh;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 		UWidgetComponent* widget_component;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
