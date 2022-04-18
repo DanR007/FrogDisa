@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Player/Movement.h"
+#include "Blueprint/UserWidget.h"
 
 #define TEST
 

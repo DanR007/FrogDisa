@@ -42,11 +42,6 @@ void ANPCAIController::StartBehaviorTreeFromParent()
 	{
 		BlackboardComp->InitializeBlackboard(*CtrlPawn->GetBehaviorTree()->BlackboardAsset);
 		BehaviorTreeComp->StartTree(*CtrlPawn->GetBehaviorTree());
-		GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Blue, "Tree start");
-	}
-	else
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Red, "Tree doesnt start");
 	}
 }
 
@@ -89,6 +84,7 @@ void ANPCAIController::ControlWhenPlayerInSight()
 		{
 			current_condition = EAICondition::EAIC_Warning;
 			SearchingTimeScale = MaxSearchingTimeScale / 2;
+			BlackboardComp->SetValueAsVector(LocationTargetKey, PlayerInSight->GetActorLocation());
 		}
 		else
 		{

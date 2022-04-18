@@ -10,19 +10,23 @@ ANPCPawn::ANPCPawn()
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	skeletal_mesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("SkeletalMesh"));
-	
+	widget_component = CreateDefaultSubobject<UWidgetComponent>(TEXT("WidgetComponent"));
+
 	ConstructorHelpers::FClassFinder<ANPCAIController> controllerClass(TEXT("Class'/Script/FrogDisa.NPCAIController'"));
 	controllerSubclass = controllerClass.Class;
 	AIControllerClass = controllerSubclass;
-
 }
 
 // Called when the game starts or when spawned
 void ANPCPawn::BeginPlay()
 {
 	Super::BeginPlay();
-	Cast<ANPCAIController>(Controller)->SetOwnerActor(this);
-	Cast<ANPCAIController>(Controller)->StartBehaviorTreeFromParent();
+	npc_controller = Cast<ANPCAIController>(Controller);
+	npc_controller->SetOwnerActor(this);
+	npc_controller->StartBehaviorTreeFromParent();
+	npc_controller->GetBlackBoardComponent()->SetValueAsBool("isDie", false);
+	//widget_component->GetUserWidgetObject()
+	
 }
 
 // Called every frame
