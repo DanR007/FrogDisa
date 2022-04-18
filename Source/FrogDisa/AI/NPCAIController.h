@@ -44,6 +44,8 @@ public:
 	void SetOwnerActor(AActor* own_actor) { ControlledActor = own_actor; }
 
 	void StartBehaviorTreeFromParent();
+
+	UBlackboardComponent* GetBlackBoardComponent() { return BlackboardComp; }
 protected:
 	UFUNCTION()
 	void NewPerception(AActor* NewActorPerception, FAIStimulus stimulus);
