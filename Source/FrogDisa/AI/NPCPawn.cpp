@@ -13,20 +13,21 @@ ANPCPawn::ANPCPawn()
 	widget_component = CreateDefaultSubobject<UWidgetComponent>(TEXT("WidgetComponent"));
 
 	ConstructorHelpers::FClassFinder<ANPCAIController> controllerClass(TEXT("Class'/Script/FrogDisa.NPCAIController'"));
+	AIControllerClass = controllerClass.Class;
 	controllerSubclass = controllerClass.Class;
-	AIControllerClass = controllerSubclass;
+	//AIControllerClass = controllerSubclass;
 }
 
 // Called when the game starts or when spawned
 void ANPCPawn::BeginPlay()
 {
 	Super::BeginPlay();
-	//npc_controller = Cast<ANPCAIController>(Controller);
-	if (Cast<ANPCAIController>(Controller))
+	npc_controller = Cast<ANPCAIController>(Controller);
+	if (npc_controller)
 	{
-		Cast<ANPCAIController>(Controller)->SetOwnerActor(this);
-		Cast<ANPCAIController>(Controller)->StartBehaviorTreeFromParent();
-		Cast<ANPCAIController>(Controller)->GetBlackBoardComponent()->SetValueAsBool("isDie", false);
+		npc_controller->SetOwnerActor(this);
+		npc_controller->StartBehaviorTreeFromParent();
+		npc_controller->GetBlackBoardComponent()->SetValueAsBool("isDie", false);
 	}
 	//widget_component->GetUserWidgetObject()
 	
