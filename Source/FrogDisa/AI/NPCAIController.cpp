@@ -64,7 +64,7 @@ void ANPCAIController::ControlWhenPlayerInSight()
 {
 	if (isWarning && current_condition == EAICondition::EAIC_Searching)
 	{
-		AlarmScale = MaxAlarmScale;
+		AlarmScale = MaxAlarmScale;	
 	}
 	else
 	{
@@ -104,6 +104,8 @@ void ANPCAIController::ControlWhenPlayerNotInSight()
 		{
 			current_condition = EAICondition::EAIC_Idle;
 		}
+		GEngine->AddOnScreenDebugMessage(-1, 1, FColor::Yellow, "Search");
+		GEngine->AddOnScreenDebugMessage(-1, 1, FColor::Yellow, FString::SanitizeFloat(SearchingTimeScale));
 	}
 	else
 	{
@@ -123,7 +125,8 @@ void ANPCAIController::NewPerception(AActor* NewActorPerception, FAIStimulus sti
 {
 	//UE_LOG(LogTemp, Warning, TEXT("Sight Triggered"));
 	ANPCPawn* dead_pawn = Cast<ANPCPawn>(NewActorPerception);
-	if (NewActorPerception == PlayerActor)
+	
+	if (stimulus.WasSuccessfullySensed())
 	{
 		isSeeTrigger = true;
 		PlayerInSight = NewActorPerception;
@@ -136,6 +139,9 @@ void ANPCAIController::NewPerception(AActor* NewActorPerception, FAIStimulus sti
 			isSeeTrigger = true;
 			isWarning = true;
 			current_condition = EAICondition::EAIC_Searching;
+			DeadBodyLocation = dead_pawn->GetActorLocation();
+
+			BlackboardComp->SetValueAsVector(LocationTargetKey, DeadBodyLocation);
 		}
 		else
 		{
@@ -145,18 +151,20 @@ void ANPCAIController::NewPerception(AActor* NewActorPerception, FAIStimulus sti
 
 		PlayerInSight = nullptr;
 	}
+
+	
 }
 
 void ANPCAIController::CalculateAlarmScale(float deltaTime)
 {
-	float scale = 2;
+	float scale = 2, current_distance = FVector::Distance(PlayerActor->GetActorLocation(), ControlledActor->GetActorLocation());
 
 	if (isWarning)
 		scale++;
 	if (PlayerActor->GetCrouchMode() == false)
 		scale++;
-	if (FVector::Distance(PlayerActor->GetActorLocation(), ControlledActor->GetActorLocation()) <= MeleeSightDistance)
-		scale++;
+	if (current_distance <= MeleeSightDistance)
+		scale += MeleeSightDistance / current_distance;
 
 	AlarmScale = UKismetMathLibrary::FClamp(AlarmScale + deltaTime * scale, 0, MaxAlarmScale);
 }

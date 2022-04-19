@@ -45,7 +45,9 @@ public:
 
 	void StartBehaviorTreeFromParent();
 
+	UFUNCTION(BlueprintCallable)
 	UBlackboardComponent* GetBlackBoardComponent() { return BlackboardComp; }
+
 protected:
 	UFUNCTION()
 	void NewPerception(AActor* NewActorPerception, FAIStimulus stimulus);
@@ -67,6 +69,8 @@ protected:
 		FName CurrentConditionKey = "CurrentCondition";
 
 private:
+	FVector DeadBodyLocation = FVector::ZeroVector;
+
 	const float SightSenseRadius = 1500.f;
 	const float SightAngle = 45.f;
 

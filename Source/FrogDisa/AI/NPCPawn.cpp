@@ -9,7 +9,7 @@ ANPCPawn::ANPCPawn()
 {
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	skeletal_mesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("SkeletalMesh"));
+	//skeletal_mesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("SkeletalMesh"));
 	widget_component = CreateDefaultSubobject<UWidgetComponent>(TEXT("WidgetComponent"));
 
 	ConstructorHelpers::FClassFinder<ANPCAIController> controllerClass(TEXT("Class'/Script/FrogDisa.NPCAIController'"));
