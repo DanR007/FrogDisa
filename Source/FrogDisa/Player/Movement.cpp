@@ -141,6 +141,7 @@ void AMovement::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	PlayerInputComponent->BindAction("ChoiceMine", IE_Pressed, this, &AMovement::ChoiceMine);
 	PlayerInputComponent->BindAction("ChoiceCrossbowBolt", IE_Pressed, this, &AMovement::ChoiceCrossbowBolt);
 	PlayerInputComponent->BindAction("ChoiceTranquilizer", IE_Pressed, this, &AMovement::ChoiceTranquilizer);
+	PlayerInputComponent->BindAction("ChoiceGrenade", IE_Pressed, this, &AMovement::ChoiceGrenade);
 
 	PlayerInputComponent->BindAction("ChangeCrouchMode", IE_Pressed, this, &AMovement::ChangeCrouchMode);
 	

@@ -15,7 +15,7 @@ AMineActor::AMineActor()
 }
 
 
-void AMineActor::Launch()
+bool AMineActor::Launch()
 {
 	FVector start = PlayerActor->Camera->GetComponentLocation(), end = PlayerActor->Camera->GetForwardVector() * 200 + start;
 	FHitResult hitPoint;
@@ -23,12 +23,15 @@ void AMineActor::Launch()
 	{
 		this->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
 		SetActorLocation(hitPoint.Location);
-		SetActorRotation(hitPoint.Normal.ToOrientationRotator());
 		
+		SetActorRotation(hitPoint.GetActor()->GetActorForwardVector().Rotation());
+		
+		return true;
 	}
 	else
 	{
 		PlayerActor->shootComponent->AddAmmunition(1, EWeaponType::EW_Mine);
+		return false;
 	}
 }
 

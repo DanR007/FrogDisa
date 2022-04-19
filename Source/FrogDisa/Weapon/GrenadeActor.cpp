@@ -28,14 +28,16 @@ void AGrenadeActor::Tick(float DeltaTime)
 
 }
 
-void AGrenadeActor::Launch()
+bool AGrenadeActor::Launch()
 {
 	this->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
 	mainMesh->SetSimulatePhysics(true);
 	mainMesh->AddImpulse(PlayerActor->FindComponentByClass<UCameraComponent>()->
 		GetForwardVector() * mainMesh->GetMass() * 500);
 	mainMesh->SetCollisionResponseToChannel(ECollisionChannel::ECC_GameTraceChannel3, ECollisionResponse::ECR_Block);
-	PlayerActor->GetWorld()->GetTimerManager().SetTimer(ExplosionTimer, this, &AGrenadeActor::Explosion, 0, false, 4.f);
+	GetWorld()->GetTimerManager().SetTimer(ExplosionTimer, this, &AGrenadeActor::Explosion, 4.f, true, 4.f);
+
+	return true;
 }
 
 
@@ -54,6 +56,7 @@ void AGrenadeActor::Interact()
 
 void AGrenadeActor::Explosion()
 {
+	GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Blue, "Damage");
 	TArray<AActor*> array_enemy;
 	FHitResult hitPoint;
 	FCollisionQueryParams queryParams;
@@ -72,6 +75,13 @@ void AGrenadeActor::Explosion()
 				}
 			}
 	}
+	
+	//CallExplosionParticle();
 
 	Destroy();
+}
+
+void AGrenadeActor::CallExplosionParticle_Implementation()
+{
+
 }

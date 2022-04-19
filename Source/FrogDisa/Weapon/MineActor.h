@@ -20,7 +20,7 @@ class FROGDISA_API AMineActor : public AActor, public IWeaponLogicInterface, pub
 public:
 
 	AMineActor();
-	virtual void Launch() override;
+	virtual bool Launch() override;
 	virtual void AttachToCharacter() override;
 	virtual void Interact() override;
 	virtual void ChangeOutlines_Implementation(bool isOutline) override { UE_LOG(LogTemp, Warning, TEXT("C++")) }

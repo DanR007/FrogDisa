@@ -21,7 +21,7 @@ public:
 	virtual void Interact() override;
 
 	virtual void ChangeOutlines_Implementation(bool isOutline) override { UE_LOG(LogTemp, Warning, TEXT("C++")) }
-	virtual void Launch() override;
+	virtual bool Launch() override;
 	virtual void AttachToCharacter() override;
 protected:
 	// Called when the game starts or when spawned

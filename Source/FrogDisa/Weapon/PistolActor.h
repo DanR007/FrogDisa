@@ -18,7 +18,7 @@ public:
 	// Sets default values for this actor's properties
 	APistolActor();
 
-	virtual void Launch() override;
+	virtual bool Launch() override;
 	virtual void AttachToCharacter() override;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)

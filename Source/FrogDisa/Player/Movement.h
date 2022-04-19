@@ -138,6 +138,15 @@ protected:
 				shootComponent->SwitchProjectile();
 		}
 	}
+	void ChoiceGrenade()
+	{
+		if (g_Projectile_Type != EWeaponType::EW_Grenade)
+		{
+			g_Projectile_Type = EWeaponType::EW_Grenade; GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Yellow, "granataaaaaaaaaaaaa");
+			if (shootComponent)
+				shootComponent->SwitchProjectile();
+		}
+	}
 
 	UFUNCTION(BlueprintCallable)
 		UGrapplingComponent* GetGrapplingComponent() { return grapplingComponent; }

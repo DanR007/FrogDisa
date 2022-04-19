@@ -82,13 +82,14 @@ void UShootComponent::Fire()
 
 		if (weaponLogicInterface)
 		{
-			weaponLogicInterface->Launch();
+			if(weaponLogicInterface->Launch())
+				if (weapon_map[PlayerActor->GetCurrentWeaponType()].second > 0)
+				{
+					Current_Weapon = GetWorld()->SpawnActor<AActor>(weapon_map[PlayerActor->GetCurrentWeaponType()].first, GetOwner()->FindComponentByClass<UCameraComponent>()->GetComponentTransform());
+					Cast<IWeaponLogicInterface>(Current_Weapon)->AttachToCharacter();
+				}
 			weapon_map[PlayerActor->GetCurrentWeaponType()].second--;
-			if (weapon_map[PlayerActor->GetCurrentWeaponType()].second > 0)
-			{
-				Current_Weapon = GetWorld()->SpawnActor<AActor>(weapon_map[PlayerActor->GetCurrentWeaponType()].first, GetOwner()->FindComponentByClass<UCameraComponent>()->GetComponentTransform());
-				Cast<IWeaponLogicInterface>(Current_Weapon)->AttachToCharacter();
-			}
+			
 		}
 	}
 }

@@ -21,10 +21,13 @@ ANPCPawn::ANPCPawn()
 void ANPCPawn::BeginPlay()
 {
 	Super::BeginPlay();
-	npc_controller = Cast<ANPCAIController>(Controller);
-	npc_controller->SetOwnerActor(this);
-	npc_controller->StartBehaviorTreeFromParent();
-	npc_controller->GetBlackBoardComponent()->SetValueAsBool("isDie", false);
+	//npc_controller = Cast<ANPCAIController>(Controller);
+	if (Cast<ANPCAIController>(Controller))
+	{
+		Cast<ANPCAIController>(Controller)->SetOwnerActor(this);
+		Cast<ANPCAIController>(Controller)->StartBehaviorTreeFromParent();
+		Cast<ANPCAIController>(Controller)->GetBlackBoardComponent()->SetValueAsBool("isDie", false);
+	}
 	//widget_component->GetUserWidgetObject()
 	
 }

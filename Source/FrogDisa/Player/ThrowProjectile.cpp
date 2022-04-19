@@ -22,8 +22,8 @@ AThrowProjectile::AThrowProjectile()
 
 	ProjectileMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ProjectileMesh"));
 
-	ConstructorHelpers::FObjectFinder<UStaticMesh> mesh(TEXT("StaticMesh'/Game/Weapon_Pack/Mesh/Weapons/Weapons_Kit/SM_Axe.SM_Axe'"));
-	ProjectileMesh -> SetStaticMesh(mesh.Object);
+	//ConstructorHelpers::FObjectFinder<UStaticMesh> mesh(TEXT("StaticMesh'/Game/Weapon_Pack/Mesh/Weapons/Weapons_Kit/SM_Axe.SM_Axe'"));
+	//ProjectileMesh -> SetStaticMesh(mesh.Object);
 	ProjectileMesh->SetGenerateOverlapEvents(true);
 	ProjectileMesh->SetCollisionResponseToChannel(ECollisionChannel::ECC_WorldDynamic, ECollisionResponse::ECR_Overlap);
 	ProjectileMesh->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Overlap);
@@ -77,7 +77,7 @@ void AThrowProjectile::ReturnStart()
 
 }
 
-void AThrowProjectile::Launch()
+bool AThrowProjectile::Launch()
 {
 	//GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Red, "ThrowProjectile");
 	if (isLaunched == false)
@@ -110,6 +110,8 @@ void AThrowProjectile::Launch()
 
 		GetWorld()->GetTimerManager().SetTimer(MoveTimer, this, &AThrowProjectile::Move, 0.01f, true, 0.f);
 	}
+
+	return false;
 }
 
 

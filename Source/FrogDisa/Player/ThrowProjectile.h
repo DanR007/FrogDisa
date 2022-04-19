@@ -28,7 +28,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 		void ReturnToCharacter();
 	//UFUNCTION(BlueprintCallable)
-	virtual void Launch() override;
+	virtual bool Launch() override;
 	virtual void Create() override;
 	//virtual void OnActorBeginOverlap() override;
 	void AttachToCharacter() override;

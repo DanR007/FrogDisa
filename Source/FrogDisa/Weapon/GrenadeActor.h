@@ -21,7 +21,7 @@ public:
 	// Sets default values for this actor's properties
 	AGrenadeActor();
 
-	virtual void Launch() override;
+	virtual bool Launch() override;
 	virtual void AttachToCharacter() override;
 	virtual void Interact() override;
 	virtual void ChangeOutlines_Implementation(bool isOutline) override { UE_LOG(LogTemp, Warning, TEXT("C++")) }
@@ -36,6 +36,9 @@ public:
 
 
 protected:
+
+	UFUNCTION(BlueprintNativeEvent)
+		void CallExplosionParticle();
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 

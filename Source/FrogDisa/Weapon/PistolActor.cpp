@@ -27,7 +27,7 @@ void APistolActor::Tick(float DeltaTime)
 
 }
 
-void APistolActor::Launch()
+bool APistolActor::Launch()
 {
 	ANPCPawn* actor;
 	FHitResult hitPoint;
@@ -40,6 +40,7 @@ void APistolActor::Launch()
 			actor->Die();
 		}
 	}
+	return false;
 }
 
 void APistolActor::AttachToCharacter()

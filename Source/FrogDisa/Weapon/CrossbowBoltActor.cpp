@@ -34,13 +34,14 @@ void ACrossbowBoltActor::Interact()
 	Destroy();
 }
 
-void ACrossbowBoltActor::Launch()
+bool ACrossbowBoltActor::Launch()
 {
 	DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
 	crossbow_bolt_mesh->SetSimulatePhysics(true);
 	crossbow_bolt_mesh->AddImpulse(PlayerActor->FindComponentByClass<UCameraComponent>()->
 		GetForwardVector()*crossbow_bolt_mesh->GetMass() * 2000);
 	crossbow_bolt_mesh->SetCollisionResponseToChannel(ECollisionChannel::ECC_GameTraceChannel3, ECollisionResponse::ECR_Block);
+	return true;
 }
 
 void ACrossbowBoltActor::AttachToCharacter()
