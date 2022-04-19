@@ -1,2 +1,2 @@
 # FrogDisa
-This is my pet-project
+3D game immersive sim
