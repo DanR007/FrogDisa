@@ -34,6 +34,7 @@ public:
 	virtual void BeginPlay() override;
 private:
 	UAISenseConfig_Sight* SightSense;
+	UAISenseConfig_Sight* SightSenseClose;
 
 	TArray<AActor*> actors_in_sight;
 	AActor* PlayerInSight;

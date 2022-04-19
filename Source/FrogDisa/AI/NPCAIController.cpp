@@ -24,8 +24,10 @@ ANPCAIController::ANPCAIController()
 	SightSense->DetectionByAffiliation.bDetectFriendlies = true;
 	SightSense->DetectionByAffiliation.bDetectNeutrals = true;
 	
+
 	PerceptionComponent->SetDominantSense(SightSense->GetSenseImplementation());
 	PerceptionComponent->ConfigureSense(*SightSense);
+
 }
 
 void ANPCAIController::BeginPlay()
@@ -77,6 +79,7 @@ void ANPCAIController::ControlWhenPlayerInSight()
 		current_condition = EAICondition::EAIC_Angry;
 		SearchingTimeScale = MaxSearchingTimeScale;
 		isWarning = true;
+		BlackboardComp->SetValueAsObject(ActorTargetKey, PlayerInSight);
 	}
 	else
 	{
@@ -84,7 +87,9 @@ void ANPCAIController::ControlWhenPlayerInSight()
 		{
 			current_condition = EAICondition::EAIC_Warning;
 			SearchingTimeScale = MaxSearchingTimeScale / 2;
+			
 			BlackboardComp->SetValueAsVector(LocationTargetKey, PlayerInSight->GetActorLocation());
+			BlackboardComp->SetValueAsObject(ActorTargetKey, PlayerInSight);
 		}
 		else
 		{
@@ -104,8 +109,7 @@ void ANPCAIController::ControlWhenPlayerNotInSight()
 		{
 			current_condition = EAICondition::EAIC_Idle;
 		}
-		GEngine->AddOnScreenDebugMessage(-1, 1, FColor::Yellow, "Search");
-		GEngine->AddOnScreenDebugMessage(-1, 1, FColor::Yellow, FString::SanitizeFloat(SearchingTimeScale));
+		
 	}
 	else
 	{
