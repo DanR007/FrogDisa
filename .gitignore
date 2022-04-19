@@ -74,6 +74,6 @@ Plugins/*/Intermediate/*
 # Cache files for the editor to use
 DerivedDataCache/*
 
-Content/Weapon_Pack
+
 Content/Weapons_Kit_BuiltData.uasset
-Content/StarterContent
+
