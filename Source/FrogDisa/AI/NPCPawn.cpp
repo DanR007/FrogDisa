@@ -4,6 +4,7 @@
 #include "NPCPawn.h"
 #include "FrogDisa/MyHUD.h"
 #include "FrogDisa/DefaultVariables.h"
+#include "GameFramework/CharacterMovementComponent.h"
 // Sets default values
 ANPCPawn::ANPCPawn()
 {
@@ -38,6 +39,11 @@ void ANPCPawn::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	if (GetCharacterMovement()->Velocity != FVector::ZeroVector)
+	{
+		//GEngine->AddOnScreenDebugMessage(-1, 0.1, FColor::Green, GetCharacterMovement()->Velocity.ToCompactString());
+		SetActorRotation(GetCharacterMovement()->Velocity.Rotation());
+	}
 }
 
 // Called to bind functionality to input

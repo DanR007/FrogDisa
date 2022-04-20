@@ -5,6 +5,7 @@
 #include "NPCPawn.h"
 
 #include "Kismet/KismetMathLibrary.h"
+#include "NavigationSystem.h"
 
 ANPCAIController::ANPCAIController()
 {
@@ -79,7 +80,7 @@ void ANPCAIController::ControlWhenPlayerInSight()
 		current_condition = EAICondition::EAIC_Angry;
 		SearchingTimeScale = MaxSearchingTimeScale;
 		isWarning = true;
-		BlackboardComp->SetValueAsObject(ActorTargetKey, PlayerInSight);
+		//BlackboardComp->SetValueAsObject(ActorTargetKey, PlayerInSight);
 	}
 	else
 	{
@@ -88,7 +89,7 @@ void ANPCAIController::ControlWhenPlayerInSight()
 			current_condition = EAICondition::EAIC_Warning;
 			SearchingTimeScale = MaxSearchingTimeScale / 2;
 			
-			BlackboardComp->SetValueAsVector(LocationTargetKey, PlayerInSight->GetActorLocation());
+			//BlackboardComp->SetValueAsVector(LocationTargetKey, PlayerInSight->GetActorLocation());
 			BlackboardComp->SetValueAsObject(ActorTargetKey, PlayerInSight);
 		}
 		else
@@ -96,10 +97,14 @@ void ANPCAIController::ControlWhenPlayerInSight()
 			current_condition = EAICondition::EAIC_Detection;
 		}
 	}
+
+	BlackboardComp->SetValueAsVector(LocationTargetKey, PlayerInSight->GetActorLocation());
 }
 
 void ANPCAIController::ControlWhenPlayerNotInSight()
 {
+	BlackboardComp->SetValueAsObject(ActorTargetKey, nullptr);
+
 	if (current_condition == EAICondition::EAIC_Angry || current_condition == EAICondition::EAIC_Warning
 		|| current_condition == EAICondition::EAIC_Searching)
 	{
@@ -161,7 +166,7 @@ void ANPCAIController::NewPerception(AActor* NewActorPerception, FAIStimulus sti
 
 void ANPCAIController::CalculateAlarmScale(float deltaTime)
 {
-	float scale = 2, current_distance = FVector::Distance(PlayerActor->GetActorLocation(), ControlledActor->GetActorLocation());
+	float scale = 10, current_distance = FVector::Distance(PlayerActor->GetActorLocation(), ControlledActor->GetActorLocation());
 
 	if (isWarning)
 		scale++;
