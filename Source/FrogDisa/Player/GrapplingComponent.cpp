@@ -56,14 +56,14 @@ void UGrapplingComponent::StartGrappling()
 				if (grappling_upper_object)
 				{
 					ChangeActiveGrapplingMode();
-					PlayerActor->SetActorLocation(grappling_target_location);
+					//PlayerActor->SetActorLocation(grappling_target_location);
 					PlayerActor->GetWorld()->GetTimerManager().SetTimer(GrapplingTimer, this, &UGrapplingComponent::LerpToUpperObject, 0.01f, true, 0.f);
 				}
 				else
 				{
 					PlayerActor->isGrappling = true;
-					PlayerActor->SetActorLocation(grappling_target_location);
-					//PlayerActor->GetWorld()->GetTimerManager().SetTimer(GrapplingTimer, this, &UGrapplingComponent::LerpTo, 0.01f, true, 0.f);
+					//PlayerActor->SetActorLocation(grappling_target_location);
+					PlayerActor->GetWorld()->GetTimerManager().SetTimer(GrapplingTimer, this, &UGrapplingComponent::LerpTo, 0.01f, true, 0.f);
 				}
 			}
 
@@ -99,7 +99,7 @@ void UGrapplingComponent::LerpTo()
 	{
 		PlayerActor->HUDComponent->UpdateStamina(-0.2f);
 
-		//PlayerActor->GetMovementComponent()->Velocity = (grappling_target_location - PlayerActor->GetActorLocation()) * 10;
+		PlayerActor->GetMovementComponent()->Velocity = (grappling_target_location - PlayerActor->GetActorLocation()) * 10;
 	}
 }
 

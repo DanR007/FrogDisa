@@ -446,6 +446,8 @@ void AMovement::ChangeCrouchHeight()
 	}
 	else
 	{
+		if(offset != FVector::ZeroVector)
+			SetActorLocation(GetActorLocation() + FVector(0, 0, DefaultCapsuleHeight / 2 - DefaultCapsuleHeight / 3));
 		GetCapsuleComponent()->SetCapsuleHalfHeight(DefaultCapsuleHeight / 2);
 		Camera->SetRelativeLocation(FVector(0, nowOffsetY, DefaultCameraHeight / 2));
 		offset = FVector::ZeroVector;
