@@ -4,6 +4,7 @@
 #include "NPCPawn.h"
 #include "FrogDisa/MyHUD.h"
 #include "FrogDisa/DefaultVariables.h"
+#include "GameFramework/CharacterMovementComponent.h"
 // Sets default values
 ANPCPawn::ANPCPawn()
 {
@@ -13,20 +14,21 @@ ANPCPawn::ANPCPawn()
 	widget_component = CreateDefaultSubobject<UWidgetComponent>(TEXT("WidgetComponent"));
 
 	ConstructorHelpers::FClassFinder<ANPCAIController> controllerClass(TEXT("Class'/Script/FrogDisa.NPCAIController'"));
+	AIControllerClass = controllerClass.Class;
 	controllerSubclass = controllerClass.Class;
-	AIControllerClass = controllerSubclass;
+	//AIControllerClass = controllerSubclass;
 }
 
 // Called when the game starts or when spawned
 void ANPCPawn::BeginPlay()
 {
 	Super::BeginPlay();
-	//npc_controller = Cast<ANPCAIController>(Controller);
-	if (Cast<ANPCAIController>(Controller))
+	npc_controller = Cast<ANPCAIController>(Controller);
+	if (npc_controller)
 	{
-		Cast<ANPCAIController>(Controller)->SetOwnerActor(this);
-		Cast<ANPCAIController>(Controller)->StartBehaviorTreeFromParent();
-		Cast<ANPCAIController>(Controller)->GetBlackBoardComponent()->SetValueAsBool("isDie", false);
+		npc_controller->SetOwnerActor(this);
+		npc_controller->StartBehaviorTreeFromParent();
+		npc_controller->GetBlackBoardComponent()->SetValueAsBool("isDie", false);
 	}
 	//widget_component->GetUserWidgetObject()
 	
@@ -37,6 +39,11 @@ void ANPCPawn::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	if (GetCharacterMovement()->Velocity != FVector::ZeroVector)
+	{
+		//GEngine->AddOnScreenDebugMessage(-1, 0.1, FColor::Green, GetCharacterMovement()->Velocity.ToCompactString());
+		SetActorRotation(GetCharacterMovement()->Velocity.Rotation());
+	}
 }
 
 // Called to bind functionality to input
