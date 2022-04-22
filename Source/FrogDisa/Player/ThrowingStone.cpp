@@ -28,9 +28,9 @@ void AThrowingStone::Tick(float DeltaTime)
 
 void AThrowingStone::ThrowStone(FVector VectorToTarget)
 {
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("ffffffffffff"));
+	//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("ffffffffffff"));
 	StoneMesh->AddImpulse(VectorToTarget * 700);
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, VectorToTarget.ToString());
+	//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, VectorToTarget.ToString());
 }
 
 void AThrowingStone::AttachToCharacter()

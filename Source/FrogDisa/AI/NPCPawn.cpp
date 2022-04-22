@@ -30,6 +30,8 @@ void ANPCPawn::BeginPlay()
 		npc_controller->StartBehaviorTreeFromParent();
 		npc_controller->GetBlackBoardComponent()->SetValueAsBool("isDie", false);
 	}
+
+	HealthPoint = MaxHealthPoint;
 	//widget_component->GetUserWidgetObject()
 	
 }
@@ -41,7 +43,7 @@ void ANPCPawn::Tick(float DeltaTime)
 
 	if (GetCharacterMovement()->Velocity != FVector::ZeroVector)
 	{
-		//GEngine->AddOnScreenDebugMessage(-1, 0.1, FColor::Green, GetCharacterMovement()->Velocity.ToCompactString());
+		////GEngine->AddOnScreenDebugMessage(-1, 0.1, FColor::Green, GetCharacterMovement()->Velocity.ToCompactString());
 		SetActorRotation(GetCharacterMovement()->Velocity.Rotation());
 	}
 }
@@ -56,7 +58,6 @@ void ANPCPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 void ANPCPawn::Interact()
 {
 	APlayerController* controller = GetWorld()->GetFirstPlayerController();
-	GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Red, "Interact called");
 	Cast<AMyHUD>(controller->GetHUD())->ShopMenu(false);
 	controller->SetShowMouseCursor(true);
 	controller->SetPause(true);
@@ -65,4 +66,19 @@ void ANPCPawn::Interact()
 void ANPCPawn::Die_Implementation()
 {
 
+}
+
+void ANPCPawn::GetDamage(int damage)
+{
+	HealthPoint -= damage;
+
+	if (HealthPoint <= 0)
+	{
+		Die();
+	}
+	else
+	{
+		if(anim_montage_array[0])
+			PlayAnimationOnce(anim_montage_array[0]);//Play Hurt Animation
+	}
 }

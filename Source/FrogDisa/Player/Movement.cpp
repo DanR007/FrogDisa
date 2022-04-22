@@ -184,7 +184,7 @@ void AMovement::Tick(float DeltaTime)
 
 void AMovement::MoveForward(float Value)
 {
-	//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::SanitizeFloat(Value));
+	////GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::SanitizeFloat(Value));
 	if (Controller && Value != 0.0f)
 	{
 		AddMovementInput(GetActorForwardVector(), Value);
@@ -326,7 +326,7 @@ void AMovement::ChangeCrouchMode()
 		}
 		else
 		{
-			GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Red, "YOU CANT STAND NOW");
+			//GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Red, "YOU CANT STAND NOW");
 			UE_LOG(LogTemp, Warning, TEXT("YOU CANT STAND NOW"))
 		}
 	}

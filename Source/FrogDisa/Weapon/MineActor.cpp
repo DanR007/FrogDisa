@@ -12,6 +12,7 @@ AMineActor::AMineActor()
 	RootComponent = mainMesh;
 	ExplosionCollision->SetupAttachment(mainMesh);
 	queryParams.AddIgnoredActor(this);
+	ExplosionCollision->SetSphereRadius(0);
 }
 
 
@@ -22,10 +23,14 @@ bool AMineActor::Launch()
 	if (GetWorld()->LineTraceSingleByChannel(hitPoint, start, end, ECollisionChannel::ECC_Visibility, queryParams))
 	{
 		this->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
-		SetActorLocation(hitPoint.Location);
+		SetActorLocation(hitPoint.Location + FVector(0, 0, 10));
 		
-		SetActorRotation(hitPoint.GetActor()->GetActorForwardVector().Rotation());
-		
+		if (hitPoint.GetActor())
+			SetActorRotation(hitPoint.GetActor()->GetActorForwardVector().Rotation());
+		else
+			SetActorRotation(FRotator::ZeroRotator);
+		ExplosionCollision->SetSphereRadius(200.f);
+
 		return true;
 	}
 	else
@@ -65,11 +70,18 @@ void AMineActor::Explosion()
 		{
 			if (npc == hitPoint.GetActor())
 			{
-				GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Blue, "Damage");
+				//GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Blue, "Damage");
 				npc->Die();
 			}
 		}
 	}
 
+	CallExplosionParticle();
+
 	Destroy();
+}
+
+void AMineActor::CallExplosionParticle_Implementation()
+{
+
 }

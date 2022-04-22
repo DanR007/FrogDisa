@@ -37,9 +37,12 @@ bool APistolActor::Launch()
 		actor = Cast<ANPCPawn>(hitPoint.GetActor());
 		if (actor)
 		{
-			actor->Die();
+			actor->GetDamage(GetDamage());
 		}
 	}
+
+	CallExplosionParticle();
+
 	return false;
 }
 
@@ -49,4 +52,9 @@ void APistolActor::AttachToCharacter()
 		this->AttachToActor(PlayerActor, FAttachmentTransformRules::KeepWorldTransform);
 	//ProjectileMesh->AttachToComponent(Cast<AMovement>(OwnerPlayer)->GetMesh(),FAttachmentTransformRules::KeepWorldTransform,TEXT("hand_RSocket"));
 	SetActorRelativeLocation(FVector(100, 100, 0));
+}
+
+void APistolActor::CallExplosionParticle_Implementation()
+{
+
 }

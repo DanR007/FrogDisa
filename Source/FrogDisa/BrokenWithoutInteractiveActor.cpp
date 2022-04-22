@@ -38,7 +38,7 @@ void ABrokenWithoutInteractiveActor::Tick(float DeltaTime)
 
 void ABrokenWithoutInteractiveActor::CheckOverlappingActor(AActor* OtherActor)
 {
-	GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Cyan, "Begin");
+	//GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Cyan, "Begin");
 	ARepairInteractiveObject* OverlapObject = Cast<ARepairInteractiveObject>(OtherActor);
 	if (OverlapObject && OverlapObject->Name == Need_Name && isBroken)
 	{

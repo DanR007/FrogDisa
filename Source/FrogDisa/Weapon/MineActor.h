@@ -25,6 +25,9 @@ public:
 	virtual void Interact() override;
 	virtual void ChangeOutlines_Implementation(bool isOutline) override { UE_LOG(LogTemp, Warning, TEXT("C++")) }
 
+	UFUNCTION(BlueprintCallable)
+		bool GetIsReplace() { return isReplace; }
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 		UStaticMeshComponent* mainMesh;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
@@ -34,9 +37,14 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 		virtual void Explosion();
+
+protected:
+
+	UFUNCTION(BlueprintNativeEvent)
+		void CallExplosionParticle();
 private:
 
 	int Time_Before_Explosion;
 
-
+	bool isReplace = false;
 };

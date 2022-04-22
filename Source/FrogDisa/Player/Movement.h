@@ -97,7 +97,7 @@ protected:
 	{ 
 		if (g_Projectile_Type != EWeaponType::EW_Wrench)
 		{
-			g_Projectile_Type = EWeaponType::EW_Wrench; GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Yellow, "Wrench");
+			g_Projectile_Type = EWeaponType::EW_Wrench; //GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Yellow, "Wrench");
 			if (shootComponent)
 				shootComponent->SwitchProjectile();
 		}
@@ -106,7 +106,7 @@ protected:
 	{ 
 		if (g_Projectile_Type != EWeaponType::EW_Pistol)
 		{
-			g_Projectile_Type = EWeaponType::EW_Pistol; GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Yellow, "Pistol");
+			g_Projectile_Type = EWeaponType::EW_Pistol; //GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Yellow, "Pistol");
 			if (shootComponent)
 				shootComponent->SwitchProjectile();
 		}
@@ -115,7 +115,7 @@ protected:
 	{
 		if (g_Projectile_Type != EWeaponType::EW_Mine)
 		{
-			g_Projectile_Type = EWeaponType::EW_Mine; GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Yellow, "Mine");
+			g_Projectile_Type = EWeaponType::EW_Mine; //GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Yellow, "Mine");
 			if (shootComponent)
 				shootComponent->SwitchProjectile();
 		}
@@ -124,7 +124,7 @@ protected:
 	{
 		if (g_Projectile_Type != EWeaponType::EW_CrossbowBolt)
 		{
-			g_Projectile_Type = EWeaponType::EW_CrossbowBolt; GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Yellow, "CrossbowBolt");
+			g_Projectile_Type = EWeaponType::EW_CrossbowBolt; //GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Yellow, "CrossbowBolt");
 			if (shootComponent)
 				shootComponent->SwitchProjectile();
 		}
@@ -133,7 +133,7 @@ protected:
 	{
 		if (g_Projectile_Type != EWeaponType::EW_Tranquilizer)
 		{
-			g_Projectile_Type = EWeaponType::EW_Tranquilizer; GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Yellow , "Tranquilizer");
+			g_Projectile_Type = EWeaponType::EW_Tranquilizer; //GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Yellow , "Tranquilizer");
 			if (shootComponent)
 				shootComponent->SwitchProjectile();
 		}
@@ -142,7 +142,7 @@ protected:
 	{
 		if (g_Projectile_Type != EWeaponType::EW_Grenade)
 		{
-			g_Projectile_Type = EWeaponType::EW_Grenade; GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Yellow, "granataaaaaaaaaaaaa");
+			g_Projectile_Type = EWeaponType::EW_Grenade; //GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Yellow, "granataaaaaaaaaaaaa");
 			if (shootComponent)
 				shootComponent->SwitchProjectile();
 		}

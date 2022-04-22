@@ -12,6 +12,10 @@ AGrenadeActor::AGrenadeActor()
 	PrimaryActorTick.bCanEverTick = false;
 	mainMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Main mesh"));
 	ExplosionCollision = CreateDefaultSubobject<USphereComponent>(TEXT("ExplosionCollision"));
+
+	RootComponent = mainMesh;
+	ExplosionCollision->SetupAttachment(mainMesh);
+	ExplosionCollision->SetRelativeLocation(FVector::ZeroVector);
 }
 
 // Called when the game starts or when spawned
@@ -56,11 +60,12 @@ void AGrenadeActor::Interact()
 
 void AGrenadeActor::Explosion()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Blue, "Damage");
+	////GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Blue, "Damage");
 	TArray<AActor*> array_enemy;
 	FHitResult hitPoint;
 	FCollisionQueryParams queryParams;
 	ExplosionCollision->GetOverlappingActors(array_enemy, APawn::StaticClass());
+	//GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Blue, FString::FromInt(array_enemy.Num()));
 	queryParams.AddIgnoredActor(this);
 	for (AActor* actor : array_enemy)
 	{
@@ -70,13 +75,13 @@ void AGrenadeActor::Explosion()
 			{
 				if (npc == hitPoint.GetActor())
 				{
-					GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Blue, "Damage");
+					//GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Blue, "Damage");
 					npc->Die();
 				}
 			}
 	}
 	
-	//CallExplosionParticle();
+	CallExplosionParticle();
 
 	Destroy();
 }

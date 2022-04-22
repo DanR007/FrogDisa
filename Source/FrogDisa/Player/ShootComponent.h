@@ -29,6 +29,10 @@ public:
 	
 	AActor* GetActorWrench();
 	void AddAmmunition(int ammunition_count, EWeaponType ammunition_type);
+
+	UFUNCTION(BlueprintCallable)
+		int GetCountAmmunition();
+
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;

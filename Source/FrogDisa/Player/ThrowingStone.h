@@ -26,7 +26,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	void ThrowStone(FVector VectorToTarget);
 	
-	virtual bool Launch() override { GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Blue, "Stone"); return false; }
-	virtual void Create() override { GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Blue, "Stone"); }
+	virtual bool Launch() override { return false; }//GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Blue, "Stone"); return false; }
+	virtual void Create() override { }//GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Blue, "Stone"); }
 	virtual void AttachToCharacter() override;
 };

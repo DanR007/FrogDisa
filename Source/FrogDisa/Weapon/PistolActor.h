@@ -29,6 +29,9 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 		float PistolRangeDistance = 2000;
+
+	UFUNCTION(BlueprintNativeEvent)
+		void CallExplosionParticle();
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

@@ -68,7 +68,7 @@ void AThrowProjectile::ReturnToCharacter()
 		halfDistance = GetDistanceTo(PlayerActor) / 2;
 		currentAlpha = 0.f;
 		GetWorld()->GetTimerManager().SetTimer(MoveTimer, this, &AThrowProjectile::Move, 0.01f, true, 0.f);
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, TEXT("ReturnSt"));
+		//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, TEXT("ReturnSt"));
 	}
 }
 
@@ -79,7 +79,7 @@ void AThrowProjectile::ReturnStart()
 
 bool AThrowProjectile::Launch()
 {
-	//GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Red, "ThrowProjectile");
+	////GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Red, "ThrowProjectile");
 	if (isLaunched == false)
 	{
 		FCollisionQueryParams queryParamsWrench;
@@ -128,7 +128,7 @@ void AThrowProjectile::Move()
 			//ProjectileMesh->AttachToActor(OwnerPlayer, FAttachmentTransformRules::KeepWorldTransform);
 			this->AttachToActor(PlayerActor, FAttachmentTransformRules::KeepWorldTransform);
 			//ProjectileMesh->AttachToComponent(Cast<AMovement>(OwnerPlayer)->GetMesh(), FAttachmentTransformRules::KeepWorldTransform, TEXT("hand_RSocket"));
-			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, TEXT("Returned"));
+			//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, TEXT("Returned"));
 			GetWorldTimerManager().ClearTimer(MoveTimer);
 			SetActorRotation(PlayerActor->GetActorRotation() + FRotator(-15, 0, 0));
 			projectileIsReturning = false;
@@ -144,7 +144,7 @@ void AThrowProjectile::Move()
 			RuleToMove(-1);
 			if (FVector::Distance(EndLocation, GetActorLocation()) <= 5.f)
 			{
-				GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, TEXT("ReturnSt"));
+				//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, TEXT("ReturnSt"));
 				ReturnToCharacter();
 			}
 		}

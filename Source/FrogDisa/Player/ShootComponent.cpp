@@ -119,6 +119,11 @@ void UShootComponent::SwitchProjectile()
 void UShootComponent::AddAmmunition(int ammunition_count, EWeaponType ammunition_type)
 {
 	weapon_map[ammunition_type].second += ammunition_count;
-	GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Red, FString::FromInt(weapon_map[ammunition_type].second));
+	//GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Red, FString::FromInt(weapon_map[ammunition_type].second));
 }
 
+
+int UShootComponent::GetCountAmmunition()
+{
+	return weapon_map[PlayerActor->GetCurrentWeaponType()].second;
+}

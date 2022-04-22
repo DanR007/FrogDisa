@@ -16,6 +16,8 @@
 
 #include "BehaviorTree/BehaviorTree.h"
 
+#include "Animation/AnimMontage.h"
+
 #include "NPCPawn.generated.h"
 
 UCLASS()
@@ -50,10 +52,23 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		int patrolDirection = 1;
 
+	UFUNCTION(BlueprintCallable)
+		void GetDamage(int damage);
+
+	UFUNCTION(BlueprintImplementableEvent)
+		void PlayAnimationOnce(UAnimMontage *animation_montage);
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Animations")
+		/*Need set anim in this order:
+		1) Injuring
+		2) Dying
+		3) Attack
+		4) Detection Player
+		*/
+		TArray<UAnimMontage*> anim_montage_array;
 	//UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	//	USkeletalMeshComponent* skeletal_mesh;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
@@ -80,7 +95,13 @@ public:
 
 	bool GetIsDead() { return isDead; }
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		int MaxHealthPoint = 10;
+
 private:
+
+	int HealthPoint;
+
 
 	int indexOfPatrol = 0;
 };

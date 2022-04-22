@@ -15,7 +15,7 @@
 #include "ThrowProjectile.generated.h"
 
 UCLASS()
-class FROGDISA_API AThrowProjectile : public AActor, public IWeaponLogicInterface
+class FROGDISA_API AThrowProjectile : public ABasicWeaponActor, public IWeaponLogicInterface
 {
 	GENERATED_BODY()
 
