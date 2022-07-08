@@ -38,7 +38,7 @@ AMovement::AMovement()
 {
 
 	ConstructorHelpers::FClassFinder<ASteamBug> steam_bug_bp(TEXT("/Game/Blueprint/BP_SteamBug"));
-	ConstructorHelpers::FObjectFinder<USkeletalMesh> mesh(TEXT("SkeletalMesh'/Game/Meshes/Animation/jaba.jaba'"));
+	//ConstructorHelpers::FObjectFinder<USkeletalMesh> mesh(TEXT("SkeletalMesh'/Game/Meshes/Animation/jaba.jaba'"));
 
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -165,15 +165,13 @@ void AMovement::Tick(float DeltaTime)
 
 	if (CanMakeAction())
 	{
-
-		
 		ForwardTrace();
 		HeightTrace();
 		if (InteractiveComponent)
 		{
 			InteractiveComponent->CheckInteractiveObject();
 		}
-
+		grapplingComponent->ChoiceGrapplingVariant();
 	}
 
 	if (isCrouching)
@@ -478,23 +476,23 @@ void AMovement::DrawGrapplingVariant_Implementation()
 }
 
 
-bool AMovement::CanMakeAction()
+bool AMovement::CanMakeAction() const
 {
 	return !isBearObject;
 }
 
 
-bool AMovement::IsHaveASteamBug()
+bool AMovement::IsHaveASteamBug() const
 {
 	return HaveSteamBug;
 }
 
-bool AMovement::IsBearObject()
+bool AMovement::IsBearObject() const
 {
 	return isBearObject;
 }
 
-int AMovement::GetCountCollectibles()
+int AMovement::GetCountCollectibles() const
 {
 	return Collectibles;
 }
@@ -506,17 +504,17 @@ void AMovement::SetStartSettings(int countCollectibles, bool isHaveBug, bool isB
 	isBearObject = isBearObj;
 }
 
-EWeaponType AMovement::GetCurrentWeaponType()
+EWeaponType AMovement::GetCurrentWeaponType() const
 {
 	return g_Projectile_Type;
 }
 
-AActor* AMovement::GetThrowProjectile()
+AActor* AMovement::GetThrowProjectile() const
 {
 	return shootComponent->GetActorWrench();
 }
 
-bool AMovement::GetPauseState()
+bool AMovement::GetPauseState() const
 {
 	return pauseMenuOpen;
 }

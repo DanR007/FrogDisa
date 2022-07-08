@@ -48,7 +48,7 @@ public:
 
 		void AddCollectibles() { Collectibles++; }
 		
-
+		
 		UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 			void DrawGrapplingVariant();
 
@@ -77,7 +77,7 @@ protected:
 
 	void Run(float Value);
 
-	bool CanMakeAction();
+	bool CanMakeAction() const;
 
 	void ChangeCharacter();
 
@@ -149,7 +149,7 @@ protected:
 	}
 
 	UFUNCTION(BlueprintCallable)
-		UGrapplingComponent* GetGrapplingComponent() { return grapplingComponent; }
+		UGrapplingComponent* GetGrapplingComponent() const { return grapplingComponent; }
 
 	void ChangeCrouchMode();
 
@@ -159,23 +159,25 @@ protected:
 	void ChangeCrouchHeight();
 public:
 	UFUNCTION(BlueprintCallable)
-		bool GetCrouchMode() { return isCrouching; }
+		bool GetCrouchMode() const { return isCrouching; }
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "meshComponent")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components/MainComponents")
 		UStaticMeshComponent* meshComponent;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Camera")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Components/MainComponents")
 		UCameraComponent* Camera;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "ShootComp")
+
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components/AdditionalComponents")
 		UShootComponent* shootComponent;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Interactive")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components/AdditionalComponents")
 		UInteractiveComponent* InteractiveComponent;
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components/AdditionalComponents")
 		UFrogDisaGameInstance* game_Instance;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components/AdditionalComponents")
 		UGrapplingComponent* grapplingComponent;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components/AdditionalComponents")
 		UHealthComponent* HUDComponent;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components/AdditionalComponents")
 		UShopComponent* shopComponent;
 	//UPROPERTY(VisibleAnywhere, Category = "Gameplay")
 	//	UAbilitySystemComponent* AbilityComponent;
@@ -187,29 +189,29 @@ public:
 		void SetStartSettings(int countCollectibles, bool isHaveBug, bool isBearObj);
 	
 	UFUNCTION(BlueprintCallable)
-		AActor* GetThrowProjectile();
+		AActor* GetThrowProjectile() const;
 
 	UFUNCTION(BlueprintCallable)
-		bool GetPauseState();
+		bool GetPauseState() const;
 	UFUNCTION(BlueprintCallable)
 		void SetUnPause();
 
 	UFUNCTION(BlueprintCallable)
-		bool IsHaveASteamBug();
+		bool IsHaveASteamBug() const;
 	UFUNCTION(BlueprintCallable)
-		bool IsBearObject();
+		bool IsBearObject() const;
 
 
 	UFUNCTION(BlueprintCallable)
-		int GetCountCollectibles();
+		int GetCountCollectibles() const;
 	UFUNCTION(BlueprintCallable)
-	EWeaponType GetCurrentWeaponType();
+	EWeaponType GetCurrentWeaponType() const;
 
 	UFUNCTION(BlueprintCallable)
-		bool GetIsGrappling(){ return isGrappling; }
+		bool GetIsGrappling() const { return isGrappling; }
 
 	UFUNCTION(BlueprintCallable)
-		bool GetIsStrangling() { return isStrangling; }
+		bool GetIsStrangling() const { return isStrangling; }
 
 	UFUNCTION(BlueprintCallable)
 		void SetStartStrangling() { isStrangling = true; }
@@ -283,7 +285,6 @@ private:
 	TSubclassOf<ASteamBug> SteamBug_Class;
 
 	friend class UInteractiveWithPuzzlesComponent;
-	//friend class ACollectiblesObject;
 	friend class UGrapplingComponent;
 	friend class UInteractiveComponent;
 };

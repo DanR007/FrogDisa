@@ -2,6 +2,8 @@
 #include "FrogDisa/DefaultVariables.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
+#include <cmath>
+
 #define ECC_GrapplingObjectTraceChannel ECC_GameTraceChannel2
 
 // Sets default values for this component's properties
@@ -20,7 +22,8 @@ void UGrapplingComponent::BeginPlay()
 {
 	Super::BeginPlay();
 	// ...
-	
+	if (PlayerActor && PlayerActor->GetCapsuleComponent())
+		capsule_half_height = PlayerActor->GetCapsuleComponent()->GetScaledCapsuleHalfHeight();
 }
 
 
@@ -30,6 +33,7 @@ void UGrapplingComponent::TickComponent(float DeltaTime, ELevelTick TickType, FA
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	// ...
+	ChoiceGrapplingVariant();
 }
 
 
@@ -117,4 +121,84 @@ void UGrapplingComponent::LerpToUpperObject()//lerp while distance > 70
 	{
 		PlayerActor->GetMovementComponent()->Velocity = (grappling_target_location - PlayerActor->GetActorLocation()) * 10;
 	}
+}
+
+void UGrapplingComponent::ChoiceGrapplingVariant()
+{
+	if (grappling_mode_active && !PlayerActor->isGrappling)
+	{
+		FHitResult hitResult;
+
+		FVector startLoc = PlayerActor->GetActorLocation();
+		
+		SetCanGrappling(CastLineTrace(startLoc,
+			startLoc + PlayerActor->GetActorForwardVector() * max_grapppling_distance
+			, hitResult));
+
+		if (GetCanGrappling())
+		{
+			hit_location = hitResult.Location;
+			AActor* hitActor = hitResult.GetActor();
+			FVector endLoc = hit_location + PlayerActor->GetActorForwardVector() * -1;
+			bool upperHit = CastLineTrace(endLoc + PlayerActor->GetActorUpVector() * capsule_half_height, endLoc, hitResult);
+			if (hitActor)
+				if (hit_location.Z < hitActor->GetActorLocation().Z)
+				{
+					SetGrapplingTargetLocation(hit_location + FVector(0, 0, capsule_half_height + 5), true);
+				}
+				else
+				{
+					if (upperHit)
+					{
+						SetGrapplingTargetLocation(hit_location + FVector(0, 0, capsule_half_height + 5), false);
+					}
+					else
+					{
+						float last_height = MAX_FLT;
+
+						bool can_grappling_upper_obj = false;
+
+						FVector last_grappling_pos;
+						for (int i = 0; i < 10; i++)
+						{
+							FHitResult lastHitRes;
+							if (CastLineTrace(hit_location + FVector(0, 0, 50.f) + PlayerActor->GetActorLocation() * i, hit_location + PlayerActor->GetActorLocation() * i, lastHitRes))
+							{
+								if (lastHitRes.Distance > 0.1f)
+								{
+									CheckHeight(lastHitRes.Location, can_grappling_upper_obj, last_grappling_pos, last_height);
+								}
+							}
+						}
+
+						if (can_grappling_upper_obj)
+							SetGrapplingTargetLocation(last_grappling_pos + FVector(0, 0, capsule_half_height), true);
+						else
+							SetGrapplingTargetLocation(hit_location /*later make here*/, false);
+					}
+				}
+
+		}
+	}
+}
+
+bool UGrapplingComponent::CastLineTrace(const FVector& startLoc, const FVector& endLoc, FHitResult& hitRes) const
+{
+	FCollisionQueryParams queryParams;
+	queryParams.AddIgnoredActor(PlayerActor);
+	return GetWorld()->LineTraceSingleByChannel(hitRes, startLoc, endLoc,
+		ECollisionChannel::ECC_Visibility, queryParams);
+}
+
+void UGrapplingComponent::CheckHeight(const FVector& hitLoc, bool& canUpper, FVector& lasHitLoc, float& lastHeight)
+{
+	FVector localHitPosition = hitLoc;
+
+	if (localHitPosition.Z - hit_location.Z <= lastHeight)
+	{
+		canUpper = true;
+		lasHitLoc = localHitPosition;
+		lastHeight = std::min(lastHeight, localHitPosition.Z - hit_location.Z);
+	}
+	
 }

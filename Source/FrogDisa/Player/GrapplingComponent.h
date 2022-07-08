@@ -36,7 +36,7 @@ public:
 	void StartGrappling();
 
 	UFUNCTION(BlueprintCallable)
-	void SetGrapplingTargetLocation(FVector location, bool grappling_to_upper)
+	void SetGrapplingTargetLocation(const FVector& location, const bool& grappling_to_upper)
 	{
 		grappling_target_location = location;
 		grappling_upper_object = grappling_to_upper;
@@ -58,8 +58,22 @@ public:
 
 	void LerpTo();
 	void LerpToUpperObject();
+
+	void ChoiceGrapplingVariant();
+
 private:
 	
+	
+	bool CastLineTrace(const FVector& startLoc, const FVector& endLoc, FHitResult& hitRes) const;
+	
+	void CheckHeight(const FVector& hitLoc, bool& canUpper, FVector& lasHitLoc, float& lastHeight);
+
+	float max_grapppling_distance = 800.f;
+
+	float capsule_half_height;
+
+	FVector hit_location;
+
 	bool grappling_mode_active;
 	bool can_grappling;
 	bool grappling_upper_object;
