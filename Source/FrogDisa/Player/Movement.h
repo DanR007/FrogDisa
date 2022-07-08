@@ -264,15 +264,16 @@ private:
 	const float ThrowImpulseValue = 1500.f;
 	const float DropImpulseValue = 0;
 
-	const float DefaultCapsuleHeight = 135;
-	const float DefaultCameraHeight = 130.5;
+	const float DefaultCapsuleHalfHeight = 90;
+	const float DefaultCapsuleRadius = 20;
+	const float DefaultCameraHeight = 80;
 
 	const float DefaultOffsetY = 0;
 	const float LeftOffsetY = -60;
 	const float RightOffsetY = 60;
 	float nowOffsetY = 0;
 	float nowOffsetZ = DefaultCameraHeight;
-	float CapsuleRadius;
+	
 
 	EWeaponType g_Projectile_Type;
 

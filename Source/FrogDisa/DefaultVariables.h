@@ -8,6 +8,8 @@
 
 #define TEST
 
+#define GRAPPLING_TRACE_CHANNEL ECC_GameTraceChannel5
+
 extern AMovement* PlayerActor;
 /**
  * 

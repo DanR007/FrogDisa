@@ -57,8 +57,8 @@ AMovement::AMovement()
 	GetCharacterMovement()->RotationRate = FRotator(0.0f, 540.0f, 0.0f); // ...at this rotation rate
 	GetCharacterMovement()->JumpZVelocity = 600.f;
 	GetCharacterMovement()->AirControl = 0.2f;
-
-	GetCapsuleComponent()->SetCapsuleSize(20.f, DefaultCapsuleHeight);
+	
+	GetCapsuleComponent()->SetCapsuleSize(DefaultCapsuleRadius, DefaultCapsuleHalfHeight);
 	//bUseControllerRotationPitch = false;
 	bUseControllerRotationYaw = true;
 	//bUseControllerRotationRoll = false;
@@ -89,7 +89,6 @@ AMovement::AMovement()
 	weaponArrayType[EWeaponType::EW_Wrench] = "Wrench";
 	weaponArrayType[EWeaponType::EW_CrossbowBolt] = "CrossbowBolt";
 
-	CapsuleRadius = GetCapsuleComponent()->GetScaledCapsuleRadius();
 	PlayerActor = this;
 #ifdef TEST
 	HaveSteamBug = true;
@@ -307,7 +306,7 @@ void AMovement::ChangeCrouchMode()
 {
 	if (!isCrouching)
 	{
-		GetCapsuleComponent()->SetCapsuleHalfHeight(DefaultCapsuleHeight / 2);
+		GetCapsuleComponent()->SetCapsuleHalfHeight(DefaultCapsuleHalfHeight / 2);
 		Camera->SetRelativeLocation(FVector(0, 0, DefaultCameraHeight / 2));
 		isCrouching = true;
 		nowOffsetZ = DefaultCameraHeight / 2;
@@ -316,8 +315,8 @@ void AMovement::ChangeCrouchMode()
 	{
 		if (CheckCanStand() == false)
 		{
-			AddActorWorldOffset(FVector(0, 0, DefaultCapsuleHeight / 2));
-			GetCapsuleComponent()->SetCapsuleHalfHeight(DefaultCapsuleHeight);
+			AddActorWorldOffset(FVector(0, 0, DefaultCapsuleHalfHeight / 2));
+			GetCapsuleComponent()->SetCapsuleHalfHeight(DefaultCapsuleHalfHeight);
 			Camera->SetRelativeLocation(FVector(0, 0, DefaultCameraHeight));
 			isCrouching = false;
 			nowOffsetZ = DefaultCameraHeight;
@@ -350,10 +349,39 @@ void AMovement::AddControllerPitchInput(float Val)
 
 void AMovement::Jump()
 {
-	if (GetCharacterMovement()->IsFalling() == false)
+	if (GetCharacterMovement()->IsFalling() == false 
+		|| GetCharacterMovement()->IsFlying())
 	{
-		bPressedJump = true;
-		JumpKeyHoldTime = 0.0f;
+		FHitResult upTrace, forwardTrace;
+		GetWorld()->LineTraceSingleByChannel(forwardTrace, GetActorLocation(), GetActorLocation() + GetActorForwardVector() * 80, GRAPPLING_TRACE_CHANNEL, queryParams);
+
+		FVector upStart = GetActorLocation() + GetActorForwardVector() * (DefaultCapsuleRadius + 2) + GetActorUpVector() * GetCapsuleComponent()->GetScaledCapsuleHalfHeight() * 2,
+			upEnd = GetActorLocation() + GetActorForwardVector() * (DefaultCapsuleRadius + 2) + GetActorUpVector() * GetCapsuleComponent()->GetScaledCapsuleHalfHeight();
+
+		if (GetWorld()->LineTraceSingleByChannel(upTrace, upStart, upEnd, GRAPPLING_TRACE_CHANNEL, queryParams))
+		{
+			if (FVector::Distance(upEnd, upTrace.Location) < GetCapsuleComponent()->GetScaledCapsuleHalfHeight() / 2)
+			{
+				GetCharacterMovement()->SetMovementMode(MOVE_Flying);
+				GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+				while (FVector::Distance(upStart, GetActorLocation()) >= GetCapsuleComponent()->GetScaledCapsuleHalfHeight() / 3*2)
+				{
+					GetMovementComponent()->Velocity = (upStart - GetActorLocation()) / 2;
+				}
+				GetCharacterMovement()->SetMovementMode(MOVE_Falling);
+				GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+			}
+			else
+			{
+				bPressedJump = true;
+				JumpKeyHoldTime = 0.0f;
+			}
+		}
+		else
+		{
+			bPressedJump = true;
+			JumpKeyHoldTime = 0.0f;
+		}
 		//make here climbing on objects
 	}
 }
@@ -422,34 +450,40 @@ void AMovement::HeightTrace()
 
 void AMovement::ChangeCrouchHeight()
 {
-	FHitResult hit_res;
+	FHitResult hit_res_forward, hit_res_up;
 	FCollisionShape capsule;
 	TArray<AActor*> arr_ignored_actors;
-	GetAllChildActors(arr_ignored_actors);
-	queryParams.AddIgnoredActors(arr_ignored_actors);
-	capsule.SetCapsule(CapsuleRadius, /*GetCapsuleComponent()->GetScaledCapsuleHalfHeight() */ DefaultCapsuleHeight / 2 );
-	
-	FVector StartForward = GetActorLocation() + GetActorForwardVector() * CapsuleRadius * 2 + offset,
-		EndForward = GetActorLocation() + FVector(CapsuleRadius * 2, 0, DefaultCapsuleHeight / 2) + offset,
-		StartUpper = GetActorLocation(), EndUpper = GetActorLocation() + GetActorUpVector() * DefaultCapsuleHeight / 3;
 
-	if (GetWorld()->SweepSingleByChannel(hit_res, StartForward, EndForward
-		, GetActorRotation().Quaternion(), ECollisionChannel::ECC_Visibility, capsule, queryParams) || 
-		GetWorld()->SweepSingleByChannel(hit_res, StartUpper, EndUpper
+	//GetAllChildActors(arr_ignored_actors);
+	//queryParams.AddIgnoredActors(arr_ignored_actors);
+
+	capsule.SetBox(FVector(DefaultCapsuleRadius, DefaultCapsuleRadius, DefaultCapsuleHalfHeight / 2));
+	FVector StartForwardToUp = GetActorLocation() + GetActorForwardVector() * DefaultCapsuleRadius + offset,
+		EndForwardToUp = GetActorLocation() + FVector(DefaultCapsuleRadius, 0, DefaultCapsuleHalfHeight / 2) + offset,
+		StartHereToUp = GetActorLocation() + offset, EndHereToUp = GetActorLocation() + GetActorUpVector() * DefaultCapsuleHalfHeight / 2 + offset;
+
+	
+
+	if (GetWorld()->SweepSingleByChannel(hit_res_forward, StartForwardToUp, EndForwardToUp
+		, GetActorRotation().Quaternion(), ECollisionChannel::ECC_Visibility, capsule, queryParams) ||
+		GetWorld()->SweepSingleByChannel(hit_res_up, StartHereToUp, EndHereToUp
 			, GetActorRotation().Quaternion(), ECollisionChannel::ECC_Visibility, capsule, queryParams))
 	{
-		GetCapsuleComponent()->SetCapsuleHalfHeight(DefaultCapsuleHeight / 3);
+		GetCapsuleComponent()->SetCapsuleHalfHeight(DefaultCapsuleHalfHeight / 3);
 		Camera->SetRelativeLocation(FVector(0, nowOffsetY, DefaultCameraHeight / 3));
-		offset = FVector(0, 0, DefaultCapsuleHeight / 3);
+		offset = FVector(0, 0, DefaultCapsuleHalfHeight / 3);
+		
 	}
 	else
 	{
 		if(offset != FVector::ZeroVector)
-			SetActorLocation(GetActorLocation() + FVector(0, 0, DefaultCapsuleHeight / 2 - DefaultCapsuleHeight / 3));
-		GetCapsuleComponent()->SetCapsuleHalfHeight(DefaultCapsuleHeight / 2);
+			SetActorLocation(GetActorLocation() + FVector(0, 0, DefaultCapsuleHalfHeight / 2 - DefaultCapsuleHalfHeight / 3));
+		GetCapsuleComponent()->SetCapsuleHalfHeight(DefaultCapsuleHalfHeight / 2);
 		Camera->SetRelativeLocation(FVector(0, nowOffsetY, DefaultCameraHeight / 2));
 		offset = FVector::ZeroVector;
 	}
+	if(hit_res_up.GetActor())
+	GEngine->AddOnScreenDebugMessage(-1, 0.1, FColor::Red, hit_res_up.GetActor()->GetName());
 }
 
 bool AMovement::CheckCanStand()
@@ -459,12 +493,12 @@ bool AMovement::CheckCanStand()
 	TArray<AActor*> arr_ignored_actors;
 	GetAllChildActors(arr_ignored_actors);
 	queryParams.AddIgnoredActors(arr_ignored_actors);
-	capsule.SetCapsule(CapsuleRadius, DefaultCapsuleHeight);
+	capsule.SetCapsule(DefaultCapsuleRadius, DefaultCapsuleHalfHeight);
 
-	FVector StartUpper = GetActorLocation(), EndUpper = GetActorLocation() + GetActorUpVector() * DefaultCapsuleHeight / 3;
+	FVector StartUpper = GetActorLocation(), EndUpper = GetActorLocation() + GetActorUpVector() * GetCapsuleComponent()->GetScaledCapsuleHalfHeight()/*DefaultCapsuleHalfHeight / 3*/;
 
-	if (GetCapsuleComponent()->GetScaledCapsuleHalfHeight() == DefaultCapsuleHeight / 2)
-		EndUpper = GetActorLocation() + GetActorUpVector() * DefaultCapsuleHeight / 2;
+	//if (GetCapsuleComponent()->GetScaledCapsuleHalfHeight() == DefaultCapsuleHalfHeight / 2)
+	//	EndUpper = GetActorLocation() + GetActorUpVector() * DefaultCapsuleHalfHeight / 2;
 
 	return GetWorld()->SweepSingleByChannel(hit_res, StartUpper, EndUpper
 		, GetActorRotation().Quaternion(), ECollisionChannel::ECC_Visibility, capsule, queryParams);

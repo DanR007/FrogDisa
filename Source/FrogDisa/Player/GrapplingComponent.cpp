@@ -54,7 +54,7 @@ void UGrapplingComponent::StartGrappling()
 			if (PlayerActor->HUDComponent && PlayerActor->HUDComponent->Stamina - 10.f > 0.f)
 			{
 				PlayerActor->HUDComponent->UpdateStamina(-10.f);
-
+			
 				PlayerActor->GetCharacterMovement()->SetMovementMode(MOVE_Flying);
 				PlayerActor->GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 				if (grappling_upper_object)
@@ -109,7 +109,7 @@ void UGrapplingComponent::LerpTo()
 
 void UGrapplingComponent::LerpToUpperObject()//lerp while distance > 70
 {
-	if (FVector::Distance(PlayerActor->GetActorLocation(), grappling_target_location) <= PlayerActor->CapsuleRadius + 2.f)
+	if (FVector::Distance(PlayerActor->GetActorLocation(), grappling_target_location) <= PlayerActor->DefaultCapsuleRadius + 2.f)
 	{
 		PlayerActor->GetCharacterMovement()->SetMovementMode(MOVE_Falling);
 		PlayerActor->GetWorldTimerManager().ClearTimer(GrapplingTimer);
@@ -129,17 +129,16 @@ void UGrapplingComponent::ChoiceGrapplingVariant()
 	{
 		FHitResult hitResult;
 
-		FVector startLoc = PlayerActor->GetActorLocation();
-		
+		FVector startLoc = PlayerActor->Camera->GetComponentLocation();
 		SetCanGrappling(CastLineTrace(startLoc,
-			startLoc + PlayerActor->GetActorForwardVector() * max_grapppling_distance
+			startLoc + PlayerActor->Camera->GetForwardVector() * max_grapppling_distance
 			, hitResult));
 
 		if (GetCanGrappling())
 		{
 			hit_location = hitResult.Location;
 			AActor* hitActor = hitResult.GetActor();
-			FVector endLoc = hit_location + PlayerActor->GetActorForwardVector() * -1;
+			FVector endLoc = hit_location + PlayerActor->GetActorForwardVector() * -1, impactNormal = hitResult.ImpactNormal;
 			bool upperHit = CastLineTrace(endLoc + PlayerActor->GetActorUpVector() * capsule_half_height, endLoc, hitResult);
 			if (hitActor)
 				if (hit_location.Z < hitActor->GetActorLocation().Z)
@@ -162,7 +161,7 @@ void UGrapplingComponent::ChoiceGrapplingVariant()
 						for (int i = 0; i < 10; i++)
 						{
 							FHitResult lastHitRes;
-							if (CastLineTrace(hit_location + FVector(0, 0, 50.f) + PlayerActor->GetActorLocation() * i, hit_location + PlayerActor->GetActorLocation() * i, lastHitRes))
+							if (CastLineTrace(hit_location + FVector(0, 0, 50.f) + PlayerActor->GetActorForwardVector() * i, hit_location + PlayerActor->GetActorForwardVector() * i, lastHitRes))
 							{
 								if (lastHitRes.Distance > 0.1f)
 								{
@@ -174,12 +173,14 @@ void UGrapplingComponent::ChoiceGrapplingVariant()
 						if (can_grappling_upper_obj)
 							SetGrapplingTargetLocation(last_grappling_pos + FVector(0, 0, capsule_half_height), true);
 						else
-							SetGrapplingTargetLocation(hit_location /*later make here*/, false);
+							SetGrapplingTargetLocation(hit_location + impactNormal * PlayerActor->GetCapsuleComponent()->GetScaledCapsuleRadius(), false);
 					}
 				}
 
 		}
 	}
+	
+	hit_location = FVector::ZeroVector;
 }
 
 bool UGrapplingComponent::CastLineTrace(const FVector& startLoc, const FVector& endLoc, FHitResult& hitRes) const
@@ -187,7 +188,7 @@ bool UGrapplingComponent::CastLineTrace(const FVector& startLoc, const FVector& 
 	FCollisionQueryParams queryParams;
 	queryParams.AddIgnoredActor(PlayerActor);
 	return GetWorld()->LineTraceSingleByChannel(hitRes, startLoc, endLoc,
-		ECollisionChannel::ECC_Visibility, queryParams);
+		GRAPPLING_TRACE_CHANNEL, queryParams);
 }
 
 void UGrapplingComponent::CheckHeight(const FVector& hitLoc, bool& canUpper, FVector& lasHitLoc, float& lastHeight)
