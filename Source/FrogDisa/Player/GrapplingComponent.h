@@ -61,6 +61,7 @@ public:
 
 	void ChoiceGrapplingVariant();
 
+	void StopGrappling();
 private:
 	
 	

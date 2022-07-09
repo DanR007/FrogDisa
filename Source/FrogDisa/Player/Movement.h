@@ -226,6 +226,8 @@ private:
 	void ForwardTrace();
 	void HeightTrace();
 	void Fire();
+
+	void Climbing();
 	//UPawnMovementComponent* GetMovementForComponents() { return GetMovementComponent(); }
 
 	void StartStrangling() {
@@ -236,7 +238,7 @@ private:
 	FTimeline MyTimeline;
 	float CurveFloatValue;
 	float TimelineValue;
-	FTimerHandle GrapplingTimer;
+	FTimerHandle ClimbTimer;
 
 	bool isBearObject;
 	bool isRunning;

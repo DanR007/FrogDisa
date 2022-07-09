@@ -352,24 +352,35 @@ void AMovement::Jump()
 	if (GetCharacterMovement()->IsFalling() == false 
 		|| GetCharacterMovement()->IsFlying())
 	{
+		if (GetCharacterMovement()->IsFlying())
+		{
+			grapplingComponent->StopGrappling();
+			GetCharacterMovement()->SetMovementMode(MOVE_Walking);
+		}
+
 		FHitResult upTrace, forwardTrace;
 		GetWorld()->LineTraceSingleByChannel(forwardTrace, GetActorLocation(), GetActorLocation() + GetActorForwardVector() * 80, GRAPPLING_TRACE_CHANNEL, queryParams);
-
-		FVector upStart = GetActorLocation() + GetActorForwardVector() * (DefaultCapsuleRadius + 2) + GetActorUpVector() * GetCapsuleComponent()->GetScaledCapsuleHalfHeight() * 2,
-			upEnd = GetActorLocation() + GetActorForwardVector() * (DefaultCapsuleRadius + 2) + GetActorUpVector() * GetCapsuleComponent()->GetScaledCapsuleHalfHeight();
+		
+		FVector upStart = GetActorLocation() + GetActorForwardVector() * (DefaultCapsuleRadius + 10) + GetActorUpVector() * GetCapsuleComponent()->GetScaledCapsuleHalfHeight() * 3,
+			upEnd = GetActorLocation() + GetActorForwardVector() * (DefaultCapsuleRadius + 10);
 
 		if (GetWorld()->LineTraceSingleByChannel(upTrace, upStart, upEnd, GRAPPLING_TRACE_CHANNEL, queryParams))
 		{
-			if (FVector::Distance(upEnd, upTrace.Location) < GetCapsuleComponent()->GetScaledCapsuleHalfHeight() / 2)
+			if (FVector::Distance(upEnd, upTrace.Location) < GetCapsuleComponent()->GetScaledCapsuleHalfHeight())
 			{
 				GetCharacterMovement()->SetMovementMode(MOVE_Flying);
 				GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-				while (FVector::Distance(upStart, GetActorLocation()) >= GetCapsuleComponent()->GetScaledCapsuleHalfHeight() / 3*2)
-				{
-					GetMovementComponent()->Velocity = (upStart - GetActorLocation()) / 2;
-				}
-				GetCharacterMovement()->SetMovementMode(MOVE_Falling);
-				GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+				endLoc = upTrace.Location + FVector(0, 0, GetCapsuleComponent()->GetScaledCapsuleHalfHeight() + 2);
+				GetWorldTimerManager().SetTimer(ClimbTimer, this, &AMovement::Climbing, 0.05f, true);
+				//while (FVector::Distance(GetActorLocation(), jumpLoc) > 5)
+				//{
+					//GEngine->AddOnScreenDebugMessage(-1, 0.1, FColor::Red, "climb");
+				//	GetMovementComponent()->Velocity = (jumpLoc - GetActorLocation()) / 2;
+				//}
+				//GetCharacterMovement()->SetMovementMode(MOVE_Falling);
+				//GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+				//SetActorLocation(upTrace.Location + FVector(0, 0, GetCapsuleComponent()->GetScaledCapsuleHalfHeight()));
+
 			}
 			else
 			{
@@ -445,6 +456,21 @@ void AMovement::HeightTrace()
 #endif
 
 		
+	}
+}
+
+void AMovement::Climbing()
+{
+	if (FVector::Distance(GetActorLocation(), endLoc) < 10)
+	{
+		GetCharacterMovement()->SetMovementMode(MOVE_Falling);
+		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+		GetMovementComponent()->Velocity = FVector::ZeroVector;
+		GetWorldTimerManager().ClearTimer(ClimbTimer);
+	}
+	else
+	{
+		GetMovementComponent()->Velocity = (endLoc - GetActorLocation()) * 3;
 	}
 }
 

@@ -81,10 +81,6 @@ void UGrapplingComponent::StartGrappling()
 void UGrapplingComponent::ChangeActiveGrapplingMode()
 { 
 	grappling_mode_active = !grappling_mode_active;
-	if (grappling_mode_active && PlayerActor)
-	{
-		PlayerActor->DrawGrapplingVariant();
-	}
 }
 
 void UGrapplingComponent::LerpTo()
@@ -95,9 +91,7 @@ void UGrapplingComponent::LerpTo()
 		PlayerActor->isGrappling = false;
 		PlayerActor->GetCharacterMovement()->SetMovementMode(MOVE_Falling);
 		//UE_LOG(LogTemp, Warning, TEXT("Stop Grappling"))
-		PlayerActor->GetWorldTimerManager().ClearTimer(GrapplingTimer);
-		PlayerActor->GetMovementComponent()->Velocity = FVector::ZeroVector;
-		PlayerActor->GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+		StopGrappling();
 	}
 	else
 	{
@@ -112,9 +106,7 @@ void UGrapplingComponent::LerpToUpperObject()//lerp while distance > 70
 	if (FVector::Distance(PlayerActor->GetActorLocation(), grappling_target_location) <= PlayerActor->DefaultCapsuleRadius + 2.f)
 	{
 		PlayerActor->GetCharacterMovement()->SetMovementMode(MOVE_Falling);
-		PlayerActor->GetWorldTimerManager().ClearTimer(GrapplingTimer);
-		PlayerActor->GetMovementComponent()->Velocity = FVector::ZeroVector;
-		PlayerActor->GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+		StopGrappling();
 		ChangeActiveGrapplingMode();
 	}
 	else
@@ -139,7 +131,7 @@ void UGrapplingComponent::ChoiceGrapplingVariant()
 			hit_location = hitResult.Location;
 			AActor* hitActor = hitResult.GetActor();
 			FVector endLoc = hit_location + PlayerActor->GetActorForwardVector() * -1, impactNormal = hitResult.ImpactNormal;
-			bool upperHit = CastLineTrace(endLoc + PlayerActor->GetActorUpVector() * capsule_half_height, endLoc, hitResult);
+			bool upperHit = CastLineTrace(endLoc + PlayerActor->GetActorUpVector() * (capsule_half_height - 5), endLoc, hitResult);
 			if (hitActor)
 				if (hit_location.Z < hitActor->GetActorLocation().Z)
 				{
@@ -181,6 +173,13 @@ void UGrapplingComponent::ChoiceGrapplingVariant()
 	}
 	
 	hit_location = FVector::ZeroVector;
+}
+
+void UGrapplingComponent::StopGrappling()
+{
+	PlayerActor->GetWorldTimerManager().ClearTimer(GrapplingTimer);
+	PlayerActor->GetMovementComponent()->Velocity = FVector::ZeroVector;
+	PlayerActor->GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 }
 
 bool UGrapplingComponent::CastLineTrace(const FVector& startLoc, const FVector& endLoc, FHitResult& hitRes) const
