@@ -4,7 +4,7 @@
 
 #include "EProjectiles.h"
 #include "SteamBug.h"
-#include "ShootComponent.h"
+#include "WeaponComponent.h"
 #include "InteractiveComponent.h"
 #include "FrogDisaGameInstance.h"
 #include "GrapplingComponent.h"
@@ -79,8 +79,6 @@ protected:
 
 	bool CanMakeAction() const;
 
-	void ChangeCharacter();
-
 	void PauseMenu();
 
 	UFUNCTION(BlueprintCallable)
@@ -92,61 +90,6 @@ protected:
 		void SetNewPosses();
 
 	
-
-	void ChoiceWrench() 
-	{ 
-		if (g_Projectile_Type != EWeaponType::EW_Wrench)
-		{
-			g_Projectile_Type = EWeaponType::EW_Wrench; //GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Yellow, "Wrench");
-			if (shootComponent)
-				shootComponent->SwitchProjectile();
-		}
-	}
-	void ChoicePistol()  
-	{ 
-		if (g_Projectile_Type != EWeaponType::EW_Pistol)
-		{
-			g_Projectile_Type = EWeaponType::EW_Pistol; //GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Yellow, "Pistol");
-			if (shootComponent)
-				shootComponent->SwitchProjectile();
-		}
-	}
-	void ChoiceMine()   
-	{
-		if (g_Projectile_Type != EWeaponType::EW_Mine)
-		{
-			g_Projectile_Type = EWeaponType::EW_Mine; //GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Yellow, "Mine");
-			if (shootComponent)
-				shootComponent->SwitchProjectile();
-		}
-	}
-	void ChoiceCrossbowBolt()
-	{
-		if (g_Projectile_Type != EWeaponType::EW_CrossbowBolt)
-		{
-			g_Projectile_Type = EWeaponType::EW_CrossbowBolt; //GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Yellow, "CrossbowBolt");
-			if (shootComponent)
-				shootComponent->SwitchProjectile();
-		}
-	}
-	void ChoiceTranquilizer()
-	{
-		if (g_Projectile_Type != EWeaponType::EW_Tranquilizer)
-		{
-			g_Projectile_Type = EWeaponType::EW_Tranquilizer; //GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Yellow , "Tranquilizer");
-			if (shootComponent)
-				shootComponent->SwitchProjectile();
-		}
-	}
-	void ChoiceGrenade()
-	{
-		if (g_Projectile_Type != EWeaponType::EW_Grenade)
-		{
-			g_Projectile_Type = EWeaponType::EW_Grenade; //GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Yellow, "granataaaaaaaaaaaaa");
-			if (shootComponent)
-				shootComponent->SwitchProjectile();
-		}
-	}
 
 	UFUNCTION(BlueprintCallable)
 		UGrapplingComponent* GetGrapplingComponent() const { return grapplingComponent; }
@@ -168,7 +111,7 @@ public:
 
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components/AdditionalComponents")
-		UShootComponent* shootComponent;
+		UWeaponComponent* weaponComponent;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components/AdditionalComponents")
 		UInteractiveComponent* InteractiveComponent;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components/AdditionalComponents")
@@ -187,9 +130,6 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 		void SetStartSettings(int countCollectibles, bool isHaveBug, bool isBearObj);
-	
-	UFUNCTION(BlueprintCallable)
-		AActor* GetThrowProjectile() const;
 
 	UFUNCTION(BlueprintCallable)
 		bool GetPauseState() const;
@@ -197,15 +137,11 @@ public:
 		void SetUnPause();
 
 	UFUNCTION(BlueprintCallable)
-		bool IsHaveASteamBug() const;
-	UFUNCTION(BlueprintCallable)
 		bool IsBearObject() const;
 
 
 	UFUNCTION(BlueprintCallable)
 		int GetCountCollectibles() const;
-	UFUNCTION(BlueprintCallable)
-	EWeaponType GetCurrentWeaponType() const;
 
 	UFUNCTION(BlueprintCallable)
 		bool GetIsGrappling() const { return isGrappling; }
@@ -247,7 +183,6 @@ private:
 	bool circleMenuIsOpen;
 	bool pauseMenuOpen;
 	bool isWaitingWrench;
-	bool HaveSteamBug;
 	bool isCrouching;
 	bool isStrangling = false;
 	bool canStrangling = false;
@@ -275,9 +210,6 @@ private:
 	const float RightOffsetY = 60;
 	float nowOffsetY = 0;
 	float nowOffsetZ = DefaultCameraHeight;
-	
-
-	EWeaponType g_Projectile_Type;
 
 	FCollisionQueryParams CollisionParams;
 	AMovableObject* movableActor;
@@ -290,4 +222,5 @@ private:
 	friend class UInteractiveWithPuzzlesComponent;
 	friend class UGrapplingComponent;
 	friend class UInteractiveComponent;
+	friend class UWeaponComponent;
 };

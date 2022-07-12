@@ -44,8 +44,6 @@ protected:
 		UStaticMeshComponent* ProjectileMesh;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		UCapsuleComponent* ProjectileColliderD;
-	UFUNCTION(BlueprintCallable)
-		void ReturnStart();
 
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
@@ -71,7 +69,4 @@ private:
 	FVector MoveProjectileVector;
 	void Move();
 	void RuleToMove(int direction);
-
-
-
 };

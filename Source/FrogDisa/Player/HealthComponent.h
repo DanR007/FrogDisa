@@ -77,9 +77,13 @@ public:
 	UFUNCTION()
 		void SetStaminaChange();
 
-	std::map<EObjectType, std::pair<int, int>> objects_map;
+	std::map<EObjectType, std::pair<int, int>> stamina_and_health_objects_map;
 
 	void AddHealthObject(int count, EObjectType object_type);
 	const int max_count_health = 10;
 	const int max_count_stamina = 10;
+
+	UFUNCTION(BlueprintCallable)
+		void Heal();
+
 };

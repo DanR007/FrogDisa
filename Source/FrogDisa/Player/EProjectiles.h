@@ -18,8 +18,8 @@ enum class EWeaponType: uint8
 	EW_SmokeMine UMETA(DisplayName = "EW_SmokeMine"),
 	EW_FlashbangMine UMETA(DisplayName = "EW_FlashbangMine"),
 	EW_Mine UMETA(DisplayName = "EW_Mine"),
-	EW_Wrench UMETA(DisplayName = "EW_Wrench"),
 	EW_Pistol UMETA(DisplayName = "EW_Pistol"),
+	EW_Bug UMETA(DisplayName = "EW_Bug"),
 	EW_None UMETA(DisplayName = "EW_None")
 };
 

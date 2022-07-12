@@ -55,7 +55,7 @@ void AGrenadeActor::AttachToCharacter()
 
 void AGrenadeActor::Interact()
 {
-	PlayerActor->shootComponent->AddAmmunition(1, EWeaponType::EW_Mine);
+	PlayerActor->weaponComponent->AddAmmunition(1, EWeaponType::EW_Mine);
 }
 
 void AGrenadeActor::Explosion()

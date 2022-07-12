@@ -23,10 +23,10 @@ UHealthComponent::UHealthComponent()
 	PreviousStamina = StaminaPercentage;
 	IsRecharging = true;
 
-	objects_map[EObjectType::EO_HelthUp].first = 0;
-	objects_map[EObjectType::EO_HelthUp].second = 10;
-	objects_map[EObjectType::EO_StaminaUp].first = 0;
-	objects_map[EObjectType::EO_StaminaUp].second = 10;
+	stamina_and_health_objects_map[EObjectType::EO_HelthUp].first = 0;
+	stamina_and_health_objects_map[EObjectType::EO_HelthUp].second = 10;
+	stamina_and_health_objects_map[EObjectType::EO_StaminaUp].first = 0;
+	stamina_and_health_objects_map[EObjectType::EO_StaminaUp].second = 10;
 }
 
 
@@ -114,5 +114,19 @@ void UHealthComponent::SetStaminaChange()
 
 void UHealthComponent::AddHealthObject(int count, EObjectType object_type)
 {
-	objects_map[object_type].first += count;
+	stamina_and_health_objects_map[object_type].first += count;
+}
+
+
+void UHealthComponent::Heal()
+{
+	if (stamina_and_health_objects_map[EObjectType::EO_HelthUp].first)
+	{
+		UpdateHealth(stamina_and_health_objects_map[EObjectType::EO_HelthUp].second);
+		stamina_and_health_objects_map[EObjectType::EO_HelthUp].first--;
+	}
+	else
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Blue, "You dont have any healing objects");
+	}
 }

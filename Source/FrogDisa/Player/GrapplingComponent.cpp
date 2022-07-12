@@ -95,7 +95,7 @@ void UGrapplingComponent::LerpTo()
 	}
 	else
 	{
-		PlayerActor->HUDComponent->UpdateStamina(-0.2f);
+		PlayerActor->HUDComponent->UpdateStamina(-0.02f);
 
 		PlayerActor->GetMovementComponent()->Velocity = (grappling_target_location - PlayerActor->GetActorLocation()) * 10;
 	}
@@ -135,13 +135,13 @@ void UGrapplingComponent::ChoiceGrapplingVariant()
 			if (hitActor)
 				if (hit_location.Z < hitActor->GetActorLocation().Z)
 				{
-					SetGrapplingTargetLocation(hit_location + FVector(0, 0, capsule_half_height + 5), true);
+					SetGrapplingTargetLocation(hit_location + FVector(0, 0, capsule_half_height + offset_grappling_height), true);
 				}
 				else
 				{
 					if (upperHit)
 					{
-						SetGrapplingTargetLocation(hit_location + FVector(0, 0, capsule_half_height + 5), false);
+						SetGrapplingTargetLocation(hit_location + FVector(0, 0, capsule_half_height + offset_grappling_height), false);
 					}
 					else
 					{
@@ -163,7 +163,7 @@ void UGrapplingComponent::ChoiceGrapplingVariant()
 						}
 
 						if (can_grappling_upper_obj)
-							SetGrapplingTargetLocation(last_grappling_pos + FVector(0, 0, capsule_half_height), true);
+							SetGrapplingTargetLocation(last_grappling_pos + FVector(0, 0, capsule_half_height + offset_grappling_height), true);
 						else
 							SetGrapplingTargetLocation(hit_location + impactNormal * PlayerActor->GetCapsuleComponent()->GetScaledCapsuleRadius(), false);
 					}

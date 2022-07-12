@@ -46,11 +46,11 @@ void UShopComponent::Buy(int cost_object, int count_objects, EWeaponType weapon_
 	if (weapon_type != EWeaponType::EW_None)
 	{
 		money -= cost_object * count_objects;
-		PlayerActor->shootComponent->AddAmmunition(count_objects, weapon_type);
+		PlayerActor->weaponComponent->AddAmmunition(count_objects, weapon_type);
 	}
 	else
 	{
-		true_count = std::min(PlayerActor->HUDComponent->objects_map[object_type].second - PlayerActor->HUDComponent->objects_map[object_type].first, count_objects);
+		true_count = std::min(PlayerActor->HUDComponent->stamina_and_health_objects_map[object_type].second - PlayerActor->HUDComponent->stamina_and_health_objects_map[object_type].first, count_objects);
 		money -= true_count * cost_object;
 		PlayerActor->HUDComponent->AddHealthObject(true_count, object_type);
 	}

@@ -30,7 +30,7 @@ void ACrossbowBoltActor::Tick(float DeltaTime)
 
 void ACrossbowBoltActor::Interact()
 {
-	PlayerActor->shootComponent->AddAmmunition(count_add, EWeaponType::EW_CrossbowBolt);
+	PlayerActor->weaponComponent->AddAmmunition(count_add, EWeaponType::EW_CrossbowBolt);
 	Destroy();
 }
 

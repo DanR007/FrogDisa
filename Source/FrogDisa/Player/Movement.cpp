@@ -45,7 +45,7 @@ AMovement::AMovement()
 
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	InteractiveComponent = CreateDefaultSubobject<UInteractiveComponent>(TEXT("InteractiveComponent"));
-	shootComponent = CreateDefaultSubobject<UShootComponent>(TEXT("ShootComponent"));
+	weaponComponent = CreateDefaultSubobject<UWeaponComponent>(TEXT("AttackComponent"));
 	grapplingComponent = CreateDefaultSubobject<UGrapplingComponent>(TEXT("GrapplingComponent"));
 	HUDComponent = CreateDefaultSubobject<UHealthComponent>(TEXT("HUD Component"));
 	shopComponent = CreateDefaultSubobject<UShopComponent>(TEXT("Shop Component"));
@@ -86,19 +86,16 @@ AMovement::AMovement()
 	nearClimbingObject = false;
 	isCrouching = false;
 
-	weaponArrayType[EWeaponType::EW_Wrench] = "Wrench";
 	weaponArrayType[EWeaponType::EW_CrossbowBolt] = "CrossbowBolt";
 
 	PlayerActor = this;
 #ifdef TEST
-	HaveSteamBug = true;
+	
 #else
-	HaveSteamBug = false;
+	
 #endif
 
 	Collectibles = 0;
-
-	g_Projectile_Type = EWeaponType::EW_Wrench;
 	//GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Walking);
 }
 
@@ -120,8 +117,9 @@ void AMovement::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 	PlayerInputComponent->BindAxis("CallCircleMenu", this, &AMovement::CallCircleMenu);
 
-	PlayerInputComponent->BindAction("Attack", IE_Pressed, this, &AMovement::Attack);
-	PlayerInputComponent->BindAction("UseSecondWeapon", IE_Pressed, shootComponent, &UShootComponent::Fire);
+	PlayerInputComponent->BindAxis("Attack", weaponComponent, &UWeaponComponent::Attack);
+	//need to check time hold a left mouse button
+	PlayerInputComponent->BindAction("UseSecondWeapon", IE_Pressed, weaponComponent, &UWeaponComponent::Fire);
 	
 	PlayerInputComponent->BindAction("TakeInteractiveObject", IE_Pressed, InteractiveComponent, &UInteractiveComponent::InteractionWithObject);
 
@@ -133,16 +131,16 @@ void AMovement::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 	PlayerInputComponent->BindAction("PauseMenu", IE_Pressed, this, &AMovement::PauseMenu);
 
-	PlayerInputComponent->BindAction("SwitchCharacter", IE_Pressed, this, &AMovement::ChangeCharacter);
-
-	PlayerInputComponent->BindAction("ChoiceWrench", IE_Pressed, this, &AMovement::ChoiceWrench);
-	PlayerInputComponent->BindAction("ChoicePistol", IE_Pressed, this, &AMovement::ChoicePistol);
-	PlayerInputComponent->BindAction("ChoiceMine", IE_Pressed, this, &AMovement::ChoiceMine);
-	PlayerInputComponent->BindAction("ChoiceCrossbowBolt", IE_Pressed, this, &AMovement::ChoiceCrossbowBolt);
-	PlayerInputComponent->BindAction("ChoiceTranquilizer", IE_Pressed, this, &AMovement::ChoiceTranquilizer);
-	PlayerInputComponent->BindAction("ChoiceGrenade", IE_Pressed, this, &AMovement::ChoiceGrenade);
+	PlayerInputComponent->BindAction("ChoiceBug", IE_Pressed, weaponComponent, &UWeaponComponent::ChoiceBug);
+	PlayerInputComponent->BindAction("ChoicePistol", IE_Pressed, weaponComponent, &UWeaponComponent::ChoicePistol);
+	PlayerInputComponent->BindAction("ChoiceMine", IE_Pressed, weaponComponent, &UWeaponComponent::ChoiceMine);
+	PlayerInputComponent->BindAction("ChoiceCrossbowBolt", IE_Pressed, weaponComponent, &UWeaponComponent::ChoiceCrossbowBolt);
+	PlayerInputComponent->BindAction("ChoiceTranquilizer", IE_Pressed, weaponComponent, &UWeaponComponent::ChoiceTranquilizer);
+	PlayerInputComponent->BindAction("ChoiceGrenade", IE_Pressed, weaponComponent, &UWeaponComponent::ChoiceGrenade);
 
 	PlayerInputComponent->BindAction("ChangeCrouchMode", IE_Pressed, this, &AMovement::ChangeCrouchMode);
+
+	PlayerInputComponent->BindAction("Heal", IE_Pressed, HUDComponent, &UHealthComponent::Heal);
 	
 }
 
@@ -164,8 +162,6 @@ void AMovement::Tick(float DeltaTime)
 
 	if (CanMakeAction())
 	{
-		ForwardTrace();
-		HeightTrace();
 		if (InteractiveComponent)
 		{
 			InteractiveComponent->CheckInteractiveObject();
@@ -279,19 +275,6 @@ void AMovement::Attack()
 	}
 }
 
-void AMovement::ChangeCharacter()
-{
-	if (HaveSteamBug && GetCharacterMovement()->MovementMode == EMovementMode::MOVE_Walking)
-	{
-		FActorSpawnParameters SpawnParameters;
-		SpawnParameters.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-		FTransform bugTransform = FTransform(GetActorRotation(), GetMesh()->GetSocketLocation("feet_L") + FVector(70,0,0));
-		SteamBug = GetWorld()->SpawnActor<ASteamBug>(SteamBug_ClassBP, bugTransform, SpawnParameters);
-		SteamBug->SetMainCharacter(this);
-		SteamBug->SetNewPosses();
-	}
-}
-
 void AMovement::SetNewPosses_Implementation()
 {
 
@@ -372,15 +355,6 @@ void AMovement::Jump()
 				GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 				endLoc = upTrace.Location + FVector(0, 0, GetCapsuleComponent()->GetScaledCapsuleHalfHeight() + 2);
 				GetWorldTimerManager().SetTimer(ClimbTimer, this, &AMovement::Climbing, 0.05f, true);
-				//while (FVector::Distance(GetActorLocation(), jumpLoc) > 5)
-				//{
-					//GEngine->AddOnScreenDebugMessage(-1, 0.1, FColor::Red, "climb");
-				//	GetMovementComponent()->Velocity = (jumpLoc - GetActorLocation()) / 2;
-				//}
-				//GetCharacterMovement()->SetMovementMode(MOVE_Falling);
-				//GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
-				//SetActorLocation(upTrace.Location + FVector(0, 0, GetCapsuleComponent()->GetScaledCapsuleHalfHeight()));
-
 			}
 			else
 			{
@@ -393,7 +367,6 @@ void AMovement::Jump()
 			bPressedJump = true;
 			JumpKeyHoldTime = 0.0f;
 		}
-		//make here climbing on objects
 	}
 }
 
@@ -409,54 +382,6 @@ void AMovement::PauseMenu()
 	pauseMenuOpen = true;
 	GetWorld()->GetFirstPlayerController()->SetShowMouseCursor(true);
 	GetWorld()->GetFirstPlayerController()->SetPause(true);
-}
-
-
-void AMovement::ForwardTrace()
-{
-	FHitResult hitPoint;
-	FVector f_start, f_end;
-	f_start = GetActorLocation();
-	f_end = GetActorLocation() + GetActorForwardVector() * 100;
-
-	if(GetWorld()->LineTraceSingleByChannel(hitPoint, f_start, f_end, ECC_ClimbingTraceChannel, queryParams))//check an object height
-	{
-		wallNormal = hitPoint.Normal;
-		wallLocation = hitPoint.Location;
-	}
-}
-
-void AMovement::HeightTrace()
-{
-	FHitResult hitPoint;
-	FVector h_start, h_end;
-	h_start = GetActorLocation() + FVector(0, 0, 200.f) + GetActorForwardVector() * 75;
-	h_end = h_start - FVector(0, 0, 200.f);
-
-	if (GetWorld()->LineTraceSingleByChannel(hitPoint, h_start, h_end, ECC_ClimbingTraceChannel, queryParams))//check an object in front of player
-	{
-#ifdef THIRD_PERSON
-		float distanceZ = Mesh->GetSocketLocation(TEXT("spineSocket")).Z - hitPoint.Location.Z;
-		if (distanceZ <= 0 && distanceZ >= -100.f)
-		{
-			if (!isClimbing && GetCharacterMovement()->MovementMode == EMovementMode::MOVE_Falling)
-			{
-
-				isClimbing = true;
-				GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Flying);
-				GetCharacterMovement()->StopMovementImmediately();
-			}
-		}
-#else
-		float distanceZ = Camera->GetComponentLocation().Z - hitPoint.Location.Z;
-		if (distanceZ <= 0 && distanceZ >= -100.f)
-		{
-			nearClimbingObject = true;
-		}
-#endif
-
-		
-	}
 }
 
 void AMovement::Climbing()
@@ -477,13 +402,13 @@ void AMovement::Climbing()
 void AMovement::ChangeCrouchHeight()
 {
 	FHitResult hit_res_forward, hit_res_up;
-	FCollisionShape capsule;
+	FCollisionShape box;
 	TArray<AActor*> arr_ignored_actors;
 
 	//GetAllChildActors(arr_ignored_actors);
 	//queryParams.AddIgnoredActors(arr_ignored_actors);
 
-	capsule.SetBox(FVector(DefaultCapsuleRadius, DefaultCapsuleRadius, DefaultCapsuleHalfHeight / 2));
+	box.SetBox(FVector(DefaultCapsuleRadius, DefaultCapsuleRadius, DefaultCapsuleHalfHeight / 2));
 	FVector StartForwardToUp = GetActorLocation() + GetActorForwardVector() * DefaultCapsuleRadius + offset,
 		EndForwardToUp = GetActorLocation() + FVector(DefaultCapsuleRadius, 0, DefaultCapsuleHalfHeight / 2) + offset,
 		StartHereToUp = GetActorLocation() + offset, EndHereToUp = GetActorLocation() + GetActorUpVector() * DefaultCapsuleHalfHeight / 2 + offset;
@@ -491,9 +416,9 @@ void AMovement::ChangeCrouchHeight()
 	
 
 	if (GetWorld()->SweepSingleByChannel(hit_res_forward, StartForwardToUp, EndForwardToUp
-		, GetActorRotation().Quaternion(), ECollisionChannel::ECC_Visibility, capsule, queryParams) ||
+		, GetActorRotation().Quaternion(), ECollisionChannel::ECC_Visibility, box, queryParams) ||
 		GetWorld()->SweepSingleByChannel(hit_res_up, StartHereToUp, EndHereToUp
-			, GetActorRotation().Quaternion(), ECollisionChannel::ECC_Visibility, capsule, queryParams))
+			, GetActorRotation().Quaternion(), ECollisionChannel::ECC_Visibility, box, queryParams))
 	{
 		GetCapsuleComponent()->SetCapsuleHalfHeight(DefaultCapsuleHalfHeight / 3);
 		Camera->SetRelativeLocation(FVector(0, nowOffsetY, DefaultCameraHeight / 3));
@@ -515,11 +440,11 @@ void AMovement::ChangeCrouchHeight()
 bool AMovement::CheckCanStand()
 {
 	FHitResult hit_res;
-	FCollisionShape capsule;
+	FCollisionShape box;
 	TArray<AActor*> arr_ignored_actors;
 	GetAllChildActors(arr_ignored_actors);
 	queryParams.AddIgnoredActors(arr_ignored_actors);
-	capsule.SetCapsule(DefaultCapsuleRadius, DefaultCapsuleHalfHeight);
+	box.SetBox(FVector(DefaultCapsuleRadius, DefaultCapsuleRadius, DefaultCapsuleHalfHeight / 2));
 
 	FVector StartUpper = GetActorLocation(), EndUpper = GetActorLocation() + GetActorUpVector() * GetCapsuleComponent()->GetScaledCapsuleHalfHeight()/*DefaultCapsuleHalfHeight / 3*/;
 
@@ -527,7 +452,7 @@ bool AMovement::CheckCanStand()
 	//	EndUpper = GetActorLocation() + GetActorUpVector() * DefaultCapsuleHalfHeight / 2;
 
 	return GetWorld()->SweepSingleByChannel(hit_res, StartUpper, EndUpper
-		, GetActorRotation().Quaternion(), ECollisionChannel::ECC_Visibility, capsule, queryParams);
+		, GetActorRotation().Quaternion(), ECollisionChannel::ECC_Visibility, box, queryParams);
 }
 
 void AMovement::DrawGrapplingVariant_Implementation()
@@ -542,11 +467,6 @@ bool AMovement::CanMakeAction() const
 }
 
 
-bool AMovement::IsHaveASteamBug() const
-{
-	return HaveSteamBug;
-}
-
 bool AMovement::IsBearObject() const
 {
 	return isBearObject;
@@ -560,19 +480,9 @@ int AMovement::GetCountCollectibles() const
 void AMovement::SetStartSettings(int countCollectibles, bool isHaveBug, bool isBearObj)
 {
 	Collectibles = countCollectibles;
-	HaveSteamBug = isHaveBug;
 	isBearObject = isBearObj;
 }
 
-EWeaponType AMovement::GetCurrentWeaponType() const
-{
-	return g_Projectile_Type;
-}
-
-AActor* AMovement::GetThrowProjectile() const
-{
-	return shootComponent->GetActorWrench();
-}
 
 bool AMovement::GetPauseState() const
 {

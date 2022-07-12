@@ -35,7 +35,7 @@ bool AMineActor::Launch()
 	}
 	else
 	{
-		PlayerActor->shootComponent->AddAmmunition(1, EWeaponType::EW_Mine);
+		PlayerActor->weaponComponent->AddAmmunition(1, EWeaponType::EW_Mine);
 		return false;
 	}
 }
@@ -51,7 +51,7 @@ void AMineActor::AttachToCharacter()
 
 void AMineActor::Interact()
 {
-	PlayerActor->shootComponent->AddAmmunition(1, EWeaponType::EW_Mine);
+	PlayerActor->weaponComponent->AddAmmunition(1, EWeaponType::EW_Mine);
 	Destroy();
 }
 

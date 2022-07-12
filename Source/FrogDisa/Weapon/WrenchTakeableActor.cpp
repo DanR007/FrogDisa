@@ -29,7 +29,7 @@ void AWrenchTakeableActor::Tick(float DeltaTime)
 
 void AWrenchTakeableActor::Interact()
 {
-	PlayerActor->shootComponent->AddAmmunition(count_add, EWeaponType::EW_Wrench);
+	PlayerActor->weaponComponent->ShowWrench();
 	Destroy();
 }
 

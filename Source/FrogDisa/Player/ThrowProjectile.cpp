@@ -44,10 +44,14 @@ void AThrowProjectile::BeginPlay()
 
 void AThrowProjectile::AttachToCharacter()
 {
-	if(PlayerActor)
-	this->AttachToActor(PlayerActor, FAttachmentTransformRules::KeepWorldTransform);
-	//ProjectileMesh->AttachToComponent(Cast<AMovement>(OwnerPlayer)->GetMesh(),FAttachmentTransformRules::KeepWorldTransform,TEXT("hand_RSocket"));
-	SetActorRelativeLocation(FVector(100, 100 , 0));
+	if (PlayerActor)
+	{
+		this->AttachToActor(PlayerActor, FAttachmentTransformRules::KeepWorldTransform);
+		//ProjectileMesh->AttachToComponent(Cast<AMovement>(OwnerPlayer)->GetMesh(),FAttachmentTransformRules::KeepWorldTransform,TEXT("hand_RSocket"));
+		SetActorRelativeLocation(FVector(100, 100, 0));
+		PlayerActor->weaponComponent->AddAmmunition(1, EWeaponType::EW_None);
+	}
+
 }
 
 void AThrowProjectile::Tick(float DeltaTime)
@@ -72,10 +76,6 @@ void AThrowProjectile::ReturnToCharacter()
 	}
 }
 
-void AThrowProjectile::ReturnStart()
-{
-
-}
 
 bool AThrowProjectile::Launch()
 {

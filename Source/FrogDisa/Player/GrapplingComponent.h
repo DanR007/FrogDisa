@@ -73,6 +73,8 @@ private:
 
 	float capsule_half_height;
 
+	const float offset_grappling_height = 5;
+
 	FVector hit_location;
 
 	bool grappling_mode_active;
