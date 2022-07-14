@@ -82,3 +82,8 @@ void ANPCPawn::GetDamage(int damage)
 			PlayAnimationOnce(anim_montage_array[0]);//Play Hurt Animation
 	}
 }
+
+void ANPCPawn::Sleep_Implementation()
+{
+
+}

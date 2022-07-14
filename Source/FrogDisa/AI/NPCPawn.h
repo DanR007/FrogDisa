@@ -34,6 +34,8 @@ public:
 	void ChangeOutlines_Implementation(bool isOutline) override { UE_LOG(LogTemp, Warning, TEXT("C++")) }
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 		void Die();
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+		void Sleep();
 
 	UBehaviorTree* GetBehaviorTree() { return BehaviorTree; }
 
