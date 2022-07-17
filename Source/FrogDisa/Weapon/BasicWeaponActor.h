@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "WeaponActor.h"
 #include "BasicWeaponActor.generated.h"
 
 

@@ -3,9 +3,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
-#include "FrogDisa/InteractiveObjectsInterface.h"
+#include "FrogDisa/InteractiveActor.h"
 #include "WeaponLogicInterface.h"
+#include "../InteractiveObjectsInterface.h"
 
 #include "Components/SphereComponent.h"
 #include "Components/TimelineComponent.h"
@@ -20,6 +20,9 @@ class FROGDISA_API AGrenadeActor : public AActor, public IWeaponLogicInterface, 
 public:	
 	// Sets default values for this actor's properties
 	AGrenadeActor();
+
+	
+		
 
 	virtual bool Launch() override;
 	virtual void AttachToCharacter() override;
@@ -36,7 +39,7 @@ public:
 
 
 protected:
-
+	const EInteractionTypes interactive_type = EInteractionTypes::EIT_Take;
 	UFUNCTION(BlueprintNativeEvent)
 		void CallExplosionParticle();
 	// Called when the game starts or when spawned

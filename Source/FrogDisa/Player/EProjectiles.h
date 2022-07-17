@@ -49,3 +49,12 @@ enum ERotatorDirection
 {
 	ERD_Forward, EDR_Right, EDR_Left, EDR_Back
 };
+
+UENUM(BlueprintType)
+enum class EInteractionTypes : uint8
+{
+	EIT_Take UMETA(DisplayName = "EIT_Take"),
+	EIT_Use UMETA(DisplayName = "EIT_Use"),
+	EIT_Repair UMETA(DisplayName = "EIT_Repair"),
+	EIT_Open UMETA(DisplayName = "EIT_Open")
+};

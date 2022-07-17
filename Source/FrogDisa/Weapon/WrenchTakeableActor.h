@@ -3,8 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
-#include "FrogDisa/InteractiveObjectsInterface.h"
+#include "../InteractiveObjectsInterface.h"
 #include "WrenchTakeableActor.generated.h"
 
 UCLASS()
@@ -16,6 +15,8 @@ public:
 	// Sets default values for this actor's properties
 	AWrenchTakeableActor();
 
+	
+
 	void Interact() override;
 
 	void ChangeOutlines_Implementation(bool isOutline) override { UE_LOG(LogTemp, Warning, TEXT("C++")) }
@@ -25,7 +26,7 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		UStaticMeshComponent* Mesh;
-
+	const EInteractionTypes interactive_type = EInteractionTypes::EIT_Take;
 	const int count_add = 1;
 public:	
 	// Called every frame

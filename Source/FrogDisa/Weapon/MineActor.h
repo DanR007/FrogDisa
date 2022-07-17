@@ -3,11 +3,10 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "WeaponActor.h"
-#include "FrogDisa/InteractiveObjectsInterface.h"
+#include "FrogDisa/InteractiveActor.h"
 #include "WeaponLogicInterface.h"
 #include "Components/SphereComponent.h"
-
+#include "../InteractiveObjectsInterface.h"
 #include "MineActor.generated.h"
 
 /**
@@ -18,6 +17,8 @@ class FROGDISA_API AMineActor : public AActor, public IWeaponLogicInterface, pub
 {
 	GENERATED_BODY()
 public:
+
+
 
 	AMineActor();
 	virtual bool Launch() override;
@@ -39,7 +40,7 @@ public:
 		virtual void Explosion();
 
 protected:
-
+	const EInteractionTypes interactive_type = EInteractionTypes::EIT_Take;
 	UFUNCTION(BlueprintNativeEvent)
 		void CallExplosionParticle();
 private:

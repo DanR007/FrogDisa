@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
 #include "Components/SphereComponent.h"
+#include "InteractiveActor.h"
 #include "Components/BillboardComponent.h"
 #include "InteractiveObjectsInterface.h"
 #include "CollectiblesObject.generated.h"
 
 UCLASS()
-class FROGDISA_API ACollectiblesObject : public AActor, public IInteractiveObjectsInterface
+class FROGDISA_API ACollectiblesObject : public AActor, public IInteractiveObjectsInterface, public InteractiveClass
 {
 	GENERATED_BODY()
 	
@@ -20,7 +20,10 @@ public:
 
 	void Interact() override;
 
+	
+	
 protected:
+	const EInteractionTypes interactive_type = EInteractionTypes::EIT_Take;
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 

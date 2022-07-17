@@ -3,10 +3,10 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
 #include "WeaponLogicInterface.h"
 #include "BasicWeaponActor.h"
-#include "FrogDisa/InteractiveObjectsInterface.h"
+#include "../InteractiveObjectsInterface.h"
+#include "FrogDisa/InteractiveActor.h"
 #include "CrossbowBoltActor.generated.h"
 
 UCLASS()
@@ -23,6 +23,8 @@ public:
 	virtual void ChangeOutlines_Implementation(bool isOutline) override { UE_LOG(LogTemp, Warning, TEXT("C++")) }
 	virtual bool Launch() override;
 	virtual void AttachToCharacter() override;
+
+	
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -32,7 +34,7 @@ protected:
 
 	const int count_add = 1;
 
-
+		const EInteractionTypes interactive_type = EInteractionTypes::EIT_Take;
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
