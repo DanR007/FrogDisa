@@ -3,11 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "../InteractiveObjectsInterface.h"
+#include "FrogDisa/InteractiveClass.h"
 #include "WrenchTakeableActor.generated.h"
 
 UCLASS()
-class FROGDISA_API AWrenchTakeableActor : public AActor, public IInteractiveObjectsInterface
+class FROGDISA_API AWrenchTakeableActor : public AActor, public IInteractiveObjectsInterface, public InteractiveClass
 {
 	GENERATED_BODY()
 	

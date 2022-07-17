@@ -3,14 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
-#include "WeaponActor.h"
-#include "FrogDisa/InteractiveObjectsInterface.h"
-#include "WeaponLogicInterface.h"
+#include "BasicWeaponActor.h"
 #include "PistolActor.generated.h"
 
 UCLASS()
-class FROGDISA_API APistolActor : public ABasicWeaponActor, public IWeaponLogicInterface
+class FROGDISA_API APistolActor : public ABasicWeaponActor
 {
 	GENERATED_BODY()
 	

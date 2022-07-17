@@ -2,10 +2,6 @@
 
 #include "CoreMinimal.h"
 #include "MineActor.h"
-#include "FrogDisa/InteractiveActor.h"
-#include "WeaponLogicInterface.h"
-#include "../InteractiveObjectsInterface.h"
-#include "Components/SphereComponent.h"
 #include "NonlethalMineActor.generated.h"
 
 /**

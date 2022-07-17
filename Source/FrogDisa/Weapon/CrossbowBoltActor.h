@@ -3,14 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "WeaponLogicInterface.h"
 #include "BasicWeaponActor.h"
-#include "../InteractiveObjectsInterface.h"
-#include "FrogDisa/InteractiveActor.h"
+#include "FrogDisa/InteractiveClass.h"
 #include "CrossbowBoltActor.generated.h"
 
 UCLASS()
-class FROGDISA_API ACrossbowBoltActor : public ABasicWeaponActor, public IWeaponLogicInterface, public IInteractiveObjectsInterface
+class FROGDISA_API ACrossbowBoltActor : public ABasicWeaponActor, public InteractiveClass, public IInteractiveObjectsInterface
 {
 	GENERATED_BODY()
 	
@@ -34,7 +32,6 @@ protected:
 
 	const int count_add = 1;
 
-		const EInteractionTypes interactive_type = EInteractionTypes::EIT_Take;
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

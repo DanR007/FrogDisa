@@ -3,10 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
+
+#include "InteractiveClass.h"
+
 #include "Components/SphereComponent.h"
-#include "InteractiveActor.h"
 #include "Components/BillboardComponent.h"
-#include "InteractiveObjectsInterface.h"
+
 #include "CollectiblesObject.generated.h"
 
 UCLASS()

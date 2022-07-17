@@ -3,17 +3,16 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "FrogDisa/InteractiveActor.h"
-#include "WeaponLogicInterface.h"
+#include "BasicWeaponActor.h"
+#include "FrogDisa/InteractiveClass.h"
 #include "Components/SphereComponent.h"
-#include "../InteractiveObjectsInterface.h"
 #include "MineActor.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class FROGDISA_API AMineActor : public AActor, public IWeaponLogicInterface, public IInteractiveObjectsInterface
+class FROGDISA_API AMineActor : public ABasicWeaponActor, public IInteractiveObjectsInterface, public InteractiveClass
 {
 	GENERATED_BODY()
 public:

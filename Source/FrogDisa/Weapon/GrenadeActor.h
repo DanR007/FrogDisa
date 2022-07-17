@@ -3,9 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "FrogDisa/InteractiveActor.h"
-#include "WeaponLogicInterface.h"
-#include "../InteractiveObjectsInterface.h"
+#include "FrogDisa/InteractiveClass.h"
+#include "BasicWeaponActor.h"
 
 #include "Components/SphereComponent.h"
 #include "Components/TimelineComponent.h"
@@ -13,7 +12,7 @@
 #include "GrenadeActor.generated.h"
 
 UCLASS()
-class FROGDISA_API AGrenadeActor : public AActor, public IWeaponLogicInterface, public IInteractiveObjectsInterface
+class FROGDISA_API AGrenadeActor : public ABasicWeaponActor, public IInteractiveObjectsInterface, public InteractiveClass
 {
 	GENERATED_BODY()
 	

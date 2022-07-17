@@ -8,14 +8,13 @@
 #include "Components/SphereComponent.h"
 #include "Components/CapsuleComponent.h"
 
-#include "FrogDisa/Weapon/WeaponActor.h"
 #include "FrogDisa/Weapon/BasicWeaponActor.h"
 #include "FrogDisa/Weapon/WeaponLogicInterface.h"
 
 #include "ThrowProjectile.generated.h"
 
 UCLASS()
-class FROGDISA_API AThrowProjectile : public ABasicWeaponActor, public IWeaponLogicInterface
+class FROGDISA_API AThrowProjectile : public ABasicWeaponActor
 {
 	GENERATED_BODY()
 

@@ -4,11 +4,12 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "WeaponLogicInterface.h"
 #include "BasicWeaponActor.generated.h"
 
 
 UCLASS()
-class FROGDISA_API ABasicWeaponActor : public AActor
+class FROGDISA_API ABasicWeaponActor : public AActor, public IWeaponLogicInterface
 {
 	GENERATED_BODY()
 	
