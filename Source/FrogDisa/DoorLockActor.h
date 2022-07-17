@@ -3,12 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
+#include "InteractiveActor.h"
 #include "InteractiveObjectsInterface.h"
 #include "DoorLockActor.generated.h"
 
 UCLASS()
-class FROGDISA_API ADoorLockActor : public AActor, public IInteractiveObjectsInterface
+class FROGDISA_API ADoorLockActor : public AInteractiveActor, public IInteractiveObjectsInterface
 {
 	GENERATED_BODY()
 	
@@ -30,6 +30,8 @@ public:
 
 	UFUNCTION(BlueprintNativeEvent)
 		void OpenOrClose();
+
+	virtual EInteractionTypes GetInteractionType() const override { return interactive_type; }
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

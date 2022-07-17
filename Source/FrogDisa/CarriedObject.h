@@ -1,8 +1,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
-#include "CarriedObjectLogicInterface.h"
+
+#include "InteractiveActor.h"
 #include "InteractiveObjectsInterface.h"
 #include "PhysicsEngine/PhysicsConstraintComponent.h"
 
@@ -10,7 +10,7 @@
 
 
 UCLASS()
-class FROGDISA_API ACarriedObject : public AActor, public ICarriedObjectLogicInterface, public IInteractiveObjectsInterface
+class FROGDISA_API ACarriedObject : public AInteractiveActor, public ICarriedObjectLogicInterface, public IInteractiveObjectsInterface
 {
 	GENERATED_BODY()
 
@@ -27,6 +27,8 @@ public:
 	//void Interact(AMovement *Player) override;
 	void Interact() override{}
 	void TakeThisObject();
+
+	virtual EInteractionTypes GetInteractionType() const override { return interactive_type; }
 
 	void DropThisObject();
 

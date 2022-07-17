@@ -3,25 +3,24 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "FrogDisa/InteractiveActor.h"
-#include "WeaponLogicInterface.h"
-#include "BasicWeaponActor.generated.h"
+#include "GameFramework/Actor.h"
+#include "Player/EProjectiles.h"
 
+#include "CarriedObjectLogicInterface.h"
+#include "InteractiveActor.generated.h"
 
 UCLASS()
-class FROGDISA_API ABasicWeaponActor : public AInteractiveActor, public IWeaponLogicInterface
+class FROGDISA_API AInteractiveActor : public AActor
 {
 	GENERATED_BODY()
 	
-public:
+public:	
 	// Sets default values for this actor's properties
-	ABasicWeaponActor();
+	AInteractiveActor();
 
-	UFUNCTION(BlueprintCallable)
-		float GetDamage() { return damage; }
+	UPROPERTY(EditDefaultsOnly)
+		EInteractionTypes interactive_type;
 protected:
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-		float damage = 10;
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 

@@ -3,11 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "FrogDisa/InteractiveClass.h"
+#include "FrogDisa/InteractiveActor.h"
+#include "FrogDisa/InteractiveObjectsInterface.h"
 #include "WrenchTakeableActor.generated.h"
 
 UCLASS()
-class FROGDISA_API AWrenchTakeableActor : public AActor, public IInteractiveObjectsInterface, public InteractiveClass
+class FROGDISA_API AWrenchTakeableActor : public AInteractiveActor, public IInteractiveObjectsInterface
 {
 	GENERATED_BODY()
 	
@@ -18,7 +19,7 @@ public:
 	
 
 	void Interact() override;
-
+	virtual EInteractionTypes GetInteractionType() const override { return interactive_type; }
 	void ChangeOutlines_Implementation(bool isOutline) override { UE_LOG(LogTemp, Warning, TEXT("C++")) }
 protected:
 	// Called when the game starts or when spawned

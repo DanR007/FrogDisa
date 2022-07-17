@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "BasicWeaponActor.h"
-#include "FrogDisa/InteractiveClass.h"
+#include "FrogDisa/InteractiveObjectsInterface.h"
 #include "Components/SphereComponent.h"
 #include "MineActor.generated.h"
 
@@ -12,7 +12,7 @@
  * 
  */
 UCLASS()
-class FROGDISA_API AMineActor : public ABasicWeaponActor, public IInteractiveObjectsInterface, public InteractiveClass
+class FROGDISA_API AMineActor : public ABasicWeaponActor, public IInteractiveObjectsInterface
 {
 	GENERATED_BODY()
 public:
@@ -27,6 +27,8 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 		bool GetIsReplace() { return isReplace; }
+
+	virtual EInteractionTypes GetInteractionType() const override { return interactive_type; }
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 		UStaticMeshComponent* mainMesh;

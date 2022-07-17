@@ -4,7 +4,6 @@
 #include "ThrowProjectile.h"
 #include "Kismet/KismetMathLibrary.h"
 
-#include "FrogDisa/DropItAfterShot.h"
 #include "FrogDisa/DefaultVariables.h"
 
 #include "UObject/ConstructorHelpers.h"
@@ -200,27 +199,7 @@ void AThrowProjectile::RuleToMove(int direction)
 
 void AThrowProjectile::OnOverlap_Implementation(AActor* OverlappedActor, AActor* OtherActor)
 {
-	if (OtherActor)
-	{
-		bool cast = Cast<ADropItAfterShot>(OtherActor) == nullptr;
 
-		if (cast)
-		{
-			if (OtherActor != PlayerActor)
-			{ 
-				AThrowProjectile::ReturnToCharacter();
-			}
-				
-			
-		}
-		else
-		{
-			if (Cast<ADropItAfterShot>(OtherActor)->isABreakableMesh() == false)
-			{
-				AThrowProjectile::ReturnToCharacter();
-			}
-		}
-	}
 }
 
 

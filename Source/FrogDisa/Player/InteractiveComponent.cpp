@@ -3,8 +3,8 @@
 
 #include "InteractiveComponent.h"
 
+#include "FrogDisa/InteractiveActor.h"
 #include "FrogDisa/InteractiveObjectsInterface.h"
-#include "FrogDisa/CarriedObjectLogicInterface.h"
 
 #include "DrawDebugHelpers.h"
 
@@ -102,12 +102,15 @@ void UInteractiveComponent::CheckInteractiveObject()
 					InteractiveActor = hitPoint.Actor.Get();
 					if (InteractiveActor)
 						InteractiveInterfaceActor->Execute_ChangeOutlines(InteractiveActor, true);//Execute нужен чтобы вызвать функцию интерфейса в нужном объекте
+
+					current_interaction_type = InteractiveInterfaceActor->GetInteractionType();
+					
 				}
 				if (Cast<ICarriedObjectLogicInterface>(hitPoint.Actor.Get()))
 				{
 					CarriedActor = Cast<ICarriedObjectLogicInterface>(hitPoint.Actor.Get());
 				}
-
+				
 			}
 			else
 			{
@@ -130,6 +133,7 @@ void UInteractiveComponent::SetNullInteractiveObject()
 		InteractiveActor = nullptr;
 		InteractiveInterfaceActor = nullptr;
 		CarriedActor = nullptr;
+		current_interaction_type = EInteractionTypes::EIT_None;
 	}
 }
 

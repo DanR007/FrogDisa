@@ -4,11 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "BasicWeaponActor.h"
-#include "FrogDisa/InteractiveClass.h"
+#include "FrogDisa/InteractiveObjectsInterface.h"
 #include "CrossbowBoltActor.generated.h"
 
 UCLASS()
-class FROGDISA_API ACrossbowBoltActor : public ABasicWeaponActor, public InteractiveClass, public IInteractiveObjectsInterface
+class FROGDISA_API ACrossbowBoltActor : public ABasicWeaponActor, public IInteractiveObjectsInterface
 {
 	GENERATED_BODY()
 	
@@ -22,7 +22,7 @@ public:
 	virtual bool Launch() override;
 	virtual void AttachToCharacter() override;
 
-	
+	virtual EInteractionTypes GetInteractionType() const override { return interactive_type; }
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

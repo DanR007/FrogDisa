@@ -4,7 +4,8 @@
 
 #include "CoreMinimal.h"
 
-#include "InteractiveClass.h"
+#include "InteractiveActor.h"
+#include "InteractiveObjectsInterface.h"
 
 #include "Components/SphereComponent.h"
 #include "Components/BillboardComponent.h"
@@ -12,7 +13,7 @@
 #include "CollectiblesObject.generated.h"
 
 UCLASS()
-class FROGDISA_API ACollectiblesObject : public AActor, public IInteractiveObjectsInterface, public InteractiveClass
+class FROGDISA_API ACollectiblesObject : public AInteractiveActor, public IInteractiveObjectsInterface
 {
 	GENERATED_BODY()
 	
@@ -22,7 +23,7 @@ public:
 
 	void Interact() override;
 
-	
+	virtual EInteractionTypes GetInteractionType() const override { return interactive_type; }
 	
 protected:
 	const EInteractionTypes interactive_type = EInteractionTypes::EIT_Take;

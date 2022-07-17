@@ -3,16 +3,16 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "FrogDisa/InteractiveClass.h"
-#include "BasicWeaponActor.h"
 
+#include "BasicWeaponActor.h"
+#include "FrogDisa/InteractiveObjectsInterface.h"
 #include "Components/SphereComponent.h"
 #include "Components/TimelineComponent.h"
 
 #include "GrenadeActor.generated.h"
 
 UCLASS()
-class FROGDISA_API AGrenadeActor : public ABasicWeaponActor, public IInteractiveObjectsInterface, public InteractiveClass
+class FROGDISA_API AGrenadeActor : public ABasicWeaponActor, public IInteractiveObjectsInterface
 {
 	GENERATED_BODY()
 	
@@ -22,7 +22,7 @@ public:
 
 	
 		
-
+	virtual EInteractionTypes GetInteractionType() const override { return interactive_type; }
 	virtual bool Launch() override;
 	virtual void AttachToCharacter() override;
 	virtual void Interact() override;

@@ -27,5 +27,7 @@ public:
 	UFUNCTION(BlueprintNativeEvent)
 		void ChangeOutlines(bool isOutline);
 
+	virtual EInteractionTypes GetInteractionType() const = 0;
+
 	virtual void Interact() {}
 };

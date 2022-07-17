@@ -4,6 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "EProjectiles.h"
+#include "Slate/SlateBrushAsset.h"
 
 #include "InteractiveComponent.generated.h"
 
@@ -41,9 +43,14 @@ public:
 	void SetInteractiveActorNull() { InteractiveActor = nullptr; }
 
 	void InteractionWithObject();
+
+	EInteractionTypes GetInteractiveType() const { return current_interaction_type; };
+
 private:
 	const float MaximumCollectibleObjectDistance = 400.f;
 	const float DistanceInteractiveObject = 120.f;
+
+	EInteractionTypes current_interaction_type = EInteractionTypes::EIT_None;
 
 	void SetNullInteractiveObject();
 };
