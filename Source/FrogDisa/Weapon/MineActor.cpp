@@ -33,11 +33,9 @@ bool AMineActor::Launch()
 
 		return true;
 	}
-	else
-	{
-		PlayerActor->weaponComponent->AddAmmunition(1, EWeaponType::EW_Mine);
-		return false;
-	}
+
+	return false;
+
 }
 
 

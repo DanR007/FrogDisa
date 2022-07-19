@@ -4,10 +4,12 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "FrogDisa/Weapon/WeaponLogicInterface.h"
+#include "FrogDisa/InteractiveObjectsInterface.h"
 #include "SteamBug.generated.h"
 
 UCLASS()
-class FROGDISA_API ASteamBug : public ACharacter
+class FROGDISA_API ASteamBug : public ACharacter, public IWeaponLogicInterface, public IInteractiveObjectsInterface
 {
 	GENERATED_BODY()
 
@@ -15,14 +17,19 @@ public:
 	// Sets default values for this character's properties
 	ASteamBug();
 
-	void SetMainCharacter(ACharacter* f_main_character);
-
+	virtual EInteractionTypes GetInteractionType() const override { return interactive_type; }
+	virtual bool Launch() override;
+	virtual void AttachToCharacter() override;
+	virtual void Interact() override;
+	virtual void ChangeOutlines_Implementation(bool isOutline) override { UE_LOG(LogTemp, Warning, TEXT("C++")) }
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		ACharacter* main_character;
+	UPROPERTY(EditDefaultsOnly)
+		EInteractionTypes interactive_type = EInteractionTypes::EIT_Take;
 
 public:	
 	// Called every frame
@@ -35,6 +42,5 @@ public:
 	UFUNCTION(BlueprintNativeEvent)
 		void SetNewPosses();
 private:
-
-
+	
 };

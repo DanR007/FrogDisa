@@ -3,7 +3,6 @@
 #include "CoreMinimal.h"
 
 #include "EProjectiles.h"
-#include "SteamBug.h"
 #include "WeaponComponent.h"
 #include "InteractiveComponent.h"
 #include "FrogDisaGameInstance.h"
@@ -59,6 +58,9 @@ public:
 
 		UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 			ACharacter* StrangledCharacter;
+
+		UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+			void SetNewPosses(APawn* new_character);
 protected:
 	// Called when the game starts or when spawned
 
@@ -86,8 +88,7 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 		bool isClimbing;
 
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
-		void SetNewPosses();
+	
 
 	
 
@@ -213,11 +214,8 @@ private:
 
 	FCollisionQueryParams CollisionParams;
 	AMovableObject* movableActor;
-	ASteamBug* SteamBug;
 	FCollisionQueryParams queryParams;
 
-	TSubclassOf<ASteamBug> SteamBug_ClassBP;
-	TSubclassOf<ASteamBug> SteamBug_Class;
 
 	friend class UInteractiveWithPuzzlesComponent;
 	friend class UGrapplingComponent;

@@ -36,8 +36,6 @@ FVector offset = FVector::ZeroVector;
 // Sets default values
 AMovement::AMovement()
 {
-
-	ConstructorHelpers::FClassFinder<ASteamBug> steam_bug_bp(TEXT("/Game/Blueprint/BP_SteamBug"));
 	//ConstructorHelpers::FObjectFinder<USkeletalMesh> mesh(TEXT("SkeletalMesh'/Game/Meshes/Animation/jaba.jaba'"));
 
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
@@ -72,9 +70,6 @@ AMovement::AMovement()
 	GetMesh()->SetupAttachment(Camera);
 	//GetMesh()->SetSkeletalMesh(mesh.Object);
 	//GetMesh()->SetRelativeLocationAndRotation(MeshPosition, MeshRotation);
-
-
-	SteamBug_ClassBP = steam_bug_bp.Class;
 
 	isGrappling = false;
 	MeleeAttackIsActive = false;
@@ -275,7 +270,7 @@ void AMovement::Attack()
 	}
 }
 
-void AMovement::SetNewPosses_Implementation()
+void AMovement::SetNewPosses_Implementation(APawn* new_character)
 {
 
 }
