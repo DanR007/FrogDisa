@@ -10,6 +10,7 @@
 #include "FrogDisa/Weapon/CrossbowBoltActor.h"
 #include "FrogDisa/Weapon/PistolActor.h"
 #include "FrogDisa/Weapon/TranquilizerBoltActor.h"
+#include "SteamBug.h"
 
 #include "FrogDisa/DefaultVariables.h"
 
@@ -86,10 +87,11 @@ void UWeaponComponent::Fire()
 				if (weaponLogicInterface->Launch())
 					if (weapon_map[current_weapon_type].second > 0)
 					{
+						weapon_map[current_weapon_type].second--;
 						Current_Weapon = GetWorld()->SpawnActor<AActor>(weapon_map[current_weapon_type].first, GetOwner()->FindComponentByClass<UCameraComponent>()->GetComponentTransform());
 						Cast<IWeaponLogicInterface>(Current_Weapon)->AttachToCharacter();
 					}
-				weapon_map[current_weapon_type].second--;
+				
 			}
 		}
 		else
