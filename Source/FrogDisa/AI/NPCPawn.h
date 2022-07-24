@@ -60,7 +60,7 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 		void PlayAnimationOnce(UAnimMontage *animation_montage);
 
-	virtual EInteractionTypes GetInteractionType() const override { return interactive_type; }
+	virtual EInteractionTypes GetInteractionType() const override{ return interactive_type; }
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

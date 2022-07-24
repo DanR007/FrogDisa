@@ -17,7 +17,7 @@ public:
 	// Sets default values for this character's properties
 	ASteamBug();
 
-	virtual EInteractionTypes GetInteractionType() const override { return interactive_type; }
+	virtual EInteractionTypes GetInteractionType() const override{ return interactive_type; }
 	virtual bool Launch() override;
 	virtual void AttachToCharacter() override;
 	virtual void Interact() override;

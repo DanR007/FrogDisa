@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
-#include "Player/Movement.h"
+#include "Player/EProjectiles.h"
 #include "InteractiveObjectsInterface.generated.h"
 
 // This class does not need to be modified.

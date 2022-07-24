@@ -175,16 +175,20 @@ void AMovement::MoveForward(float Value)
 	////GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::SanitizeFloat(Value));
 	if (Controller && Value != 0.0f)
 	{
-		AddMovementInput(GetActorForwardVector(), Value);
-
+		if (isClimbing)
+			SetActorLocation(GetActorLocation() + GetActorUpVector() * Value);
+			//AddMovementInput(GetActorUpVector(), Value);
+		else
+			AddMovementInput(GetActorForwardVector(), Value);
 	}
 }
 
 void AMovement::MoveRight(float Value)
 {
-if (Controller && Value != 0.0f)
+	if (Controller && Value != 0.0f)
 	{
-		AddMovementInput(GetActorRightVector(), Value);
+		if (!isClimbing)
+			AddMovementInput(GetActorRightVector(), Value);
 	}
 }
 
@@ -328,14 +332,20 @@ void AMovement::AddControllerPitchInput(float Val)
 void AMovement::Jump()
 {
 	if (GetCharacterMovement()->IsFalling() == false 
-		|| GetCharacterMovement()->IsFlying())
+		|| GetCharacterMovement()->IsFlying() || GetCharacterMovement()->MovementMode == EMovementMode::MOVE_None)
 	{
 		if (GetCharacterMovement()->IsFlying())
 		{
 			grapplingComponent->StopGrappling();
 			GetCharacterMovement()->SetMovementMode(MOVE_Walking);
 		}
-
+		else
+		{
+			if (GetCharacterMovement()->MovementMode == EMovementMode::MOVE_None)
+			{
+				GetCharacterMovement()->SetMovementMode(MOVE_Walking);
+			}
+		}
 		FHitResult upTrace, forwardTrace;
 		GetWorld()->LineTraceSingleByChannel(forwardTrace, GetActorLocation(), GetActorLocation() + GetActorForwardVector() * 80, GRAPPLING_TRACE_CHANNEL, queryParams);
 		
@@ -498,4 +508,14 @@ void AMovement::SetUnPause()
 void AMovement::StartStranglingBP_Implementation()
 {
 
+}
+
+void AMovement::SetIsClimbing(bool is_climbing)
+{
+	isClimbing = is_climbing;
+	if (isClimbing)
+	GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_None);
+	else
+		GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Walking);
+	//GetCapsuleComponent()->SetEnableGravity(!isClimbing);
 }

@@ -17,9 +17,8 @@ public:
 	AWrenchTakeableActor();
 
 	
-
+	virtual EInteractionTypes GetInteractionType() const override{ return interactive_type; }
 	void Interact() override;
-	virtual EInteractionTypes GetInteractionType() const override { return interactive_type; }
 	void ChangeOutlines_Implementation(bool isOutline) override { UE_LOG(LogTemp, Warning, TEXT("C++")) }
 protected:
 	// Called when the game starts or when spawned

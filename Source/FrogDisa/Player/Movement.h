@@ -61,6 +61,8 @@ public:
 
 		UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 			void SetNewPosses(APawn* new_character);
+
+		void SetIsClimbing(bool is_climbing);
 protected:
 	// Called when the game starts or when spawned
 

@@ -23,7 +23,12 @@ void ASteamBug::BeginPlay()
 void ASteamBug::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
+	FHitResult hitRes;
+	/*FVector start = GetActorLocation(), end = start + GetActorForwardVector() * (GetCapsuleComponent()->GetScaledCapsuleRadius() + 5);
+	if (GetWorld()->LineTraceSingleByChannel(hitRes, start, end, ECollisionChannel::ECC_Visibility))
+	{
+		SetActorRotation(hitRes.ImpactNormal.Rotation());
+	}*/
 }
 
 // Called to bind functionality to input

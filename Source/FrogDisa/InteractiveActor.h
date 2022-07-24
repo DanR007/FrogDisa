@@ -20,6 +20,7 @@ public:
 
 	UPROPERTY(EditDefaultsOnly)
 		EInteractionTypes interactive_type;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
